@@ -1,0 +1,12 @@
+.navbar-brand img {
+    max-width: 3em;
+    height: auto;
+
+  }
+  .navbar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    font-size:20px;
+    font-family: Impact, 'Arial Narrow Bold', sans-serif;
+    color:red;
+  }
