@@ -29,53 +29,55 @@
 
     <!--Nested Nav Bar -->
     <!-- RESPONSIVE NAV BAR STARTS HERE -->
-   
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-            <div class="container-fluid">
 
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container-fluid">
+
+            <ul class="navbar-nav">
+
+                <a class="navbar-brand" href="index.php">
+                    <img src="logos/logo.png" alt="ATS">
+                </a>
+
+            </ul>
+
+        </div>
+
+    </nav>
+ 
+    <div class="container">
+        <div class="d-flex">
+            <div class="sidebar ">
+                <!-- Your sidebar content here -->
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="teacher_list.php">Add Teacher</a>
+                    </li>
 
-                    <a class="navbar-brand" href="index.php">
-                        <img src="logos/logo.png" alt="ATS">
-                    </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Add Section</a>
+                    </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Add Subject</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Add Subject Timing</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Add Rooms</a>
+                    </li>
                 </ul>
-
-            </div>
-
-        </nav>
-
-        <div class="container">
-            <div class="d-flex">
-                <div class="sidebar ">
-                    <!-- Your sidebar content here -->
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="teacher_form.php">Add Teacher</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Add Section</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Add Subject</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Add Subject Timing</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Add Rooms</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="content">
-                <!-- Your main content here -->
             </div>
         </div>
+        
+    </div>
+    </nav>
 </body>
 
 </html>
+
+
+  

@@ -1,5 +1,6 @@
 body{
   background-color:rgb(236, 243, 250);
+ 
 }
 .navbar-brand img {
     max-width: 3em;
@@ -19,6 +20,7 @@ body{
     height: 65px;
     background-color: rgb(14, 75, 6);
     border:1px solid #020000;
+    position:web;
   }
   
   .sidebar {

@@ -1,14 +1,15 @@
 <?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ats_db";
 
-$dbhost = "localhost";
-$dbuser = "root";
-$dbpass = "";
-$dbname = "ats_system_db";
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-$mysqli = mysqli_connect($dbhost,$dbuser,$dbpass,$dbname);
-
-if(!$con = mysqli_connect($dbhost,$dbuser,$dbpass,$dbname))
-{
-
-	die("failed to connect!");
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
+
+?>
