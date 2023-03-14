@@ -8,7 +8,7 @@ if (isset($_GET['id'])) {
     $teacher_id = mysqli_real_escape_string($conn, $_GET['id']);
     $sql = "SELECT * FROM teachers WHERE id ='$teacher_id'";
     $result = mysqli_query($conn, $sql);
-    
+
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
     } else {
@@ -45,11 +45,11 @@ if (isset($_POST['update'])) {
             echo ' window.location.href = "teacher_list.php";';
             echo '</script>';
             exit; // Make sure to exit after the redirect
-          } else {
+        } else {
             echo "Error updating record: " . mysqli_error($conn);
-          }
         }
     }
+}
 ?>
 
 <!doctype html>
@@ -72,7 +72,7 @@ if (isset($_POST['update'])) {
 
         <h3>Update Teacher</h3>
 
-        <form method="post" >
+        <form method="post">
             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
             <div class="mb-3 mt-3">
                 <label for="firstname" class="form-label">Firstname</label>

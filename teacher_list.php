@@ -1,4 +1,4 @@
-<?php 
+<?php
 include 'database_connection.php';
 include 'index.php';
 
@@ -39,7 +39,9 @@ if (isset($_POST['search'])) {
     <!--External CSS-->
     <link rel="stylesheet" href="css/teacher_form.css">
     <!-- CDN Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qI5N5m1n5QlSvZPmRlMlrLHhYiGXy3bqxCX4mtE5ZRtgr5Q5Z5S0C5fRi+KLkDlO" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-qI5N5m1n5QlSvZPmRlMlrLHhYiGXy3bqxCX4mtE5ZRtgr5Q5Z5S0C5fRi+KLkDlO"
+        crossorigin="anonymous"></script>
 
     <title>Index Page</title>
 
@@ -53,16 +55,17 @@ if (isset($_POST['search'])) {
         <div class="container">
 
 
-            <h2>Teacher List</h2>   
+            <h2>Teacher List</h2>
 
             <form method="POST">
                 <div class="input-group mb-3">
-      
-                    <input type="text" class="form-control rounded"  placeholder="Search by firstname or lastname" name="search">
+
+                    <input type="text" class="form-control rounded" placeholder="Search by firstname or lastname"
+                        name="search">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </form>
-            
+
 
             <table class="table">
                 <thead>
@@ -79,29 +82,30 @@ if (isset($_POST['search'])) {
                     if ($result->num_rows > 0) {
                         // output data of each row
                         $i = 1;
-                        while($row = $result->fetch_assoc()) {
+                        while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . $i . "</td>";
                             echo "<td>" . $row["teacher_id"] . "</td>";
                             echo "<td>" . $row["firstname"] . "</td>";
                             echo "<td>" . $row["lastname"] . "</td>";
-                        echo "<td>";
-                            echo "<a href='teacher_update.php?id=".$row["id"]."' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
-                            echo "<a href='".$_SERVER['PHP_SELF']."?delete_id=".$row["id"]."' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this teacher?')\">Delete<i class='fas fa-trash'></i></a>";
-                        echo "</td>";
-                        echo "</tr>";
-                        $i++;
+                            echo "<td>";
+                            echo "<a href='teacher_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
+                            echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this teacher?')\">Delete<i class='fas fa-trash'></i></a>";
+                            echo "</td>";
+                            echo "</tr>";
+                            $i++;
+                        }
+                    } else {
+                        echo "<tr><td colspan='5'>No teachers found</td></tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='5'>No teachers found</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-        <a href="teacher_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Teacher</a>
+                    ?>
+                </tbody>
+            </table>
+            <a href="teacher_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Teacher</a>
 
+        </div>
     </div>
-</div>
 
 </body>
+
 </html>
