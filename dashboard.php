@@ -1,8 +1,22 @@
-<?php
-session_start();
-include("database_connection.php");
 
+<?php
+include 'database_connection.php';
+session_start();
+
+// Check if user is not logged in
+if(!isset($_SESSION['user_id'])){
+    header("Location: login.php");
+    exit;
+}
+
+// Logout function
+if(isset($_POST['logout'])){
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -22,7 +36,6 @@ include("database_connection.php");
 </head>
 
 <body>
-
     <!--Nested Nav Bar -->
     <!-- RESPONSIVE NAV BAR STARTS HERE -->
 
@@ -35,13 +48,50 @@ include("database_connection.php");
                     <img src="logos/logo.png" alt="ATS">
                 </a>
 
+                <div style="display: flex; align-items: center; margin-left:85em;">
+                    <form method="post">
+                        <button type="submit" name="logout" class="btn btn-danger">Logout</button>
+                    </form>
+                </div>
+
+                    
             </ul>
 
         </div>
 
     </nav>
 
-    <div class="container">
+<div class="dashboard">
+
+                <?php
+
+                //dashboard code here
+                include("database_connection.php");
+               
+
+                $query = "SELECT COUNT(*) AS total_teachers FROM teachers";
+                $result = mysqli_query($conn, $query);
+
+                if ($result) {
+                    $row = mysqli_fetch_assoc($result);
+                    $total_teachers = $row['total_teachers'];
+                } else {
+                    $total_teachers = "N/A";
+                }
+                ?>
+
+                <h2>Dashboard</h2>
+                <div class="metric">
+                    <div class="value"><?php echo $total_teachers; ?></div>
+                    <div class="label">Total Teachers</div>
+                    <div class="card-body">
+				
+					</div>
+                </div>
+            </div>
+            
+
+            <div class="container">
         <div class="d-flex">
             <div class="sidebar ">
                 <!-- Your sidebar content here -->
