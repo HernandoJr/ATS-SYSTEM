@@ -4,6 +4,12 @@
 include 'database_connection.php';
 include 'index.php';
 
+// Check if user is not logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
 // Fetching data from the database
 if (isset($_GET['id'])) {
     $teacher_id = mysqli_real_escape_string($conn, $_GET['id']);

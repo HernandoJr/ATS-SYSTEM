@@ -67,7 +67,8 @@ if (isset($_POST['update'])) {
 </head>
 
 <body>
-  
+    <div class="container mt-3">
+
         <h3>Update Semester</h3>
 
         <div class="mb-3">
@@ -94,19 +95,20 @@ if (isset($_POST['update'])) {
                     ?>
                 </select>
 
-    </div>
-    <div class="mb-3">
-        <label for="start_date" class="form-label">Start Date</label>
-        <input type="date" class="form-control" id="start_date" name="start_date"
-            value="<?php echo $row['start_date']; ?>">
-    </div>
-    <div class="mb-3">
-        <label for="end_date" class="form-label">End Date</label>
-        <input type="date" class="form-control" id="end_date" name="end_date" value="<?php echo $row['end_date']; ?>">
-    </div>
-    <button type="submit" name="update" class="btn btn-primary">Update</button>
-    <a href="semester_list.php" class="btn btn-secondary">Cancel</a>
-    </form>
+            </div>
+            <div class="mb-3">
+                <label for="start_date" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="start_date" name="start_date"
+                    value="<?php echo $row['start_date']; ?>">
+            </div>
+            <div class="mb-3">
+                <label for="end_date" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="end_date" name="end_date"
+                    value="<?php echo $row['end_date']; ?>">
+            </div>
+            <button type="submit" name="update" class="btn btn-primary">Update</button>
+            <a href="semester_list.php" class="btn btn-danger">Back</a>
+        </form>
 
     </div>
 
