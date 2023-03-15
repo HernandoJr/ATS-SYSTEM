@@ -102,8 +102,17 @@ if (isset($_POST['logout'])) {
             <div class="sidebar ">
                 <!-- Your sidebar content here -->
                 <ul class="navbar-nav">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="semester_list.php">Add Semester</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="teacher_list.php">Add Teacher</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Add Course</a>
                     </li>
 
                     <li class="nav-item">
@@ -111,11 +120,7 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Add Subject</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Add Subject Timing</a>
+                        <a class="nav-link" href="#">Add Timeslot</a>
                     </li>
 
                     <li class="nav-item">

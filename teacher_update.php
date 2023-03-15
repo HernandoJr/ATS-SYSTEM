@@ -1,4 +1,5 @@
 <?php
+
 //include the db connetion php file.
 include 'database_connection.php';
 include 'index.php';
