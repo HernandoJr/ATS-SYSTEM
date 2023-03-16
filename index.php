@@ -83,15 +83,11 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Add Course</a>
+                        <a class="nav-link" href="course_list.php">Add Course</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Add Section</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Add Timeslot</a>
+                        <a class="nav-link" href="section_list.php">Add Section</a>
                     </li>
 
                     <li class="nav-item">
@@ -100,17 +96,26 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="update.php">Update Account</a>
+                        <a class="nav-link text-muted" href="#">Generate Schedule</a>
                     </li>
 
+                    <li class="nav-item">
+
+                    <a class="nav-link mar" href="update.php">Update Account</a>
+                    </li>
+
+
                 </ul>
+                       
                 <div class="m-5">
                     <form method="post">
                         <button type="submit" name="logout" class="btn btn-danger" margin>Logout</button>
                     </form>
-                </div>
 
+                </div>
+                   
             </div>
+            
         </div>
 
         <!-- footer -->

@@ -33,22 +33,19 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
         integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP"
-        crossorigin="anonymous"></script>
+        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous">
+        </script>
 
-    <title>Index Page</title>
+    <title>Dashboard Page</title>
 
 
 </head>
 
 <body class="bg-light">
 
+    <!-- TEACHER DASHBOARD -->
     <div class="dashboard">
-
         <?php
-
-        //dashboard code here
-        include("database_connection.php");
 
         $query = "SELECT COUNT(*) AS total_teachers FROM teachers";
         $result = mysqli_query($conn, $query);
@@ -70,6 +67,64 @@ if (!isset($_SESSION['user_id'])) {
 
             <div class="label text-dark">Total Teachers</div>
             <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+
+    <!--  COURSE DASHBOARD-->
+    <div class="dashboard">
+
+        <?php
+        $query = "SELECT COUNT(*) AS total_course FROM courses";
+        $result = mysqli_query($conn, $query);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            $total_course = $row['total_course'];
+        } else {
+            $total_course = "N/A";
+        }
+        ?>
+
+        <img class="logo" src="logos/course.png" alt="ATS">
+        <div class="metric rounded-circle">
+
+            <div class="value">
+                <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_course . '</div>'; // Replace display-1 with the desired size class.?>
+            </div>
+
+            <div class="label text-dark">Total Course</div>
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION DASHBOARD -->
+    <div class="dashboard">
+
+        <?php
+        $query = "SELECT COUNT(*) AS total_section FROM sections";
+        $result = mysqli_query($conn, $query);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            $total_section = $row['total_section'];
+        } else {
+            $total_section = "N/A";
+        }
+        ?>
+
+        <img class="logo" src="logos/section.png" alt="ATS">
+        <div class="metric rounded-circle">
+
+            <div class="value">
+                <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_section . '</div>'; // Replace display-1 with the desired size class.?>
+            </div>
+
+            <div class="label text-dark">Total Section</div>
+            <div class="card-body ">
 
             </div>
         </div>

@@ -1,6 +1,7 @@
 <?php
 
-include("database_connection.php");
+include 'database_connection.php';
+
 $message = '';
 
 if (isset($_POST['register'])) {

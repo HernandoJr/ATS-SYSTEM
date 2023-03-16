@@ -5,6 +5,7 @@ include 'index.php';
 
 // Fetching data from the database
 if (isset($_GET['id'])) {
+
     $id = mysqli_real_escape_string($conn, $_GET['id']);
     $sql = "SELECT * FROM semesters WHERE id ='$id'";
     $result = mysqli_query($conn, $sql);
@@ -21,13 +22,15 @@ if (isset($_GET['id'])) {
 // Updating data in the database
 if (isset($_POST['update'])) {
     // First, retrieve the data from the form and sanitize it
+    $id = mysqli_real_escape_string($conn, $_POST['id']);
+
     $semester_id = mysqli_real_escape_string($conn, $_POST['semester_id']);
     $semester_name = mysqli_real_escape_string($conn, $_POST['semester_name']);
     $start_date = mysqli_real_escape_string($conn, $_POST['start_date']);
     $end_date = mysqli_real_escape_string($conn, $_POST['end_date']);
 
     // Then, check if the semester name, start date and end date already exists in the database
-    $sql = "SELECT * FROM semesters WHERE semester_id='$semester_id' AND semester_name='$semester_name' AND start_date='$start_date' AND end_date='$end_date' AND id!='$id'";
+    $sql = "SELECT * FROM semesters WHERE semester_id='$semester_id'  AND semester_name='$semester_name' AND start_date='$start_date' AND end_date='$end_date' AND id!='$id'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -37,7 +40,7 @@ if (isset($_POST['update'])) {
         echo '</script>';
     } else {
         // If the semester with the same name, start date and end date does not exist, update the data in the database
-        $sql = "UPDATE semesters SET semester_id='$semester_id', semester_name='$semester_name', start_date='$start_date', end_date='$end_date' WHERE id='$id'";
+        $sql = "UPDATE semesters SET semester_id='$semester_id', semester_name='$semester_name', start_date ='$start_date', end_date='$end_date' WHERE id='$id'";
         if (mysqli_query($conn, $sql)) {
             // Data updated successfully, display an alert message and redirect to semester_list.php
             echo '<script type="text/javascript">';
@@ -51,10 +54,12 @@ if (isset($_POST['update'])) {
     }
 }
 ?>
+
 <!doctype html>
 <html lang="en">
 
 <head>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -62,8 +67,19 @@ if (isset($_POST['update'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!--External CSS-->
-    <link rel="stylesheet" href="css/semester_form.css">
-    <title>Update Semester</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- CDN Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
+        </script>
+    <!-- CDN jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP"
+        crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -71,14 +87,15 @@ if (isset($_POST['update'])) {
 
         <h3>Update Semester</h3>
 
-        <div class="mb-3">
-            <label for="semester_id" class="form-label">Semester ID</label>
-            <input type="text" class="form-control" id="semester_id" name="semester_id"
-                value="<?php echo $row['semester_id']; ?>">
-        </div>
+
 
         <!-- Display the data of the selected semester in the form fields -->
         <form method="POST" action="">
+            <div class="mb-3">
+                <label for="semester_id" class="form-label">Semester ID</label>
+                <input type="text" class="form-control" id="semester_id" name="semester_id"
+                    value="<?php echo $row['semester_id']; ?>">
+            </div>
             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
             <div class="mb-3">
                 <label for="semester_name" class="form-label">Semester Name</label>

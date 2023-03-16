@@ -2,13 +2,13 @@
 include 'database_connection.php';
 include 'index.php';
 
-// Delete teacher if delete_id is set in the URL parameters
+// Delete section if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
-    $sql = "DELETE FROM teachers WHERE id='$id'";
+    $sql = "DELETE FROM sections WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Teacher deleted successfully');</script>";
-        echo "<script>window.location.href = 'teacher_list.php';</script>";
+        echo "<script>alert('section deleted successfully');</script>";
+        echo "<script>window.location.href = 'section_list.php';</script>";
     } else {
         echo "Error deleting record: " . $conn->error;
     }
@@ -17,10 +17,10 @@ if (isset($_GET['delete_id'])) {
 // Execute search query if search form is submitted
 if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
-    $query = "SELECT * FROM teachers WHERE firstname LIKE '%$search_term%' OR lastname LIKE '%$search_term%'";
+    $query = "SELECT * FROM sections WHERE section_name LIKE '%$search_term%' OR section_id LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR section_year LIKE '%$search_term%'";
     $result = $conn->query($query);
 } else {
-    $query = "SELECT * FROM teachers";
+    $query = "SELECT * FROM sections";
     $result = $conn->query($query);
 }
 ?>
@@ -37,7 +37,7 @@ if (isset($_POST['search'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!--External CSS-->
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/sections.css">
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
@@ -58,12 +58,12 @@ if (isset($_POST['search'])) {
         <div class="container">
 
 
-            <h2>Teacher List</h2>
+            <h2>Section List</h2>
 
             <form method="POST">
                 <div class="input-group mb-3">
 
-                    <input type="text" class="form-control rounded" placeholder="Search by firstname or lastname"
+                    <input type="text" class="form-control rounded" placeholder="Search by section_name or section_id"
                         name="search">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
@@ -74,13 +74,34 @@ if (isset($_POST['search'])) {
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Teacher ID</th>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
+                        <th>Section ID</th>
+                        <th>Section Name</th>
+                        <th>Course</th>
+                        <th>Year</th>
                         <th>Action</th>
+
                     </tr>
                 </thead>
                 <tbody>
+
+                    <?php
+                    // Execute search query if search form is submitted
+                    if (isset($_POST['search'])) {
+                        $search_term = $_POST['search'];
+                        $query = "SELECT * FROM sections WHERE section_name LIKE '%$search_term%' OR section_id LIKE '%$search_term%'";
+                        $result = $conn->query($query);
+                        if (!$result) {
+                            die("Error executing search query: " . $conn->error);
+                        }
+                    } else {
+                        $query = "SELECT * FROM sections";
+                        $result = $conn->query($query);
+                        if (!$result) {
+                            die("Error executing query: " . $conn->error);
+                        }
+                    }
+                    ?>
+
                     <?php
                     if ($result->num_rows > 0) {
                         // output data of each row
@@ -88,25 +109,26 @@ if (isset($_POST['search'])) {
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . $i . "</td>";
-                            echo "<td>" . $row["teacher_id"] . "</td>";
-                            echo "<td>" . $row["firstname"] . "</td>";
-                            echo "<td>" . $row["lastname"] . "</td>";
+                            echo "<td>" . $row["section_id"] . "</td>";
+                            echo "<td>" . $row["section_name"] . "</td>";
+                            echo "<td>" . $row["course_name"] . "</td>";
+                            echo "<td>" . $row["section_year"] . "</td>";
                             echo "<td>";
-                            echo "<a href='teacher_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
-                            echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this teacher?')\">Delete<i class='fas fa-trash'></i></a>";
+                            echo "<a href='section_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
+                            echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this section?')\">Delete<i class='fas fa-trash'></i></a>";
                             echo "</td>";
                             echo "</tr>";
                             $i++;
                         }
                     } else {
-                        echo "<tr><td colspan='5'>No teachers found</td></tr>";
+                        echo "<tr><td colspan='5'>No sections found</td></tr>";
                     }
                     ?>
                 </tbody>
             </table>
 
-            <a href="teacher_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Teacher</a>
-            
+            <a href="section_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add section</a>
+
         </div>
     </div>
 

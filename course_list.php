@@ -2,13 +2,13 @@
 include 'database_connection.php';
 include 'index.php';
 
-// Delete teacher if delete_id is set in the URL parameters
+// Delete course if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
-    $sql = "DELETE FROM teachers WHERE id='$id'";
+    $sql = "DELETE FROM courses WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Teacher deleted successfully');</script>";
-        echo "<script>window.location.href = 'teacher_list.php';</script>";
+        echo "<script>alert('Course deleted successfully');</script>";
+        echo "<script>window.location.href = 'course_list.php';</script>";
     } else {
         echo "Error deleting record: " . $conn->error;
     }
@@ -17,10 +17,10 @@ if (isset($_GET['delete_id'])) {
 // Execute search query if search form is submitted
 if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
-    $query = "SELECT * FROM teachers WHERE firstname LIKE '%$search_term%' OR lastname LIKE '%$search_term%'";
+    $query = "SELECT * FROM courses WHERE course_name LIKE '%$search_term%' OR course_id LIKE '%$search_term%'";
     $result = $conn->query($query);
 } else {
-    $query = "SELECT * FROM teachers";
+    $query = "SELECT * FROM courses";
     $result = $conn->query($query);
 }
 ?>
@@ -37,7 +37,7 @@ if (isset($_POST['search'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!--External CSS-->
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/courses.css">
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
@@ -58,12 +58,12 @@ if (isset($_POST['search'])) {
         <div class="container">
 
 
-            <h2>Teacher List</h2>
+            <h2>Course List</h2>
 
             <form method="POST">
                 <div class="input-group mb-3">
 
-                    <input type="text" class="form-control rounded" placeholder="Search by firstname or lastname"
+                    <input type="text" class="form-control rounded" placeholder="Search by course_name or slots"
                         name="search">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
@@ -74,9 +74,9 @@ if (isset($_POST['search'])) {
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Teacher ID</th>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
+                        <th>Course ID</th>
+                        <th>Course Name</th>
+                        <th>Slots</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -88,24 +88,24 @@ if (isset($_POST['search'])) {
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . $i . "</td>";
-                            echo "<td>" . $row["teacher_id"] . "</td>";
-                            echo "<td>" . $row["firstname"] . "</td>";
-                            echo "<td>" . $row["lastname"] . "</td>";
+                            echo "<td>" . $row["course_id"] . "</td>";
+                            echo "<td>" . $row["course_name"] . "</td>";
+                            echo "<td>" . $row["slots"] . "</td>";
                             echo "<td>";
-                            echo "<a href='teacher_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
+                            echo "<a href='course_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
                             echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this teacher?')\">Delete<i class='fas fa-trash'></i></a>";
                             echo "</td>";
                             echo "</tr>";
                             $i++;
                         }
                     } else {
-                        echo "<tr><td colspan='5'>No teachers found</td></tr>";
+                        echo "<tr><td colspan='5'>No courses found</td></tr>";
                     }
                     ?>
                 </tbody>
             </table>
 
-            <a href="teacher_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Teacher</a>
+            <a href="course_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Course</a>
             
         </div>
     </div>

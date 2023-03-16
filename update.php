@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 //include the db connection php file.
 include 'database_connection.php';
@@ -59,31 +59,60 @@ if (isset($_POST['update'])) {
     }
 }
 ?>
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CDN Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!--External CSS-->
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- CDN Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
+        </script>
+    <!-- CDN jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP"
+        crossorigin="anonymous"></script>
+</head>
 
 <div class="container my-5">
     <h1>Update User</h1>
 
     <!-- Display the form for updating user data -->
     <form method="post">
-    <div class="form-group">
-        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-    </div>
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" class="form-control" id="name" name="name" value="<?php echo $row['name']; ?>">
-    </div>
-    <div class="form-group">
-        <label for="email">Email address:</label>
-        <input type="email" class="form-control" id="email" name="email" value="<?php echo $row['email']; ?>">
-    </div>
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control" id="password" name="password" value="<?php echo $row['password']; ?>">
-    </div>
-    <button type="submit" class="btn btn-primary" name="update">Update</button>
-</form>
+        <div class="form-group">
+            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+        </div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" value="<?php echo $row['name']; ?>">
+        </div>
+        <div class="form-group">
+            <label for="email">Email address:</label>
+            <input type="email" class="form-control" id="email" name="email" value="<?php echo $row['email']; ?>">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="password"
+                value="<?php echo $row['password']; ?>">
+        </div>
+        <button type="submit" class="btn btn-primary" name="update">Update</button>
+    </form>
 </div>
 <?php
 // Close the database connection
 mysqli_close($conn);
 ?>
+</body>
+
+</html>

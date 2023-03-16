@@ -57,9 +57,9 @@ if (isset($_POST['submit'])) {
 <body>
     <div class="container mt-3">
         <h3>Add Semester</h3>
-        <form method="post">
 
-            <div class="form-group">
+        <form method="post">
+            <div class="mb-3">
                 <label for="semester_id">Semester ID:</label>
                 <input type="text" class="form-control" id="semester_id" name="semester_id"
                     placeholder="Enter Semester ID">
