@@ -84,7 +84,7 @@ if (isset($_POST['submit'])) {
                     name="course_id" required>
             </div>
             <div class="mb-3 mt-3">
-                <label for="course_name" class="form-label">Course_name</label>
+                <label for="course_name" class="form-label">Course Name</label>
                 <input type="text" class="form-control" id="course_name" placeholder="Enter Course name"
                     name="course_name" required>
             </div>

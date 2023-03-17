@@ -90,11 +90,11 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Add Subject</a>
+                        <a class="nav-link" href="subject_list.php">Add Subject</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Add Rooms</a>
+                        <a class="nav-link" href="room_list.php">Add Rooms</a>
                     </li>
 
                     <li class="nav-item">

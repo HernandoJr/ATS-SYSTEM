@@ -141,10 +141,10 @@ if (isset($_POST['update'])) {
                 }
 
                 ?>
+                
                 <!-- Display the data of the selected section in the form fields -->
-
-
                 <div class="mb-3">
+                    
                     <label for="course_name" class="form-label">Course Name</label>
                     <select class="form-control" id="course_name" name="course_name">
                         <?php
@@ -159,11 +159,8 @@ if (isset($_POST['update'])) {
                         }
                         ?>
                     </select>
+
                 </div>
-
-
-
-
 
 
                 <div class="mb-3">
@@ -181,10 +178,9 @@ if (isset($_POST['update'])) {
                         }
                         ?>
                     </select>
+
                 </div>
 
-
-            </div>
 
             <button type="submit" name="update" class="btn btn-primary">Update</button>
             <a href="section_list.php" class="btn btn-danger">Back</a>

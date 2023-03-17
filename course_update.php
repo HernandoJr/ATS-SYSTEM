@@ -100,7 +100,7 @@ if (isset($_POST['update'])) {
             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 
             <div class="mb-3">
-                <label for="course_name" class="form-label">Course ID</label>
+                <label for="course_name" class="form-label">Course Name</label>
                 <input type="text" class="form-control" id="course_name" name="course_name"
                     value="<?php echo $row['course_name']; ?>">
             </div>
