@@ -102,8 +102,8 @@ if (isset($_GET['delete_id'])) {
                             echo "<td>" . $row["semester_name"] . "</td>";
                             echo "<td>" . $row["start_date"] . "</td>";
                             echo "<td>" . $row["end_date"] . "</td>";
-                            echo "<td><a href='semester_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm me-2'>Update</a>";
-                            echo "<a href='semester_list.php?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm'>Delete</a></td>";
+                            echo "<td><a href='semester_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm me-1'>Update</a>";
+                            echo "<a href='semester_list.php?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm me-1'>Delete</a></td>";
                             echo "</tr>";
                             $i++;
                         }

@@ -44,7 +44,7 @@ if (!isset($_SESSION['user_id'])) {
 <body class="bg-light">
 
     <!-- TEACHER DASHBOARD -->
-    <div class="dashboard">
+    <div class="dashboard ">
         <?php
 
         $query = "SELECT COUNT(*) AS total_teachers FROM teachers";

@@ -37,15 +37,18 @@ if (isset($_POST['logout'])) {
         </script>
     <!-- CDN jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous">
+        </script>
 
     <title>Index Page</title>
 
 
 </head>
 
-<body style="background-color:ghostwhite";>
+<body style="background-color:ghostwhite" ;>
     <!--Nested Nav Bar -->
     <!-- RESPONSIVE NAV BAR STARTS HERE -->
 
@@ -53,24 +56,20 @@ if (isset($_POST['logout'])) {
         <div class="container-fluid">
 
             <ul class="navbar-nav">
-
+        
                 <a class="navbar-brand" href="dashboard.php">
                     <img src="logos/logo.png" alt="ATS" height="60">
                 </a>
+            </ul>
 
-
-            </ul>
-            </ul>
-            </li>
-            </ul>
-        <!-- Example split danger button -->
+            <!-- Example split danger button -->
 
 
     </nav>
 
     <div class="container">
         <div class="d-flex">
-            <div class="sidebar bg-white">
+            <div class="sidebar bg-white  animate__animated">
                 <!-- Your sidebar content here -->
                 <ul class="navbar-nav">
 
@@ -91,44 +90,52 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link" href="#">Add Subject</a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link" href="#">Add Rooms</a>
-
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-muted" href="#">Generate Schedule</a>
+                        <a class="nav-link text-muted" href="#">Faculty Loading</a>
                     </li>
 
                     <li class="nav-item">
 
-                    <a class="nav-link mar" href="update.php">Update Account</a>
+                        <a class="nav-link mar" href="update.php">Update Account</a>
                     </li>
 
 
                 </ul>
-                       
-                <div class="m-5">
+
+                <div class="mt-5 m-5">
+
                     <form method="post">
                         <button type="submit" name="logout" class="btn btn-danger" margin>Logout</button>
                     </form>
-
                 </div>
-                   
+
             </div>
-            
+            </script>
+
+
         </div>
 
         <!-- footer -->
         <footer class="footer bg-dark bg-gradient py-3 fixed-bottom">
+
             <div class="container">
                 <p class="text-muted">Copyright © 2023 Cavite State University CCAT Campus (Automated Timetable
                     Scheduling System)
-
                     <span class="float-end"><a href="#">Back to top</a></span>
                 </p>
             </div>
+
+        </footer>
+
     </div>
-    </footer>
+
 </body>
 
 </html>
