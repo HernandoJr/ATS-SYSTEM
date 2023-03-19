@@ -73,7 +73,8 @@ if (isset($_POST['search'])) {
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Teacher Name</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
                         <th>Subject Description</th>
                         <th>Subject Type</th>
                         <th>Course</th>
@@ -109,7 +110,8 @@ if (isset($_POST['search'])) {
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . $i . "</td>";
-                            echo "<td>" . $row["teacher_name"] . "</td>";
+                            echo "<td>" . $row["firstname"] . "</td>";
+                            echo "<td>" . $row["lastname"] . "</td>";
                             echo "<td>" . $row["subject_description"] . "</td>";
                             echo "<td>" . $row["subject_type"] . "</td>";
                             echo "<td>" . $row["course_name"] . "</td>";
@@ -117,7 +119,7 @@ if (isset($_POST['search'])) {
                             echo "<td>";
                             echo "<a href='subject_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
                             echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
-                            echo "</td>";
+                            echo "</td>";   
                             echo "</tr>";
                             $i++;
                         }
