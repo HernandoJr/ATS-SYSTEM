@@ -43,12 +43,12 @@ if (isset($_POST['logout'])) {
         integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous">
         </script>
 
-    <title>Index Page</title>
+    <title>ATS-SYSTEM</title>
 
 
 </head>
 
-<body style="background-color:ghostwhite" ;>
+<body style="background-color:ghostwhite";>
     <!--Nested Nav Bar -->
     <!-- RESPONSIVE NAV BAR STARTS HERE -->
 
@@ -98,7 +98,7 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-muted" href="#">Faculty Loading</a>
+                        <a class="nav-link text-muted" href="faculty_loading.php">Faculty Loading</a>
                     </li>
 
                     <li class="nav-item">
