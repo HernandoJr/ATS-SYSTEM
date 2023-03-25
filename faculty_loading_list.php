@@ -8,7 +8,7 @@ if (isset($_GET['delete_id'])) {
     $sql = "DELETE FROM faculty_loadings WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('subject deleted successfully');</script>";
-        echo "<script>window.location.href = 'subject_list.php';</script>";
+        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
     } else {
         echo "Error deleting record: " . $conn->error;
     }
@@ -57,12 +57,12 @@ if (isset($_POST['search'])) {
         <div class="container">
 
 
-            <h2>Subject List</h2>
+            <h2>Faculty Loading List</h2>
 
             <form method="POST">
                 <div class="input-group mb-3">
 
-                    <input type="text" class="form-control rounded" placeholder="Search by Subject Description/Code/Type" 
+                    <input type="text" class="form-control rounded" placeholder="Search by Teacher ID/Name" 
                         name="search">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
@@ -73,12 +73,11 @@ if (isset($_POST['search'])) {
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
+                        <th>Teacher Name</th>
                         <th>Subject Description</th>
-                        <th>Subject Type</th>
                         <th>Course</th>
                         <th>Section</th>
+                        <th>Year</th>
                         <th>Action</th>
 
                     </tr>
@@ -105,17 +104,18 @@ if (isset($_POST['search'])) {
 
                     <?php
                     if ($result->num_rows > 0) {
+                        
                         // output data of each row
                         $i = 1;
                         while ($row = $result->fetch_assoc()) {
+                            
                             echo "<tr>";
                             echo "<td>" . $i . "</td>";
-                            echo "<td>" . $row["firstname"] . "</td>";
-                            echo "<td>" . $row["lastname"] . "</td>";
+                            echo "<td>" . $row["teacher"] . "</td>";
                             echo "<td>" . $row["subject_description"] . "</td>";
-                            echo "<td>" . $row["subject_type"] . "</td>";
                             echo "<td>" . $row["course_name"] . "</td>";
                             echo "<td>" . $row["section_name"] . "</td>";
+                            echo "<td>" . $row["section_year"] . "</td>";
                             echo "<td>";
                             echo "<a href='subject_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
                             echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
@@ -130,7 +130,7 @@ if (isset($_POST['search'])) {
                 </tbody>
             </table>
 
-            <a href="subject_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Subject</a>
+            <a href="faculty_loading.php" class="btn btn-success"><i class='fas fa-user-plus'></i>Assign subject</a>
 
         </div>
     </div>

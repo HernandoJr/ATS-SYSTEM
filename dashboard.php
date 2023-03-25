@@ -15,6 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 <html lang="en">
 
 <head>
+ 
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -42,166 +43,177 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 
 <body class="bg-light">
-  
-        <!-- TEACHER DASHBOARD -->
-        <div class="dashboard p-3 col-auto ">
 
-            <?php
-            $query = "SELECT COUNT(*) AS total_teachers FROM teachers";
-            $result = mysqli_query($conn, $query);
+    <div class="container-fluid">
+        <div class="row justify-content-center" style="margin-right:0px;margin-left:190px;">
 
-            if ($result) {
-                $row = mysqli_fetch_assoc($result);
-                $total_teachers = $row['total_teachers'];
-            } else {
-                $total_teachers = "N/A";
-            }
-            ?>
+            <!-- TEACHER DASHBOARD -->
+            <div class="col-4">
+                <div class="dashboard">
 
-            <img class="logo" src="logos/teacher.png" alt="ATS">
-            <div class="metric rounded-circle">
+                    <?php
+                    $query = "SELECT COUNT(*) AS total_teachers FROM teachers";
+                    $result = mysqli_query($conn, $query);
 
-                <div class="value">
-                    <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_teachers . '</div>'; // Replace display-1 with the desired size class.?>
+                    if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $total_teachers = $row['total_teachers'];
+                    } else {
+                        $total_teachers = "N/A";
+                    }
+                    ?>
+
+                    <img class="logo" src="logos/teacher.png" alt="ATS">
+                    <div class="metric rounded-circle">
+
+                        <div class="value">
+                            <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_teachers . '</div>'; // Replace display-1 with the desired size class.?>
+                        </div>
+
+                        <div class="card-body ">
+                            <div class="label text-dark">Total Teachers</div>
+                        </div>
+
+                    </div>
+
                 </div>
+            </div>
 
-                <div class="card-body">
-                    <div class="label text-dark">Total Teachers</div>
+
+
+            <!--  COURSE DASHBOARD-->
+            <div class="col-4">
+                <div class="dashboard">
+
+                    <?php
+                    $query = "SELECT COUNT(*) AS total_course FROM courses";
+                    $result = mysqli_query($conn, $query);
+
+                    if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $total_course = $row['total_course'];
+                    } else {
+                        $total_course = "N/A";
+                    }
+                    ?>
+
+                    <img class="logo" src="logos/course.png" alt="ATS">
+                    <div class="metric rounded-circle">
+
+                        <div class="value">
+                            <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_course . '</div>'; // Replace display-1 with the desired size class.?>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="label text-dark">Total Course</div>
+                        </div>
+
+                    </div>
+
                 </div>
+            </div>
 
+            <!--  SECTION DASHBOARD-->
+            <div class="col-4">
+                <div class="dashboard">
+
+                    <?php
+                    $query = "SELECT COUNT(*) AS total_section FROM sections";
+                    $result = mysqli_query($conn, $query);
+
+                    if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $total_section = $row['total_section'];
+                    } else {
+                        $total_section = "N/A";
+                    }
+                    ?>
+
+                    <img class="logo" src="logos/section.png" alt="ATS">
+                    <div class="metric rounded-circle">
+
+                        <div class="value">
+                            <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_section . '</div>'; // Replace display-1 with the desired size class.?>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="label text-dark">Total Section</div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!--  SUBJECT DASHBOARD-->
+            <div class="col-6">
+                <div class="dashboard">
+
+                    <?php
+                    $query = "SELECT COUNT(*) AS total_subject FROM subjects";
+                    $result = mysqli_query($conn, $query);
+
+                    if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $total_subject = $row['total_subject'];
+                    } else {
+                        $total_subject = "N/A";
+                    }
+                    ?>
+
+                    <img class="logo" src="logos/subjects.png" alt="ATS">
+                    <div class="metric rounded-circle">
+
+                        <div class="value">
+                            <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_subject . '</div>'; // Replace display-1 with the desired size class.?>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="label text-dark">Total Subjects</div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!--  Rooms DASHBOARD-->
+            <div class="col-6">
+                <div class="dashboard">
+
+                    <?php
+                    $query = "SELECT COUNT(*) AS total_rooms FROM rooms";
+                    $result = mysqli_query($conn, $query);
+
+                    if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $total_rooms = $row['total_rooms'];
+                    } else {
+                        $total_rooms = "N/A";
+                    }
+                    ?>
+
+                    <img class="logo" src="logos/rooms.png" alt="ATS">
+                    <div class="metric rounded-circle">
+
+                        <div class="value">
+                            <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_rooms . '</div>'; // Replace display-1 with the desired size class.?>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="label text-dark">Total Rooms</div>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
 
         </div>
+    </div>
+    </div>
 
-     
-    
-        <div class="d-flex flex-row">
-
-        <!--  COURSE DASHBOARD-->
-        <div class="dashboard p-5 col-3">
-
-            <?php
-            $query = "SELECT COUNT(*) AS total_course FROM courses";
-            $result = mysqli_query($conn, $query);
-
-            if ($result) {
-                $row = mysqli_fetch_assoc($result);
-                $total_course = $row['total_course'];
-            } else {
-                $total_course = "N/A";
-            }
-            ?>
-
-            <img class="logo" src="logos/course.png" alt="ATS">
-            <div class="metric rounded-circle">
-
-                <div class="value">
-                    <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_course . '</div>'; // Replace display-1 with the desired size class.?>
-                </div>
-
-                <div class="card-body">
-                    <div class="label text-dark">Total Course</div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!--  SECTION DASHBOARD-->
-        <div class="dashboard p-5 col-5">
-
-            <?php
-            $query = "SELECT COUNT(*) AS total_section FROM sections";
-            $result = mysqli_query($conn, $query);
-
-            if ($result) {
-                $row = mysqli_fetch_assoc($result);
-                $total_section = $row['total_section'];
-            } else {
-                $total_section = "N/A";
-            }
-            ?>
-
-            <img class="logo" src="logos/section.png" alt="ATS">
-            <div class="metric rounded-circle">
-
-                <div class="value">
-                    <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_section . '</div>'; // Replace display-1 with the desired size class.?>
-                </div>
-
-                <div class="card-body">
-                    <div class="label text-dark">Total Section</div>
-                </div>
-
-            </div>
-
-        </div>
-        </div>
-        
-        <!--  SUBJECT DASHBOARD-->
-
-        <div class="d-flex flex-row">
-        <div class="dashboard p-5 col-3">
-
-            <?php
-            $query = "SELECT COUNT(*) AS total_subject FROM subjects";
-            $result = mysqli_query($conn, $query);
-
-            if ($result) {
-                $row = mysqli_fetch_assoc($result);
-                $total_subject = $row['total_subject'];
-            } else {
-                $total_subject = "N/A";
-            }
-            ?>
-
-            <img class="logo" src="logos/subjects.png" alt="ATS">
-            <div class="metric rounded-circle">
-
-                <div class="value">
-                    <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_subject . '</div>'; // Replace display-1 with the desired size class.?>
-                </div>
-
-                <div class="card-body">
-                    <div class="label text-dark">Total Subjects</div>
-                </div>
-
-            </div>
-
-        </div>
-        
-            
-        <!--  Rooms DASHBOARD-->
-        <div class="dashboard p-5 col-5">
-
-            <?php
-            $query = "SELECT COUNT(*) AS total_rooms FROM rooms";
-            $result = mysqli_query($conn, $query);
-
-            if ($result) {
-                $row = mysqli_fetch_assoc($result);
-                $total_rooms = $row['total_rooms'];
-            } else {
-                $total_rooms = "N/A";
-            }
-            ?>
-
-            <img class="logo" src="logos/rooms.png" alt="ATS">
-            <div class="metric rounded-circle">
-
-                <div class="value">
-                    <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_rooms . '</div>'; // Replace display-1 with the desired size class.?>
-                </div>
-
-                <div class="card-body">
-                    <div class="label text-dark">Total Rooms</div>
-                </div>
-
-            </div>
-
-        </div>
-        </div>
-    
 </body>
 
 </html>

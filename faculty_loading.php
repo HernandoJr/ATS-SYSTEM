@@ -3,20 +3,20 @@ include 'database_connection.php';
 include 'index.php';
 
 if (isset($_POST['submit'])) {
-    
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
+
+    $teacher = $_POST['teacher'];
     $subject_description = $_POST['subject_description'];
     $course_name = $_POST['course_name'];
     $section_name = $_POST['section_name'];
     $section_year = $_POST['section_year'];
 
     // Validate input data
-    if (empty ($firstname) || empty($lastname) || empty($subject_description) || empty($course_name) || empty($section_name) || empty($section_year))   {
+    if (empty($teacher) || empty($subject_description) || empty($course_name) || empty($section_name) || empty($section_year)) {
         echo '<div class="alert alert-danger" role="alert">Please select all fields.</div>';
     } else {
         // Insert the data into the faculty_loading table
-        $sql = "INSERT INTO faculty_loadings (firstname, lastname, subject_description, course_name, section_name,section_year ) VALUES ('$firstname', '$lastname', '$subject_description', '$course_name', '$section_name', '$section_year')";
+        list($firstname, $lastname) = explode(' ', $teacher);
+        $sql = "INSERT INTO faculty_loadings (teacher, subject_description, course_name, section_name, section_year)  VALUES ('$teacher', '$subject_description', '$course_name', '$section_name', '$section_year')";
 
         if ($conn->query($sql) === TRUE) {
             echo '<div class="alert alert-success" role="alert">Faculty loading added successfully.</div>';
@@ -57,42 +57,29 @@ if (isset($_POST['submit'])) {
 
 
 </head>
-<div class="container mt-3">
 
-    <!-- Dropdown for selecting a teacher -->
-    <div class="form-group">
-        <label for="firstname">Teacher</label>
-        <select class="form-control" id="firstname" name="firstname">
-            <?php
-            $sql = "SELECT * FROM teachers";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo '<option value="' . $row["firstname"] . '">' . $row["firstname"] . ' ' . $row["firstname"] . '</option>';
-                }
-            }
-            ?>
-        </select>
-    </div>
-
-    <!-- Dropdown for selecting a teacher -->
-    <div class="form-group">
-        <label for="firstname">Teacher</label>
-        <select class="form-control" id="firstname" name="firstname">
-            <?php
-            $sql = "SELECT * FROM teachers";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo '<option value="' . $row["firstname"] . '">' . $row["firstname"] . ' ' . $row["firstname"] . '</option>';
-                }
-            }
-            ?>
-        </select>
-    </div>
 
     <!-- Dropdown for selecting a course -->
     <form method="POST">
+
+    <div class="container mt-3">
+
+    <!-- Dropdown for selecting a teacher -->
+    <div class="form-group">
+        <label for="teacher">Teacher</label>
+        <select class="form-control" id="teacher" name="teacher">
+            <?php
+            $sql = "SELECT * FROM teachers";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<option value="' . $row["firstname"] . '' . $row["lastname"] . '">' . $row["firstname"] . ' ' . $row["lastname"] . '</option>';
+                }
+            }
+            ?>
+        </select>
+    </div>
+
         <div class="form-group">
             <label for="course_name">Course</label>
             <select class="form-control" id="course_name" name="course_name">
@@ -124,9 +111,24 @@ if (isset($_POST['submit'])) {
             </select>
         </div>
 
+        <!-- Dropdown for selecting a section -->
+        <div class="form-group">
+            <label for="section_name">Year</label>
+            <select class="form-control" id="section_name" name="section_name">
+                <?php
+                $sql = "SELECT * FROM sections";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["section_name"] . '">' . $row["section_name"] . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
 
-         <!-- Dropdown for selecting a section -->
-         <div class="form-group">
+        <!-- Dropdown for selecting a section year -->
+        <div class="form-group">
             <label for="section_year">Year</label>
             <select class="form-control" id="section_year" name="section_year">
                 <?php
@@ -140,10 +142,6 @@ if (isset($_POST['submit'])) {
                 ?>
             </select>
         </div>
-
-
-    
-        
 
         <button type="submit" class="btn btn-primary" name="submit">Create</button>
         <a href="faculty_loading_list.php" class="btn btn-danger" name="back">Back</a>
