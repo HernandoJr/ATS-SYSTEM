@@ -22,6 +22,8 @@ if (isset($_POST['search'])) {
     $query = "SELECT * FROM faculty_loadings";
     $result = $conn->query($query);
 }
+
+
 ?>
 
 <!doctype html>
@@ -40,101 +42,102 @@ if (isset($_POST['search'])) {
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
-    </script>
+        </script>
     <!-- CDN jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
         integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous">
-    </script>
+        </script>
 
 </head>
 
 <body>
 
+
     <div class="container">
-        <div class="container">
 
 
-            <h2>Faculty Loading List</h2>
+        <h2>Faculty Loading List</h2>
 
-            <form method="POST">
-                <div class="input-group mb-3">
+        <form method="POST">
+            <div class="input-group mb-3">
 
-                    <input type="text" class="form-control rounded" placeholder="Search by Teacher ID/Name" 
-                        name="search">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
-            </form>
+                <input type="text" class="form-control rounded" placeholder="Search by Teacher ID/Name" name="search">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
 
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Teacher Name</th>
-                        <th>Subject Description</th>
-                        <th>Course</th>
-                        <th>Section</th>
-                        <th>Year</th>
-                        <th>Action</th>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Teacher Name</th>
+                    <th>Subject Description</th>
+                    <th>Units</th>
+                    <th>Course</th>
+                    <th>Section</th>
+                    <th>Year</th>
+                    <th>Action</th>
 
-                    </tr>
-                </thead>
-                <tbody>
+                </tr>
+            </thead>
+            <tbody>
 
-                    <?php
-                    // Execute search query if search form is submitted
-                    if (isset($_POST['search'])) {
-                        $search_term = $_POST['search'];
-                        $query = "SELECT * FROM faculty_loadings WHERE teacher_name LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
-                        $result = $conn->query($query);
-                        if (!$result) {
-                            die("Error executing search query: " . $conn->error);
-                        }
-                    } else {
-                        $query = "SELECT * FROM faculty_loadings";
-                        $result = $conn->query($query);
-                        if (!$result) {
-                            die("Error executing query: " . $conn->error);
-                        }
+                <?php
+                // Execute search query if search form is submitted
+                if (isset($_POST['search'])) {
+                    $search_term = $_POST['search'];
+                    $query = "SELECT * FROM faculty_loadings WHERE teacher_name LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
+                    $result = $conn->query($query);
+                    if (!$result) {
+                        die("Error executing search query: " . $conn->error);
                     }
-                    ?>
-
-                    <?php
-                    if ($result->num_rows > 0) {
-                        
-                        // output data of each row
-                        $i = 1;
-                        while ($row = $result->fetch_assoc()) {
-                            
-                            echo "<tr>";
-                            echo "<td>" . $i . "</td>";
-                            echo "<td>" . $row["teacher"] . "</td>";
-                            echo "<td>" . $row["subject_description"] . "</td>";
-                            echo "<td>" . $row["course_name"] . "</td>";
-                            echo "<td>" . $row["section_name"] . "</td>";
-                            echo "<td>" . $row["section_year"] . "</td>";
-                            echo "<td>";
-                            echo "<a href='subject_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
-                            echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
-                            echo "</td>";   
-                            echo "</tr>";
-                            $i++;
-                        }
-                    } else {
-                        echo "<tr><td colspan='5'>No faculty_loadings found</td></tr>";
+                } else {
+                    $query = "SELECT * FROM faculty_loadings";
+                    $result = $conn->query($query);
+                    if (!$result) {
+                        die("Error executing query: " . $conn->error);
                     }
-                    ?>
-                </tbody>
-            </table>
+                }
+                ?>
 
-            <a href="faculty_loading.php" class="btn btn-success"><i class='fas fa-user-plus'></i>Assign subject</a>
+                <?php
+                if ($result->num_rows > 0) {
 
-        </div>
+                    // output data of each row
+                    $i = 1;
+                    while ($row = $result->fetch_assoc()) {
+
+                        echo "<tr>";
+                        echo "<td>" . $i . "</td>";
+                        echo "<td>" . $row["teacher"] . "</td>";
+                        echo "<td>" . $row["subject_description"] . "</td>";
+                        echo "<td>" . $row["subject_units"] . "</td>";
+                        echo "<td>" . $row["course_name"] . "</td>";
+                        echo "<td>" . $row["section_name"] . "</td>";
+                        echo "<td>" . $row["section_year"] . "</td>";
+                        echo "<td>";
+                        echo "<a href='faculty_loading_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
+                        echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
+                        echo "</td>";
+                        echo "</tr>";
+                        $i++;
+                    }
+                } else {
+                    echo "<tr><td colspan='5'>No faculty_loadings found</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+
+        <a href="faculty_loading.php" class="btn btn-success"><i class='fas fa-user-plus'></i>Assign subject</a>
+
     </div>
-    
+
+
 </body>
 
 </html>
