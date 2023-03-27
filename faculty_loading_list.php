@@ -7,10 +7,20 @@ if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
     $sql = "DELETE FROM faculty_loadings WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('subject deleted successfully');</script>";
+        echo "<script>alert('Subject deleted successfully');</script>";
         echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
     } else {
         echo "Error deleting record: " . $conn->error;
+    }
+}
+
+// Update section if update_id is set in the URL parameters
+if (isset($_GET['update_id'])) {
+    $id = $_GET['update_id'];
+    $query = "SELECT * FROM faculty_loadings WHERE id='$id'";
+    $result = $conn->query($query);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
     }
 }
 
@@ -23,6 +33,24 @@ if (isset($_POST['search'])) {
     $result = $conn->query($query);
 }
 
+// Update record if update form is submitted
+if (isset($_POST['update'])) {
+    $id = $_POST['id'];
+    $teacher_name = $_POST['teacher_name'];
+    $subject_description = $_POST['subject_description'];
+    $subject_units = $_POST['subject_units'];
+    $course_name = $_POST['course_name'];
+    $section_name = $_POST['section_name'];
+    $year = $_POST['year'];
+
+    $sql = "UPDATE faculty_loadings SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', course_name='$course_name', section_name='$section_name', year='$year' WHERE id='$id'";
+    if ($conn->query($sql) === TRUE) {
+        echo "<script>alert('Record updated successfully');</script>";
+        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+    } else {
+        echo "Error updating record: " . $conn->error;
+    }
+}
 
 ?>
 

@@ -1,62 +1,35 @@
 <?php
-
-//include the db connetion php file.
 include 'database_connection.php';
 include 'index.php';
 
-// Check if user is not logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+if (isset($_POST['submit'])) {
 
-// Fetching data from the database
-if (isset($_GET['id'])) {
-    $teacher_id = mysqli_real_escape_string($conn, $_GET['id']);
-    $sql = "SELECT * FROM teachers WHERE id ='$teacher_id'";
-    $result = mysqli_query($conn, $sql);
+    $teacher = $_POST['teacher'];
+    $subject_description = $_POST['subject_description'];
+    $subject_units = $_POST['subject_units'];
+    $course_name = $_POST['course_name'];
+    $section_name = $_POST['section_name'];
+    $section_year = $_POST['section_year'];
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
+    // Validate input data
+    if (empty($teacher) || empty($subject_description) || empty($course_name) || empty($section_name) || empty($section_year) || empty($subject_units)) {
+        echo '<div class="alert alert-danger" role="alert">Please select all fields.</div>';
     } else {
-        // If there was an error in the query, display an error message and exit
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-        exit();
-    }
-}
-
-// Updating data in the database
-if (isset($_POST['update'])) {
-    // First, retrieve the data from the form and sanitize it
-    $id = mysqli_real_escape_string($conn, $_POST['id']);
-    $firstname = mysqli_real_escape_string($conn, $_POST['firstname']);
-    $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
-    $teacher_id = mysqli_real_escape_string($conn, $_POST['teacher_id']);
-
-    // Then, check if the teacher_id already exists in the database
-    $sql = "SELECT * FROM teachers WHERE teacher_id='$teacher_id' AND id!='$id'";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) > 0) {
-        // If the teacher_id already exists, display an error message
-        echo '<script type="text/javascript">';
-        echo ' alert("Teacher ID already exists!")';
-        echo '</script>';
-    } else {
-        // If the teacher_id does not exist, update the data in the database
-        $sql = "UPDATE teachers SET firstname='$firstname', lastname='$lastname', teacher_id='$teacher_id' WHERE id='$id'";
+        // Insert the data into the faculty_loading table
+        list($firstname, $lastname) = explode(' ', $teacher);
+        $sql = "UPDATE faculty_loadings SET teacher='$teacher', course_name='$course_name', slots ='$slots' WHERE id='$id'";
         if (mysqli_query($conn, $sql)) {
-            // Data updated successfully, display an alert message and redirect to teacher_list.php
+            // Data updated successfully, display an alert message and redirect to Course_list.php
             echo '<script type="text/javascript">';
             echo ' alert("Record updated successfully!");';
-            echo ' window.location.href = "teacher_list.php";';
+            echo ' window.location.href = "course_list.php";';
             echo '</script>';
-            exit; // Make sure to exit after the redirect
         } else {
-            echo "Error updating record: " . mysqli_error($conn);
+            echo '<div class="alert alert-danger" role="alert">Error: ' . $sql . '<br>' . $conn->error . '</div>';
         }
     }
 }
+
 ?>
 
 <!doctype html>
@@ -71,7 +44,7 @@ if (isset($_POST['update'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!--External CSS-->
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/index.css">
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
@@ -81,35 +54,134 @@ if (isset($_POST['update'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
         integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP"
-        crossorigin="anonymous"></script>
+        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous">
+        </script>
+
+    <title>ATS-SYSTEM</title>
+
+
 </head>
-<body>
+
+
+
+<form method="POST">
+
     <div class="container mt-3">
 
-        <h3>Update Teacher</h3>
+        <!-- Dropdown for selecting a teacher -->
+        <div class="form-group">
+            <label for="teacher">Teacher</label>
+            <select class="form-control" id="teacher" name="teacher">
+                <?php
+                $sql = "SELECT * FROM teachers";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["firstname"] . '' . $row["lastname"] . '">' . $row["firstname"] . ' ' . $row["lastname"] . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
 
-        <form method="post">
-            <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-            <div class="mb-3 mt-3">
-                <label for="firstname" class="form-label">Firstname</label>
-                <input type="text" class="form-control" id="firstname" placeholder="Enter firstname" name="firstname"
-                    value="<?php echo $row['firstname']; ?>" required>
-            </div>
-            <div class="mb-3 mt-3">
-                <label for="lastname" class="form-label">Lastname</label>
-                <input type="text" class="form-control" id="lastname" placeholder="Enter lastname" name="lastname"
-                    value="<?php echo $row['lastname']; ?>" required>
-            </div>
-            <div class="mb-3">
-                <label for="teacher_id" class="form-label">Teacher ID:</label>
-                <input type="number" class="form-control" id="teacher_id" placeholder="Enter teacher id"
-                    name="teacher_id" value="<?php echo $row['teacher_id']; ?>" required>
-            </div>
+        <!-- Dropdown for selecting a course -->
+        <div class="form-group">
+            <label for="course_name">Course</label>
+            <select class="form-control" id="course_name" name="course_name">
+                <?php
+                $sql = "SELECT * FROM courses";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["course_name"] . '">' . $row["course_name"] . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
 
-            <button type="submit" class="btn btn-primary" name="update">Update</button>
-            <a href="teacher_list.php" class="btn btn-danger" name="back">Back</a>
+        <!-- Dropdown for selecting a subject -->
+        <div class="form-group">
+            <label for="subject_description">Subject</label>
+            <select class="form-control" id="subject_description" name="subject_description">
+                <?php
+                $sql = "SELECT * FROM subjects";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["subject_description"] . '">' . $row["subject_description"] . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
 
+        <!-- Dropdown for selecting a subject -->
+        <div class="form-group">
+            <label for="subject_units">Units</label>
+            <select class="form-control" id="subject_select" name="subject_units">
+                <?php
+                $sql = "SELECT * FROM subjects";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["subject_id"] . '" data-units="' . $row["subject_units"] . '">' . $row["subject_description"] . '</option>';
+                    }
+                }
+                ?>
+            </select>
+            <input class="form-control" id="subject_units" name="subject_units" type="text" readonly>
+        </div>
+
+        <script>
+            const subjectSelect = document.getElementById('subject_select');
+            const subjectUnitsInput = document.getElementById('subject_units');
+
+            subjectSelect.addEventListener('change', () => {
+                const selectedOption = subjectSelect.options[subjectSelect.selectedIndex];
+                subjectUnitsInput.value = selectedOption.getAttribute('data-units');
+            });
+        </script>
+
+
+
+        <!-- Dropdown for selecting a section -->
+        <div class="form-group">
+            <label for="section_name">Section</label>
+            <select class="form-control" id="section_name" name="section_name" ></select>
+                 value="<?php echo $row['course_id']; ?>"
+                <?php
+                $sql = "SELECT * FROM sections";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["section_name"] . '">' . $row["section_name"] . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
+
+        <!-- Dropdown for selecting a section year -->
+        <div class="form-group">
+            <label for="section_year">Year</label>
+            <select class="form-control" id="section_year" name="section_year">
+                <?php
+                $sql = "SELECT * FROM sections";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["section_year"] . '">' . $row["section_year"] . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" name="submit">Create</button>
+        <a href="faculty_loading_list.php" class="btn btn-danger" name="back">Back</a>
+</form>
+</div>
 </body>
 
 </html>
