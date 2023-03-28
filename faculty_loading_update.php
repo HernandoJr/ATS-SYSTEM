@@ -148,7 +148,7 @@ if (isset($_POST['submit'])) {
         <!-- Dropdown for selecting a section -->
         <div class="form-group">
             <label for="section_name">Section</label>
-            <select class="form-control" id="section_name" name="section_name" ></select>
+            <select class="form-control" id="section_name" name="section_name" 
                  value="<?php echo $row['course_id']; ?>"
                 <?php
                 $sql = "SELECT * FROM sections";

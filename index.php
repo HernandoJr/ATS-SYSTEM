@@ -3,6 +3,9 @@
 include 'database_connection.php';
 session_start();
 
+// Check if the user is logged in
+
+
 // Check if user is not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -34,15 +37,11 @@ if (isset($_POST['logout'])) {
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
-    </script>
+        </script>
     <!-- CDN jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
         integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous">
-    </script>
-
     <title>ATS-SYSTEM</title>
 
 
@@ -52,16 +51,39 @@ if (isset($_POST['logout'])) {
     <!--Nested Nav Bar -->
     <!-- RESPONSIVE NAV BAR STARTS HERE -->
 
-
     <nav class="navbar navbar-expand bg-light sticky-top">
-  <ul class="navbar-nav">
-    <a class="navbar-brand" href="dashboard.php">
-      <img src="logos/logo.png" alt="ATS">
-      <span class="navbar-brand-label fw-bolder fs-2 text-dark" style="margin-left:60px;font-family:monospace">ATS SYSTEM</span>
-    </a>
-  </ul>
-</nav>
+        <ul class="navbar-nav">
+            <a class="navbar-brand" href="dashboard.php">
+                <img src="logos/logo.png" alt="ATS">
+                <span class="navbar-brand-label fw-bolder fs-2 text-dark"
+                    style="margin-left:60px;font-family:monospace">ATS SYSTEM</span>
+            </a>
+        </ul>
 
+        <div class="d-flex ml-auto">
+            
+            <?php
+            if (isset($_SESSION['user_id'])) {
+                // Fetch the user data from the database
+                $user_id = $_SESSION['user_id'];
+                $sql = "SELECT * FROM users WHERE id='$user_id'";
+                $result = mysqli_query($conn, $sql);
+                $user_data = mysqli_fetch_assoc($result);
+
+                // Display the user name
+                $user_name = $user_data['name'];
+                echo "<span class='navbar-text'>Welcome, $user_name!</span>";
+            }
+            ?>
+        </div>
+    </nav>
+
+
+    </nav>
+
+
+    </div>
+    </div>
     <div class="container-fluid">
         <div class="d-flex">
             <div class="sidebar bg-white">
@@ -95,6 +117,11 @@ if (isset($_POST['logout'])) {
                     <li class="nav-item">
                         <a class="nav-link text-muted" href="faculty_loading_list.php">Faculty Loading</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-muted" href="generate_timetables.php">Generate Schedule</a>
+                    </li>
+
 
                     <li class="nav-item">
 
