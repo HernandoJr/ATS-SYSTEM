@@ -107,40 +107,36 @@ if (isset($_POST['submit'])) {
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo '<option value="' . $row["subject_description"] . '">' . $row["subject_description"] . '</option>';
+                        echo '<option value="' . $row["subject_id"] . '">' . $row["subject_description"] . '</option>';
                     }
                 }
                 ?>
             </select>
         </div>
 
-        <!-- Dropdown for selecting a subject -->
         <div class="form-group">
             <label for="subject_units">Units</label>
-            <select class="form-control" id="subject_select" name="subject_units">
-                <?php
-                $sql = "SELECT * FROM subjects";
-                $result = $conn->query($sql);
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<option value="' . $row["subject_id"] . '" data-units="' . $row["subject_units"] . '">' . $row["subject_description"] . '</option>';
-                    }
-                }
-                ?>
-            </select>
-            <input class="form-control" id="subject_units" name="subject_units" type="text" readonly>
+            <input type="text" class="form-control" id="subject_units" name="subject_units" readonly>
         </div>
-
         <script>
-            const subjectSelect = document.getElementById('subject_select');
-            const subjectUnitsInput = document.getElementById('subject_units');
-
-            subjectSelect.addEventListener('change', () => {
-                const selectedOption = subjectSelect.options[subjectSelect.selectedIndex];
-                subjectUnitsInput.value = selectedOption.getAttribute('data-units');
+            $(document).ready(function () {
+                $('#subject_description').on('change', function () {
+                    var subject_id = $(this).val();
+                    if (subject_id) {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'get_subject_units.php',
+                            data: { subject_id: subject_id },
+                            success: function (response) {
+                                $('#subject_units').val(response);
+                            }
+                        });
+                    } else {
+                        $('#subject_units').val('');
+                    }
+                });
             });
         </script>
-
 
 
         <!-- Dropdown for selecting a section -->

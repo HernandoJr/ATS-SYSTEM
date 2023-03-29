@@ -102,22 +102,6 @@ if (isset($_POST['submit'])) {
 
         <!-- Dropdown for selecting a subject -->
         <div class="form-group">
-            <label for="subject_description">Subject</label>
-            <select class="form-control" id="subject_description" name="subject_description">
-                <?php
-                $sql = "SELECT * FROM subjects";
-                $result = $conn->query($sql);
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<option value="' . $row["subject_description"] . '">' . $row["subject_description"] . '</option>';
-                    }
-                }
-                ?>
-            </select>
-        </div>
-
-        <!-- Dropdown for selecting a subject -->
-        <div class="form-group">
             <label for="subject_units">Units</label>
             <select class="form-control" id="subject_select" name="subject_units">
                 <?php
@@ -148,8 +132,7 @@ if (isset($_POST['submit'])) {
         <!-- Dropdown for selecting a section -->
         <div class="form-group">
             <label for="section_name">Section</label>
-            <select class="form-control" id="section_name" name="section_name" 
-                 value="<?php echo $row['course_id']; ?>"
+            <select class="form-control" id="section_name" name="section_name" value="<?php echo $row['course_id']; ?>"
                 <?php
                 $sql = "SELECT * FROM sections";
                 $result = $conn->query($sql);
@@ -158,8 +141,7 @@ if (isset($_POST['submit'])) {
                         echo '<option value="' . $row["section_name"] . '">' . $row["section_name"] . '</option>';
                     }
                 }
-                ?>
-            </select>
+                ?> </select>
         </div>
 
         <!-- Dropdown for selecting a section year -->
@@ -178,7 +160,7 @@ if (isset($_POST['submit'])) {
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary" name="submit">Create</button>
+        <button type="submit" class="btn btn-primary" name="submit">Update</button>
         <a href="faculty_loading_list.php" class="btn btn-danger" name="back">Back</a>
 </form>
 </div>

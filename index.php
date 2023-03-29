@@ -57,29 +57,34 @@ if (isset($_POST['logout'])) {
                 <img src="logos/logo.png" alt="ATS">
                 <span class="navbar-brand-label fw-bolder fs-2 text-dark"
                     style="margin-left:60px;font-family:monospace">ATS SYSTEM</span>
+
             </a>
         </ul>
 
-        <div class="d-flex ml-auto">
-            
-            <?php
-            if (isset($_SESSION['user_id'])) {
-                // Fetch the user data from the database
-                $user_id = $_SESSION['user_id'];
-                $sql = "SELECT * FROM users WHERE id='$user_id'";
-                $result = mysqli_query($conn, $sql);
-                $user_data = mysqli_fetch_assoc($result);
+        <div class=" bg-gray text-warning border ms-12  fw-bolder "><u>
+                <?php
 
-                // Display the user name
-                $user_name = $user_data['name'];
-                echo "<span class='navbar-text'>Welcome, $user_name!</span>";
-            }
-            ?>
-        </div>
+                if (isset($_SESSION['user_id'])) {
+                    // Fetch the user data from the database
+                    $user_id = $_SESSION['user_id'];
+                    $sql = "SELECT * FROM users WHERE id='$user_id'";
+                    $result = mysqli_query($conn, $sql);
+                    $user_data = mysqli_fetch_assoc($result);
+
+                    // Display the user name
+                    $user_name = $user_data['name'];
+                    echo "<span class='navbar-text'>Welcome, $user_name!</span>";
+                }
+
+                ?>
+
+
     </nav>
 
 
-    </nav>
+
+
+
 
 
     </div>
