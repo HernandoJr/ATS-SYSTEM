@@ -7,7 +7,7 @@ if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
     $sql = "DELETE FROM faculty_loadings WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Subject deleted successfully');</script>";
+        echo "<script>alert('Data deleted successfully');</script>";
         echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
     } else {
         echo "Error deleting record: " . $conn->error;
@@ -27,7 +27,7 @@ if (isset($_GET['update_id'])) {
 // Execute search query if search form is submitted
 if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
-    $query = "SELECT * FROM faculty_loadings WHERE teacher_name LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
+    $query = "SELECT * FROM faculty_loadings WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
 } else {
     $query = "SELECT * FROM faculty_loadings";
     $result = $conn->query($query);

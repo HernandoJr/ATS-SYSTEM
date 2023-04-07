@@ -6,27 +6,35 @@ if (isset($_POST['submit'])) {
 
     $teacher = $_POST['teacher'];
     $subject_description = $_POST['subject_description'];
-    $subject_units = $_POST['subject_units'];
     $course_name = $_POST['course_name'];
     $section_name = $_POST['section_name'];
     $section_year = $_POST['section_year'];
+    $section_year = $_POST['section_year'];
 
-    // Validate input data
-    if (empty($teacher) || empty($subject_description) || empty($course_name) || empty($section_name) || empty($section_year) || empty($subject_units)) {
-        echo '<div class="alert alert-danger" role="alert">Please select all fields.</div>';
+
+    // Get the subject units from the database
+    $sql = "SELECT subject_units FROM subjects WHERE subject_description = '$subject_description'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $subject_units = $row['subject_units'];
     } else {
+        $subject_units = "";
+    }
+
+
         // Insert the data into the faculty_loading table
         list($firstname, $lastname) = explode(' ', $teacher);
-        $sql = "INSERT INTO faculty_loadings (teacher, subject_description, course_name, section_name, section_year)  VALUES ('$teacher', '$subject_description', '$course_name', '$section_name', '$section_year')";
+        $sql = "INSERT INTO faculty_loadings (teacher, subject_description, subject_units, course_name, section_name, section_year)  VALUES ('$teacher', '$subject_description', '$subject_units', '$course_name', '$section_name', '$section_year')";
 
         if ($conn->query($sql) === TRUE) {
-            echo "<script>alert('Data added sucessfully');</script>";
+            echo "<script>alert('Data added successfully');</script>";
             echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
         } else {
             echo '<div class="alert alert-danger" role="alert">Error: ' . $sql . '<br>' . $conn->error . '</div>';
         }
     }
-}
+?>
 
 ?>
 
@@ -97,46 +105,38 @@ if (isset($_POST['submit'])) {
                 ?>
             </select>
         </div>
+<!-- Dropdown for selecting a subject -->
+<div class="form-group">
+    <label for="subject_description">Subject</label>
+    <select class="form-control" id="subject_description" name="subject_description">
+        <?php
+        $sql = "SELECT * FROM subjects";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<option value="' . $row["subject_id"] . '" data-units="' . $row["subject_units"] . '">' . $row["subject_description"] . '</option>';
+            }
+        }
+        ?>
+    </select>
+</div>
 
-        <!-- Dropdown for selecting a subject -->
-        <div class="form-group">
-            <label for="subject_description">Subject</label>
-            <select class="form-control" id="subject_description" name="subject_description">
-                <?php
-                $sql = "SELECT * FROM subjects";
-                $result = $conn->query($sql);
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<option value="' . $row["subject_id"] . '">' . $row["subject_description"] . '</option>';
-                    }
-                }
-                ?>
-            </select>
-        </div>
+<div class="form-group">
+    <label for="subject_units">Units</label>
+    <input type="text" class="form-control" id="subject_units" name="subject_units" >
+</div>
 
-        <div class="form-group">
-            <label for="subject_units">Units</label>
-            <input type="text" class="form-control" id="subject_units" name="subject_units" readonly>
-        </div>
-        <script>
-            $(document).ready(function () {
-                $('#subject_description').on('change', function () {
-                    var subject_id = $(this).val();
-                    if (subject_id) {
-                        $.ajax({
-                            type: 'POST',
-                            url: 'get_subject_units.php',
-                            data: { subject_id: subject_id },
-                            success: function (response) {
-                                $('#subject_units').val(response);
-                            }
-                        });
-                    } else {
-                        $('#subject_units').val('');
-                    }
-                });
-            });
-        </script>
+<script>
+    $(document).ready(function() {
+        $('#subject_description').on('change', function() {
+            var selectedOption = $('option:selected', this);
+            var subject_units = selectedOption.data('units');
+            $('#subject_units').val(subject_units);
+        });
+    });
+</script>
+
+
 
 
         <!-- Dropdown for selecting a section -->

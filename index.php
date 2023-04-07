@@ -61,7 +61,7 @@ if (isset($_POST['logout'])) {
             </a>
         </ul>
 
-        <div class=" bg-gray text-warning border ms-12  fw-bolder "><u>
+        <div class=" bg-gray text-warning border ms-12  fw-bolder ">
                 <?php
 
                 if (isset($_SESSION['user_id'])) {
@@ -75,20 +75,14 @@ if (isset($_POST['logout'])) {
                     $user_name = $user_data['name'];
                     echo "<span class='navbar-text'>Welcome, $user_name!</span>";
                 }
-
+                
                 ?>
-
-
-    </nav>
-
-
-
-
-
-
+      </nav>
 
     </div>
     </div>
+  
+
     <div class="container-fluid">
         <div class="d-flex">
             <div class="sidebar bg-white">

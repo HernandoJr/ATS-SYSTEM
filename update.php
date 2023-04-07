@@ -23,35 +23,47 @@ if (isset($_POST['submit'])) {
     if (empty($name) || empty($email)) {
         $error_message = 'Please fill in all the fields';
     } else {
-        // Update the user data in the database
+        // Check if the email is already in use
         $user_id = $_SESSION['user_id'];
-        $sql = "UPDATE users SET name='$name', email='$email', password='$password' WHERE id='$user_id'";
-        $result = mysqli_query($conn, $sql);
+        $sql_check_email = "SELECT * FROM users WHERE email='$email' AND id!='$user_id'";
+        $result_check_email = mysqli_query($conn, $sql_check_email);
 
-        if ($result) {
-            $success_message = 'User data updated successfully';
+        if (mysqli_num_rows($result_check_email) > 0) {
+            $error_message = 'Email address is already in use by another user';
         } else {
-            $error_message = 'Error updating user data: ' . mysqli_error($conn);
+            // Update the user data in the database
+            $user_id = $_SESSION['user_id'];
+            $sql = "UPDATE users SET name='$name', email='$email', password='$password' WHERE id='$user_id'";
+            $result = mysqli_query($conn, $sql);
+
+            if ($result) {
+                $success_message = 'User data updated successfully';
+            } else {
+                $error_message = 'Error updating user data: ' . mysqli_error($conn);
+            }
         }
     }
-    if ($result) {
-        $success_message = 'User data updated successfully';
+    if (isset($success_message)) {
         // Redirect to the dashboard page after showing the alert box
         echo "<script>alert('$success_message'); window.location.href='dashboard.php';</script>";
         exit();
-    } else {
-        $error_message = 'Error updating user data: ' . mysqli_error($conn);
     }
 }
 
 // Fetch the user data from the database
 $user_id = $_SESSION['user_id'];
-$sql = "SELECT * FROM users WHERE id='$user_id'";
-$result = mysqli_query($conn, $sql);
-$user_data = mysqli_fetch_assoc($result);
+$sql_fetch_user_data = "SELECT * FROM users WHERE id='$user_id'";
+$result_fetch_user_data = mysqli_query($conn, $sql_fetch_user_data);
+$row_fetch_user_data = mysqli_fetch_assoc($result_fetch_user_data);
+
+// Assign the user data to variables for displaying in the form
+$name = $row_fetch_user_data['name'];
+$email = $row_fetch_user_data['email'];
+$password = $row_fetch_user_data['password'];
 ?>
 <!doctype html>
 <html lang="en">
+
 <head>
 
     <!-- Required meta tags -->
@@ -75,37 +87,53 @@ $user_data = mysqli_fetch_assoc($result);
 
 </head>
 
+
 <body>
+
+
     <div class="container">
+
         <h1>Update User Account</h1>
+
         <?php if (isset($success_message)) { ?>
-            <div class="alert alert-success"><?php echo $success_message; ?></div>
+        <div class="alert alert-success"><?php echo $success_message; ?></div>
         <?php } ?>
         <?php if (isset($error_message)) { ?>
-            <div class="alert alert-danger"><?php echo $error_message; ?></div>
+        <div class="alert alert-danger"><?php echo $error_message; ?></div>
         <?php } ?>
+
         <form method="post">
+
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" class="form-control" id="name" name="name" value="<?php echo $user_data['name']; ?>">
             </div>
+
             <div class="form-group">
                 <label for="email">Email address:</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?php echo $user_data['email']; ?>">
+                <input type="email" class="form-control" id="email" name="email"
+                    value="<?php echo $user_data['email']; ?>">
             </div>
+
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" value="<?php echo $user_data['password']; ?>">
+                <input type="password" class="form-control" id="password" name="password"
+                    value="<?php echo $user_data['password']; ?>">
             </div>
-            <button type="submit" name="submit" class="btn btn-primary">Update</button>
+            <!-- Form inputs go here -->
+            <div class="form-group mt-3">
+                <button type="submit" name="submit" class="btn btn-primary">Update</button>
+                <button type="button" class="btn btn-danger" onclick="window.history.back()">Back</button>
+            </div>
         </form>
+
+
     </div>
 </body>
+
 </html>
 <?php
 // Close the database connection
 mysqli_close($conn);
 ?>
 <!-- End of code -->
-
-
