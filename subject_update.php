@@ -26,6 +26,8 @@ if (isset($_POST['update'])) {
     $subject_description = mysqli_real_escape_string($conn, $_POST['subject_description']);
     $subject_type = mysqli_real_escape_string($conn, $_POST['subject_type']);
     $subject_units = mysqli_real_escape_string($conn, $_POST['subject_units']);
+    $subject_hours = mysqli_real_escape_string($conn, $_POST['subject_hours']);
+
 
 
     // Then, check if the subject code, description and type already exists in the database
@@ -39,7 +41,7 @@ if (isset($_POST['update'])) {
         echo '</script>';
     } else {
         // If the section with the same subject code, description and type does not exist, update the data in the database
-        $sql = "UPDATE subjects SET subject_code='$subject_code', subject_description='$subject_description', subject_type='$subject_type', subject_units='$subject_units' WHERE id='$id'";
+        $sql = "UPDATE subjects SET subject_code='$subject_code', subject_description='$subject_description', subject_type='$subject_type', subject_units='$subject_units', subject_hours='$subject_hours' WHERE id='$id'";
         if (mysqli_query($conn, $sql)) {
             // Data updated successfully, display an alert message and redirect to subject_list.php
             echo '<script type="text/javascript">';
@@ -70,14 +72,14 @@ if (isset($_POST['update'])) {
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
-    </script>
+        </script>
     <!-- CDN jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
         integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous">
-    </script>
+        </script>
 
 </head>
 
@@ -90,7 +92,7 @@ if (isset($_POST['update'])) {
 
         <!-- Display the data of the selected subject in the form fields -->
         <form method="POST">
-        
+
             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 
             <div class="mb-3">
@@ -133,6 +135,23 @@ if (isset($_POST['update'])) {
 
             </div>
 
+            <div class="mb-3">
+
+                <label for="subject_hours" class="form-label">Subject Hours</label>
+                <select class="form-select" id="subject_hours" name="subject_hours">
+                    <?php
+                    // Define the allowed subject hours
+                    $allowed_subject_hours = array(1, 1.5, 3, );
+
+                    // Loop through each allowed subject hour and create an option in the dropdown menu
+                    foreach ($allowed_subject_hours as $subject_hour) {
+                        $selected = ($subject_hour == $row['subject_hours']) ? 'selected' : '';
+                        echo "<option value='$subject_hour' $selected>$subject_hour</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+
 
 
             <button type="submit" name="update" class="btn btn-primary">Update</button>
@@ -145,7 +164,7 @@ if (isset($_POST['update'])) {
     <!-- CDN Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-X9rjbZitmdP6ROkU6KFpP0o+IKwOmR1SHz0UUN/u0W8+k2l2QKLmYJlL3aWpKR8y" crossorigin="anonymous">
-    </script>
+        </script>
 </body>
 
 </html>

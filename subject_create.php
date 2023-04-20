@@ -12,6 +12,8 @@ if (isset($_POST['submit'])) {
     $subject_description = $_POST['subject_description'];
     $subject_type = $_POST['subject_type'];
     $subject_units = $_POST['subject_units'];
+    $subject_hours = $_POST['subject_hours'];
+
 
     // check if a record with the same subject_code date already exists
     $sql = "SELECT * FROM subjects WHERE  subject_description='$subject_description' AND subject_type='$subject_type' AND id!='$id'";
@@ -26,7 +28,7 @@ if (isset($_POST['submit'])) {
     }
 
     // insert the data into the database
-    $sql = "INSERT INTO subjects (subject_code, subject_description, subject_type, subject_units) VALUES ('$subject_code', '$subject_description', '$subject_type', '$subject_units')";
+    $sql = "INSERT INTO subjects (subject_code, subject_description, subject_type, subject_units, subject_hours) VALUES ('$subject_code', '$subject_description', '$subject_type', '$subject_units', '$subject_hours')";
 
     if (mysqli_query($conn, $sql)) {
         echo '<script type="text/javascript">';
@@ -85,6 +87,16 @@ if (isset($_POST['submit'])) {
                 <label for="subject_units">Units</label>
                 <input type="number" class="form-control" id="subject_units" name="subject_units"
                     placeholder="Enter number of Units">
+            </div>
+
+            <div class="mb-3 mt-3">
+                <label for="subject_hours" class="form-label">Subject Hours</label>
+                <select class="form-select" id="subject_hours" name="subject_hours" required>
+                    <option value="">Select </option>
+                    <option value="1">1 hour</option>
+                    <option value="1.5">1 hour and 30 minutes</option>
+                    <option value="3">3 hours</option>
+                </select>
             </div>
             
             <button type="submit" class="btn btn-primary" name="submit">Create</button>

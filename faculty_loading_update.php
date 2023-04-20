@@ -85,13 +85,17 @@ if (isset($_POST['submit'])) {
             <label for="section_name">Section Name:</label>
             <input type="text" class="form-control" id="section_name" name="section_name" value="<?php echo $row['section_name']; ?>">
         </div>
-        <div class="form-group">
+
+        <div class="form-group mb-3">
             <label for="section_year">Section Year:</label>
             <input type="text" class="form-control" id="section_year" name="section_year" value="<?php echo $row['section_year']; ?>">
         </div>
+      
         <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
         <button type="submit" name="submit" class="btn btn-primary">Update</button>
+        <a class="btn btn-danger" href="faculty_loading_list.php">Back</a>
     </form>
+
     <?php
         } else {
             echo '<div class="alert alert-danger" role="alert">No record found.</div>';

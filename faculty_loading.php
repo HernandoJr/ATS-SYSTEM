@@ -23,17 +23,17 @@ if (isset($_POST['submit'])) {
     }
 
 
-        // Insert the data into the faculty_loading table
-        list($firstname, $lastname) = explode(' ', $teacher);
-        $sql = "INSERT INTO faculty_loadings (teacher, subject_description, subject_units, course_name, section_name, section_year)  VALUES ('$teacher', '$subject_description', '$subject_units', '$course_name', '$section_name', '$section_year')";
+    // Insert the data into the faculty_loading table
+    list($firstname, $lastname) = explode(' ', $teacher);
+    $sql = "INSERT INTO faculty_loadings (teacher, subject_description, subject_units, course_name, section_name, section_year)  VALUES ('$teacher', '$subject_description', '$subject_units', '$course_name', '$section_name', '$section_year')";
 
-        if ($conn->query($sql) === TRUE) {
-            echo "<script>alert('Data added successfully');</script>";
-            echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
-        } else {
-            echo '<div class="alert alert-danger" role="alert">Error: ' . $sql . '<br>' . $conn->error . '</div>';
-        }
+    if ($conn->query($sql) === TRUE) {
+        echo "<script>alert('Data added successfully');</script>";
+        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+    } else {
+        echo '<div class="alert alert-danger" role="alert">Error: ' . $sql . '<br>' . $conn->error . '</div>';
     }
+}
 ?>
 
 ?>
@@ -105,36 +105,36 @@ if (isset($_POST['submit'])) {
                 ?>
             </select>
         </div>
-<!-- Dropdown for selecting a subject -->
-<div class="form-group">
-    <label for="subject_description">Subject</label>
-    <select class="form-control" id="subject_description" name="subject_description">
-        <?php
-        $sql = "SELECT * FROM subjects";
-        $result = $conn->query($sql);
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                echo '<option value="' . $row["subject_id"] . '" data-units="' . $row["subject_units"] . '">' . $row["subject_description"] . '</option>';
-            }
-        }
-        ?>
-    </select>
-</div>
+        <!-- Dropdown for selecting a subject -->
+        <div class="form-group">
+            <label for="subject_description">Subject</label>
+            <select class="form-control" id="subject_description" name="subject_description">
+                <?php
+                $sql = "SELECT * FROM subjects";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["subject_id"] . '" data-units="' . $row["subject_units"] . '">' . $row["subject_description"] . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
 
-<div class="form-group">
-    <label for="subject_units">Units</label>
-    <input type="text" class="form-control" id="subject_units" name="subject_units" >
-</div>
+        <div class="form-group">
+            <label for="subject_units">Units</label>
+            <input type="text" class="form-control" id="subject_units" name="subject_units">
+        </div>
 
-<script>
-    $(document).ready(function() {
-        $('#subject_description').on('change', function() {
-            var selectedOption = $('option:selected', this);
-            var subject_units = selectedOption.data('units');
-            $('#subject_units').val(subject_units);
-        });
-    });
-</script>
+        <script>
+            $(document).ready(function () {
+                $('#subject_description').on('change', function () {
+                    var selectedOption = $('option:selected', this);
+                    var subject_units = selectedOption.data('units');
+                    $('#subject_units').val(subject_units);
+                });
+            });
+        </script>
 
 
 

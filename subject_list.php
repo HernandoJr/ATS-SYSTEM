@@ -77,6 +77,7 @@ if (isset($_POST['search'])) {
                         <th>Subject Description</th>
                         <th>Subject Type</th>
                         <th>Units</th>
+                        <th>Contact hours</th>
                         <th>Action</th>
 
                     </tr>
@@ -112,6 +113,7 @@ if (isset($_POST['search'])) {
                             echo "<td>" . $row["subject_description"] . "</td>";
                             echo "<td>" . $row["subject_type"] . "</td>";
                             echo "<td>" . $row["subject_units"] . "</td>";
+                            echo "<td>" . $row["subject_hours"] . "</td>";
                             echo "<td>";
                             echo "<a href='subject_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
                             echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";

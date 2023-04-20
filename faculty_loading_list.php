@@ -102,6 +102,7 @@ if (isset($_POST['update'])) {
             <thead>
                 <tr>
                     <th>No.</th>
+                    <th>schedcode</th>
                     <th>Teacher Name</th>
                     <th>Subject Description</th>
                     <th>Units</th>
@@ -118,7 +119,7 @@ if (isset($_POST['update'])) {
                 // Execute search query if search form is submitted
                 if (isset($_POST['search'])) {
                     $search_term = $_POST['search'];
-                    $query = "SELECT * FROM faculty_loadings WHERE teacher_name LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
+                    $query = "SELECT * FROM faculty_loadings WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
                     $result = $conn->query($query);
                     if (!$result) {
                         die("Error executing search query: " . $conn->error);
