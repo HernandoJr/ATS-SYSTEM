@@ -2,6 +2,7 @@
 include 'database_connection.php';
 include 'index.php';
 
+
 // Delete section if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
@@ -35,6 +36,7 @@ if (isset($_POST['search'])) {
 
 // Update record if update form is submitted
 if (isset($_POST['update'])) {
+
     $id = $_POST['id'];
     $teacher_name = $_POST['teacher_name'];
     $subject_description = $_POST['subject_description'];
@@ -102,7 +104,7 @@ if (isset($_POST['update'])) {
             <thead>
                 <tr>
                     <th>No.</th>
-                    <th>schedcode</th>
+                    <th>Sched Code</th>
                     <th>Teacher Name</th>
                     <th>Subject Description</th>
                     <th>Units</th>
@@ -142,6 +144,7 @@ if (isset($_POST['update'])) {
 
                         echo "<tr>";
                         echo "<td>" . $i . "</td>";
+                        echo "<td>" . $row["schedcode"] . "</td>";
                         echo "<td>" . $row["teacher"] . "</td>";
                         echo "<td>" . $row["subject_description"] . "</td>";
                         echo "<td>" . $row["subject_units"] . "</td>";
@@ -163,10 +166,25 @@ if (isset($_POST['update'])) {
         </table>
 
         <a href="faculty_loading.php" class="btn btn-success"><i class='fas fa-user-plus'></i>Assign subject</a>
+        <button type="button" class="btn btn-danger" id="truncate-btn">Delete all the data in faculty loading table</button>
+
 
     </div>
 
-
+    <script>
+        $(document).ready(function () {
+            $('#truncate-btn').click(function () {
+                if (confirm("Are you sure you want to truncate the table?")) {
+                    $.ajax({
+                        url: "truncate_table.php", // the PHP script that truncates the table
+                        success: function (response) {
+                            alert(response); // show the response message from the PHP script
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

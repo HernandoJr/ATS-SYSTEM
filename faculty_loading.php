@@ -2,16 +2,15 @@
 include 'database_connection.php';
 include 'index.php';
 
-if (isset($_POST['submit'])) {
 
+if (isset($_POST['submit'])) {
     $teacher = $_POST['teacher'];
     $subject_description = $_POST['subject_description'];
     $course_name = $_POST['course_name'];
     $section_name = $_POST['section_name'];
     $section_year = $_POST['section_year'];
-    $section_year = $_POST['section_year'];
-
-
+  
+    
     // Get the subject units from the database
     $sql = "SELECT subject_units FROM subjects WHERE subject_description = '$subject_description'";
     $result = $conn->query($sql);
@@ -72,6 +71,8 @@ if (isset($_POST['submit'])) {
 
 <form method="POST">
 
+
+
     <div class="container mt-3">
 
         <!-- Dropdown for selecting a teacher -->
@@ -107,7 +108,7 @@ if (isset($_POST['submit'])) {
         </div>
         <!-- Dropdown for selecting a subject -->
         <div class="form-group">
-            <label for="subject_description">Subject</label>
+            <label for="subject_description">Subject Description</label>
             <select class="form-control" id="subject_description" name="subject_description">
                 <?php
                 $sql = "SELECT * FROM subjects";
