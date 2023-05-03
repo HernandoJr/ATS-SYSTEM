@@ -118,7 +118,7 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-muted" href="generate_timetables.php">Generate Schedule</a>
+                        <a class="nav-link text-muted" href="generate_schedule.php">Generate Schedule</a>
                     </li>
 
 

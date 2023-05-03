@@ -2,7 +2,6 @@
 include 'database_connection.php';
 include 'index.php';
 
-
 // Delete section if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
@@ -30,9 +29,11 @@ if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
     $query = "SELECT * FROM faculty_loadings WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
 } else {
-    $query = "SELECT * FROM faculty_loadings";
+    $query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
+        FROM faculty_loadings fl
+        JOIN subjects s ON fl.subject_description = s.subject_description";
     $result = $conn->query($query);
-}
+}   
 
 // Update record if update form is submitted
 if (isset($_POST['update'])) {
@@ -41,11 +42,12 @@ if (isset($_POST['update'])) {
     $teacher_name = $_POST['teacher_name'];
     $subject_description = $_POST['subject_description'];
     $subject_units = $_POST['subject_units'];
+    $subject_hours = $_POST['subject_hours'];
     $course_name = $_POST['course_name'];
     $section_name = $_POST['section_name'];
-    $year = $_POST['year'];
+    $section_year = $_POST['section_year'];
 
-    $sql = "UPDATE faculty_loadings SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', course_name='$course_name', section_name='$section_name', year='$year' WHERE id='$id'";
+    $sql = "UPDATE faculty_loadings SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Record updated successfully');</script>";
         echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
@@ -55,6 +57,8 @@ if (isset($_POST['update'])) {
 }
 
 ?>
+
+
 
 <!doctype html>
 <html lang="en">
@@ -86,6 +90,7 @@ if (isset($_POST['update'])) {
 <body>
 
 
+
     <div class="container">
 
 
@@ -106,18 +111,23 @@ if (isset($_POST['update'])) {
                     <th>No.</th>
                     <th>Sched Code</th>
                     <th>Teacher Name</th>
+                    <th>Subject Code</th>
                     <th>Subject Description</th>
+                    <th>Subject Type</th>
+                    <th>Contact Hours</th>
                     <th>Units</th>
                     <th>Course</th>
-                    <th>Section</th>
-                    <th>Year</th>
+                    <th>Year & Section</th>
                     <th>Action</th>
-
                 </tr>
             </thead>
+
             <tbody>
 
                 <?php
+
+
+
                 // Execute search query if search form is submitted
                 if (isset($_POST['search'])) {
                     $search_term = $_POST['search'];
@@ -136,21 +146,42 @@ if (isset($_POST['update'])) {
                 ?>
 
                 <?php
+
                 if ($result->num_rows > 0) {
 
                     // output data of each row
                     $i = 1;
                     while ($row = $result->fetch_assoc()) {
+                        // Loop through data and combine year and section columns
+                        $section_year = $row["section_year"];
+                        $section_name = $row["section_name"];
 
+                        if ($section_year == "1st") {
+                            $year_section = "101-" . $section_name;
+                        } elseif ($section_year == "2nd") {
+                            $year_section = "201-" . $section_name;
+                        } elseif ($section_year == "3rd") {
+                            $year_section = "301-" . $section_name;
+                        } elseif ($section_year == "4th") {
+                            $year_section = "401-" . $section_name;
+                        } else {
+                            $year_section = $section_year . $section_name;
+                        }
+
+  
                         echo "<tr>";
                         echo "<td>" . $i . "</td>";
                         echo "<td>" . $row["schedcode"] . "</td>";
                         echo "<td>" . $row["teacher"] . "</td>";
+                        echo "<td>" . $row["subject_code"] . "</td>";
                         echo "<td>" . $row["subject_description"] . "</td>";
+                        echo "<td>" . $row["subject_type"] . "</td>";
+                        echo "<td>" . $row["subject_hours"] . "</td>";
                         echo "<td>" . $row["subject_units"] . "</td>";
                         echo "<td>" . $row["course_name"] . "</td>";
-                        echo "<td>" . $row["section_name"] . "</td>";
-                        echo "<td>" . $row["section_year"] . "</td>";
+                        echo "<td>" . $year_section . "</td>";
+
+
                         echo "<td>";
                         echo "<a href='faculty_loading_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
                         echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
@@ -158,6 +189,7 @@ if (isset($_POST['update'])) {
                         echo "</tr>";
                         $i++;
                     }
+
                 } else {
                     echo "<tr><td colspan='5'>No faculty_loadings found</td></tr>";
                 }
@@ -166,7 +198,8 @@ if (isset($_POST['update'])) {
         </table>
 
         <a href="faculty_loading.php" class="btn btn-success"><i class='fas fa-user-plus'></i>Assign subject</a>
-        <button type="button" class="btn btn-danger" id="truncate-btn">Delete all the data in faculty loading table</button>
+        <button type="button" class="btn btn-danger" id="truncate-btn">Delete all the data in faculty loading
+            table</button>
 
 
     </div>
@@ -176,7 +209,7 @@ if (isset($_POST['update'])) {
             $('#truncate-btn').click(function () {
                 if (confirm("Are you sure you want to truncate the table?")) {
                     $.ajax({
-                        url: "truncate_table.php", // the PHP script that truncates the table
+                        url: "truncate_table.php", // the PHP script t hat truncates the table
                         success: function (response) {
                             alert(response); // show the response message from the PHP script
                         }
