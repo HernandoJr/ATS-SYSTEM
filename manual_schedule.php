@@ -10,6 +10,9 @@ if (isset($_POST['submit'])) {
     $courseName = $_POST['course_name'];
     $sectionName = $_POST['section_name'];
     $sectionYear = $_POST['section_year'];
+    $startTime = $_POST['start_time'];
+    $endTime = $_POST['end_time'];
+    $day = $_POST['day'];
 
     // Validate form fields (PDO)
     if (empty($teacher) || empty($subjectDescription) || empty($courseName) || empty($sectionName) || empty($sectionYear)) {
@@ -45,8 +48,8 @@ if (isset($_POST['submit'])) {
             echo "<script>alert('Data already exist!');</script>";
         } else {
             // Data does not exist, insert the data into the faculty_loading table
-            $stmt = $conn->prepare("INSERT INTO faculty_loadings (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear);
+            $stmt = $conn->prepare("INSERT INTO faculty_loadings (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, start_time, end_time, day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $startTime, $endTime, $day);
 
             try {
                 $stmt->execute();
@@ -178,9 +181,29 @@ if (isset($_POST['submit'])) {
             </select>
         </div>
 
+        <div class="mb-3">
+            <label for="start_time" class="form-label">Start Time:</label>
+            <input type="time" class="form-control" name="start_time" id="start_time" required>
+        </div>
+        <div class="mb-3">
+            <label for="end_time" class="form-label">End Time:</label>
+            <input type="time" class="form-control" name="end_time" id="end_time" required>
+        </div>
+        <div class="mb-3">
+            <label for="day" class="form-label">Day:</label>
+            <select class="form-select" name="day" id="day" required>
+                <option value="">Select a day</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+            </select>
+        </div>
+
 
         <button type="submit" class="btn btn-primary" name="submit">Create</button>
-        <a href="faculty_loading_list.php" class="btn btn-danger" name="back">Back</a>
+        <a href="manual_schedule_list.php" class="btn btn-danger" name="back">Back</a>
 
     </div>
     </body>

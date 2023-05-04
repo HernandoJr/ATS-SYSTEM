@@ -1,36 +1,68 @@
 <?php
 include 'database_connection.php';
-include 'index.php';
+
+$error = '';
 
 if (isset($_POST['submit'])) {
-
+    $id = $_POST['id'];
     $teacher = $_POST['teacher'];
-    $subject_description = $_POST['subject_description'];
-    $course_name = $_POST['course_name'];
-    $section_name = $_POST['section_name'];
-    $section_year = $_POST['section_year'];
+    $subjectDescription = $_POST['subject_description'];
+    $courseName = $_POST['course_name'];
+    $sectionName = $_POST['section_name'];
+    $sectionYear = $_POST['section_year'];
 
+    // Validate form fields
+    if (empty($teacher) || empty($subjectDescription) || empty($courseName) || empty($sectionName) || empty($sectionYear)) {
+        $error = 'Please fill in all required fields.';
+    } else {
+        // Get the subject units from the database
+        $stmt = $conn->prepare("SELECT subject_units, subject_type, subject_hours, subject_code FROM subjects WHERE subject_description = ?");
+        $stmt->bind_param("s", $subjectDescription);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $subjectUnits = $row['subject_units'];
+            $subjectType = $row['subject_type'];
+            $subjectHours = $row ['subject_hours'];
+            $subjectCode = $row ['subject_code'];
+        } else {
+            $subjectUnits = "";
+            $subjectType = "";
+            $subjectHours ="";
+            $subject_code ="";
+        }
 
-    // Get the subject units from the database
-    $sql = "SELECT subject_units FROM subjects WHERE subject_description = '$subject_description'";
-    $result = $conn->query($sql);
+        // Update the data in the faculty_loading table
+        $stmt = $conn->prepare("UPDATE faculty_loadings SET teacher=?, subject_description=?, subject_code=?, subject_hours=?, subject_type=?, subject_units=?, course_name=?, section_name=?, section_year=? WHERE id=?");
+        $stmt->bind_param("sssssssssi", $teacher, $subjectDescription, $subjectCode, $subjectHours,  $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $id);
+
+        try {
+            $stmt->execute();
+            echo "<script>alert('Data updated successfully');</script>";
+            echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+        } catch (Exception $error) {
+            echo '<div class="alert alert-danger" role="alert">Error: ' . $error->getMessage() . '</div>';
+        }
+    }
+} else {
+    // Get the data to pre-populate the form
+    $id = $_GET['id'];
+    $stmt = $conn->prepare("SELECT * FROM faculty_loadings WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $subject_units = $row['subject_units'];
+        $teacher = $row['teacher'];
+        $subjectDescription = $row['subject_description'];
+        $courseName = $row['course_name'];
+        $sectionName = $row['section_name'];
+        $sectionYear = $row['section_year'];
     } else {
-        $subject_units = "";
-    }
-
-    // Update the data in the faculty_loading table
-    $id = $_POST['id'];
-    $sql = "UPDATE faculty_loadings SET teacher='$teacher', subject_description='$subject_description', subject_units='$subject_units', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
-
-    if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Data updated successfully');</script>";
-        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
-    } else {
-        echo '<div class="alert alert-danger" role="alert">Error: ' . $sql . '<br>' . $conn->error . '</div>';
+        $error = 'Data not found';
     }
 }
 ?>
@@ -82,11 +114,25 @@ if (isset($_POST['submit'])) {
                     <input type="text" class="form-control" id="teacher" name="teacher"
                         value="<?php echo $row['teacher']; ?>">
                 </div>
+
                 <div class="form-group">
-                    <label for="subject_description">Subject Description:</label>
-                    <input type="text" class="form-control" id="subject_description" name="subject_description"
-                        value="<?php echo $row['subject_description']; ?>">
-                </div>
+  <label for="id">Subject:</label>
+  <select class="form-control" id="id" name="id">
+<?PHP
+      // Retrieve the list of subjects from the SQL table
+      $query = "SELECT * FROM subjects";
+      $result = mysqli_query($conn, $query);
+
+      // Loop through the results and create an option for each subject
+      while ($row = mysqli_fetch_assoc($result)) {
+        $selected = ($row['id'] == $subject_id) ? "selected" : "";
+        echo "<option value='{$row['id']}' $selected>{$row['subject_description']}</option>";
+      }
+
+    ?>
+  </select>
+</div>
+
                 <div class="form-group">
                     <label for="course_name">Course Name:</label>
                     <input type="text" class="form-control" id="course_name" name="course_name"

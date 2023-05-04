@@ -13,7 +13,7 @@ if (isset($_POST['submit'])) {
     $room_capacity = mysqli_real_escape_string($conn, $_POST['room_capacity']);
 
     // check if a record with the same room_id already exists
-    $sql = "SELECT * FROM rooms WHERE  room_id = '$room_id' AND room_name = '$room_name'";
+    $sql = "SELECT * FROM rooms WHERE  room_id = '$room_id' OR room_name = '$room_name'";
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {

@@ -48,6 +48,7 @@ if (isset($_POST['update'])) {
     $course_name = $_POST['course_name'];
     $section_name = $_POST['section_name'];
     $year_section = $_POST['year_section'];
+    $startTime = 
 
     $sql = "UPDATE faculty_loadings SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
@@ -96,7 +97,7 @@ if (isset($_POST['update'])) {
     <div class="container">
 
 
-        <h2>Faculty Loading List</h2>
+        <h2>MANUAL SCHEDULING</h2>
 
         <form method="POST">
             <div class="input-group mb-3">
@@ -119,6 +120,9 @@ if (isset($_POST['update'])) {
                     <th>Contact Hours</th>
                     <th>Units</th>
                     <th>Year & Section</th>
+                    <th>Day</th>
+                    <th>Start Time</th>
+                    <th>End TIme</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -187,7 +191,9 @@ if (isset($_POST['update'])) {
                         echo "<td>" . $row["subject_hours"] . "</td>";
                         echo "<td>" . $row["subject_units"] . "</td>";
                         echo "<td>" . $course_year_section . "</td>";
-
+                        echo "<td>" . $row["day"] . "</td>";
+                        echo "<td>" . $row["start_time"] . "</td>";
+                        echo "<td>" . $row["end_time"] . "</td>";
 
                         echo "<td>";
                         echo "<a href='faculty_loading_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
@@ -204,7 +210,7 @@ if (isset($_POST['update'])) {
             </tbody>
         </table>
 
-        <a href="faculty_loading.php" class="btn btn-success"><i class='fas fa-user-plus'></i>Assign subject</a>
+        <a href="manual_schedule.php" class="btn btn-success"><i class='fas fa-user-plus'></i>Assign subject</a>
         <button type="button" class="btn btn-danger" id="truncate-btn">Delete all the data in faculty loading table</button>
         
 

@@ -15,17 +15,18 @@ if (isset($_POST['submit'])) {
     $subject_hours = $_POST['subject_hours'];
 
 
-    // check if a record with the same subject_code date already exists
-    $sql = "SELECT * FROM subjects WHERE  subject_description='$subject_description' AND subject_type='$subject_type' AND id!='$id'";
-    $result = mysqli_query($conn, $sql);
+  // check if a record with the same subject code and type already exists
+$sql = "SELECT * FROM subjects WHERE subject_code='$subject_code' and subject_type='$subject_type' or 'subject_description=$subject_description'";
+$result = mysqli_query($conn, $sql);
 
-    if (mysqli_num_rows($result) > 0) {
-        echo '<script type="text/javascript">';
-        echo ' alert("A Subject with the same subject code and type  already exists!");';
-        echo ' window.location.href = "subject_create.php";';
-        echo '</script>';
-        exit;
-    }
+if (mysqli_num_rows($result) > 0) {
+    echo '<script type="text/javascript">';
+    echo ' alert("A Subject with the same subject code and type already exists!");';
+    echo ' window.location.href = "subject_create.php";';
+    echo '</script>';
+    exit;
+}
+
 
     // insert the data into the database
     $sql = "INSERT INTO subjects (subject_code, subject_description, subject_type, subject_units, subject_hours) VALUES ('$subject_code', '$subject_description', '$subject_type', '$subject_units', '$subject_hours')";

@@ -10,12 +10,10 @@ if (isset($_POST['submit'])) {
     // get the form data
     $section_id = $_POST['section_id'];
     $section_name = $_POST['section_name'];
-    $section_year = $_POST['section_year'];
-    $course_name = $_POST['course_name'];
 
 
     // check if a record with the same section name, start date, and end date already exists
-    $sql = "SELECT * FROM sections WHERE course_name = '$course_name' AND section_name = '$section_name' AND section_year = '$section_year'";
+    $sql = "SELECT * FROM sections WHERE section_name = '$section_name' AND section_id = '$section_id'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -27,7 +25,7 @@ if (isset($_POST['submit'])) {
     }
 
     // insert the data into the database
-    $sql = "INSERT INTO sections (section_id, section_name, section_year, course_name) VALUES ('$section_id', '$section_name', '$section_year', '$course_name')";
+    $sql = "INSERT INTO sections (section_id, section_name) VALUES ('$section_id', '$section_name')";
 
     if (mysqli_query($conn, $sql)) {
         echo '<script type="text/javascript">';
@@ -87,33 +85,6 @@ if (isset($_POST['submit'])) {
                     <option value="D">D</option>
                     <option value="E">E</option>
                     <option value="F">F</option>
-                </select>
-            </div>
-
-            <div class="mb-3 mt-3">
-                <label for="course_name" class="form-label"> Course Name</label>
-                <select class="form-select" id="course_name" name="course_name" required>
-                    <option value="">Select a course</option>
-                    <?php
-                    $courses_query = "SELECT * FROM courses";
-                    $courses_result = mysqli_query($conn, $courses_query);
-                    while ($courses_row = mysqli_fetch_assoc($courses_result)) {
-                        $selected = ($_GET['course_name'] == $courses_row['course_name']) ? 'selected' : '';
-                        echo "<option value='" . $courses_row['course_name'] . "' $selected>" . $courses_row['course_name'] . "</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-
-
-            <div class="mb-3 mt-3">
-                <label for="section_year" class="form-label"> Year</label>
-                <select class="form-select" id="section_year" name="section_year" required>
-                    <option value="">Select </option>
-                    <option value="1st">1st</option>
-                    <option value="2nd">2nd</option>
-                    <option value="3rd">3rd</option>
-                    <option value="4th">4th</option>
                 </select>
             </div>
 

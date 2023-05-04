@@ -31,7 +31,7 @@ if (isset($_POST['update'])) {
 
 
     // Then, check if the subject code, description and type already exists in the database
-    $sql = "SELECT * FROM subjects WHERE subject_code = '$subject_code' AND subject_description= '$subject_description' AND subject_type= '$subject_type'  AND id!='$id'";
+    $sql = "SELECT * FROM subjects WHERE subject_code = '$subject_code' AND subject_type= '$subject_type'  AND id!='$id'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {

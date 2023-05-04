@@ -17,7 +17,7 @@ if (isset($_GET['delete_id'])) {
 // Execute search query if search form is submitted
 if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
-    $query = "SELECT * FROM sections WHERE section_name LIKE '%$search_term%' OR section_id LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR section_year LIKE '%$search_term%'";
+    $query = "SELECT * FROM sections WHERE section_name LIKE '%$search_term%' OR section_id LIKE '%$search_term%'";
     $result = $conn->query($query);
 } else {
     $query = "SELECT * FROM sections";
@@ -76,8 +76,6 @@ if (isset($_POST['search'])) {
                         <th>No.</th>
                         <th>Section ID</th>
                         <th>Section Name</th>
-                        <th>Course</th>
-                        <th>Year</th>
                         <th>Action</th>
 
                     </tr>
@@ -111,8 +109,6 @@ if (isset($_POST['search'])) {
                             echo "<td>" . $i . "</td>";
                             echo "<td>" . $row["section_id"] . "</td>";
                             echo "<td>" . $row["section_name"] . "</td>";
-                            echo "<td>" . $row["course_name"] . "</td>";
-                            echo "<td>" . $row["section_year"] . "</td>";
                             echo "<td>";
                             echo "<a href='section_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
                             echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this section?')\">Delete<i class='fas fa-trash'></i></a>";
