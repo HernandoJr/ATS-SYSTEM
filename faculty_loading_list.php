@@ -2,6 +2,8 @@
 include 'database_connection.php';
 include 'index.php';
 
+
+
 // Delete section if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];

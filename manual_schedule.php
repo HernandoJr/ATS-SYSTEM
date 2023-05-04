@@ -38,7 +38,7 @@ if (isset($_POST['submit'])) {
         }
 
         // Check if the data already exists in the faculty_loading table
-        $stmt = $conn->prepare("SELECT * FROM faculty_loadings WHERE teacher=? AND subject_description=? AND course_name=? AND section_name=? AND section_year=?");
+        $stmt = $conn->prepare("SELECT * FROM faculty_loading WHERE teacher=? AND subject_description=? AND course_name=? AND section_name=? AND section_year=?");
         $stmt->bind_param("sssss", $teacher, $subjectDescription, $courseName, $sectionName, $sectionYear);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -48,7 +48,7 @@ if (isset($_POST['submit'])) {
             echo "<script>alert('Data already exist!');</script>";
         } else {
             // Data does not exist, insert the data into the faculty_loading table
-            $stmt = $conn->prepare("INSERT INTO faculty_loadings (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, start_time, end_time, day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO faculty_loading (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, start_time, end_time, day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $startTime, $endTime, $day);
 
             try {

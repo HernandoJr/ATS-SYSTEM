@@ -5,7 +5,7 @@ include 'index.php';
 // Delete section if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
-    $sql = "DELETE FROM faculty_loadings WHERE id='$id'";
+    $sql = "DELETE FROM faculty_loading WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Data deleted successfully');</script>";
         echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
@@ -17,7 +17,7 @@ if (isset($_GET['delete_id'])) {
 // Update section if update_id is set in the URL parameters
 if (isset($_GET['update_id'])) {
     $id = $_GET['update_id'];
-    $query = "SELECT * FROM faculty_loadings WHERE id='$id'";
+    $query = "SELECT * FROM faculty_loading WHERE id='$id'";
     $result = $conn->query($query);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
@@ -27,10 +27,10 @@ if (isset($_GET['update_id'])) {
 // Execute search query if search form is submitted
 if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
-    $query = "SELECT * FROM faculty_loadings WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
+    $query = "SELECT * FROM faculty_loading WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
 } else {
     $query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
-    FROM faculty_loadings fl
+    FROM faculty_loading fl
     JOIN subjects s ON fl.subject_description = s.subject_description
     JOIN subjects sd ON sd.subject_type = s.subject_type";
 $result = $conn->query($query);
@@ -50,7 +50,7 @@ if (isset($_POST['update'])) {
     $year_section = $_POST['year_section'];
     $startTime = 
 
-    $sql = "UPDATE faculty_loadings SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
+    $sql = "UPDATE faculty_loading SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Record updated successfully');</script>";
         echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
@@ -75,7 +75,7 @@ if (isset($_POST['update'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!--External CSS-->
-    <link rel="stylesheet" href="css/faculty_loadings.css">
+    <link rel="stylesheet" href="css/faculty_loading.css">
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
@@ -136,13 +136,13 @@ if (isset($_POST['update'])) {
                 // Execute search query if search form is submitted
                 if (isset($_POST['search'])) {
                     $search_term = $_POST['search'];
-                    $query = "SELECT * FROM faculty_loadings WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
+                    $query = "SELECT * FROM faculty_loading WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
                     $result = $conn->query($query);
                     if (!$result) {
                         die("Error executing search query: " . $conn->error);
                     }
                 } else {
-                    $query = "SELECT * FROM faculty_loadings";
+                    $query = "SELECT * FROM faculty_loading";
                     $result = $conn->query($query);
                     if (!$result) {
                         die("Error executing query: " . $conn->error);
@@ -177,7 +177,7 @@ if (isset($_POST['update'])) {
 
                         // Update row in database with combined value
                         $id = $row["id"];
-                        $sql = "UPDATE faculty_loadings SET course_year_section = '$course_year_section' WHERE id = '$id'";
+                        $sql = "UPDATE faculty_loading SET course_year_section = '$course_year_section' WHERE id = '$id'";
                         $result2 = $conn->query($sql);
 
 
@@ -204,7 +204,7 @@ if (isset($_POST['update'])) {
                     }
 
                 } else {
-                    echo "<tr><td colspan='5'>No faculty_loadings found</td></tr>";
+                    echo "<tr><td colspan='5'>No faculty_loading found</td></tr>";
                 }
                 ?>
             </tbody>
