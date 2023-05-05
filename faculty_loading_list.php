@@ -43,7 +43,7 @@ $result = $conn->query($query);
 if (isset($_POST['update'])) {
 
     $id = $_POST['id'];
-    $teacher_name = $_POST['teacher_name'];
+    $teacher = $_POST['teacher'];
     $subject_description = $_POST['subject_description'];
     $subject_units = $_POST['subject_units'];
     $subject_hours = $_POST['subject_hours'];
@@ -51,7 +51,7 @@ if (isset($_POST['update'])) {
     $section_name = $_POST['section_name'];
     $year_section = $_POST['year_section'];
 
-    $sql = "UPDATE faculty_loadings SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
+    $sql = "UPDATE faculty_loadings SET teacher='$teacher', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Record updated successfully');</script>";
         echo "<script>window.location.href = 'faculty_loading_list.php';</script>";

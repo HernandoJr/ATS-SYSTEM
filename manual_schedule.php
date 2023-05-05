@@ -13,12 +13,13 @@ if (isset($_POST['submit'])) {
     $startTime = $_POST['start_time'];
     $endTime = $_POST['end_time'];
     $day = $_POST['day'];
+    $room_name = $_POST['room_name'];
 
     // Validate form fields (PDO)
     if (empty($teacher) || empty($subjectDescription) || empty($courseName) || empty($sectionName) || empty($sectionYear)) {
         $error = 'Please fill in all required fields.';
     } else {
-        // Get the subject units from the database
+        // Get the subject units/type/cpode/ hours of selected subject description from the database
         $stmt = $conn->prepare("SELECT subject_units, subject_type, subject_hours, subject_code FROM subjects WHERE subject_description = ?");
         $stmt->bind_param("s", $subjectDescription);
         $stmt->execute();
@@ -37,9 +38,9 @@ if (isset($_POST['submit'])) {
             $subject_code = "";
         }
 
-        // Check if the data already exists in the faculty_loading table
-        $stmt = $conn->prepare("SELECT * FROM faculty_loading WHERE teacher=? AND subject_description=? AND course_name=? AND section_name=? AND section_year=?");
-        $stmt->bind_param("sssss", $teacher, $subjectDescription, $courseName, $sectionName, $sectionYear);
+        // Check if the data already exists in the manual_generated_schedule table
+        $stmt = $conn->prepare("SELECT * FROM manual_generated_schedule WHERE start_time =? AND end_time=? AND day=? AND room_name=? ");
+        $stmt->bind_param("ssss", $startTime, $endTime, $day, $room_name);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -48,13 +49,13 @@ if (isset($_POST['submit'])) {
             echo "<script>alert('Data already exist!');</script>";
         } else {
             // Data does not exist, insert the data into the faculty_loading table
-            $stmt = $conn->prepare("INSERT INTO faculty_loading (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, start_time, end_time, day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $startTime, $endTime, $day);
+            $stmt = $conn->prepare("INSERT INTO manual_generated_schedule (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, start_time, end_time, day, room_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssssssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $startTime, $endTime, $day, $room_name);
 
             try {
                 $stmt->execute();
                 echo "<script>alert('Data added successfully');</script>";
-                echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+                echo "<script>window.location.href = 'manual_schedule_list.php';</script>";
             } catch (Exception $error) {
                 echo '<div class="alert alert-danger" role="alert">Error: ' . $error->getMessage() . '</div>';
             }
@@ -100,6 +101,8 @@ if (isset($_POST['submit'])) {
 
 
     <div class="container mt-3">
+
+        <h2> Manual Adding of Timeslot</h2>
         <!-- Dropdown for selecting a teacher -->
         <div class="form-group">
             <label for="teacher">Teacher</label>
@@ -181,15 +184,15 @@ if (isset($_POST['submit'])) {
             </select>
         </div>
 
-        <div class="mb-3">
+        <div class="form-group">
             <label for="start_time" class="form-label">Start Time:</label>
             <input type="time" class="form-control" name="start_time" id="start_time" required>
         </div>
-        <div class="mb-3">
+        <div class="form-group">
             <label for="end_time" class="form-label">End Time:</label>
             <input type="time" class="form-control" name="end_time" id="end_time" required>
         </div>
-        <div class="mb-3">
+        <div class="form-group">
             <label for="day" class="form-label">Day:</label>
             <select class="form-select" name="day" id="day" required>
                 <option value="">Select a day</option>
@@ -198,6 +201,21 @@ if (isset($_POST['submit'])) {
                 <option value="Wednesday">Wednesday</option>
                 <option value="Thursday">Thursday</option>
                 <option value="Friday">Friday</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="room_name">Room</label>
+            <select class="form-control" id="room_name" name="room_name">
+                <?php
+                $sql = "SELECT * FROM rooms";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["room_name"] . '">' . $row["room_name"] . '</option>';
+                    }
+                }
+                ?>
             </select>
         </div>
 

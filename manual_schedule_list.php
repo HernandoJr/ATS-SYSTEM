@@ -5,10 +5,10 @@ include 'index.php';
 // Delete section if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
-    $sql = "DELETE FROM faculty_loading WHERE id='$id'";
+    $sql = "DELETE FROM manual_generated_schedule WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Data deleted successfully');</script>";
-        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+        echo "<script>window.location.href = 'manual_schedule_list.php';</script>";
     } else {
         echo "Error deleting record: " . $conn->error;
     }
@@ -17,7 +17,7 @@ if (isset($_GET['delete_id'])) {
 // Update section if update_id is set in the URL parameters
 if (isset($_GET['update_id'])) {
     $id = $_GET['update_id'];
-    $query = "SELECT * FROM faculty_loading WHERE id='$id'";
+    $query = "SELECT * FROM manual_generated_schedule WHERE id='$id'";
     $result = $conn->query($query);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
@@ -27,10 +27,10 @@ if (isset($_GET['update_id'])) {
 // Execute search query if search form is submitted
 if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
-    $query = "SELECT * FROM faculty_loading WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
+    $query = "SELECT * FROM manual_generated_schedule WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
 } else {
     $query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
-    FROM faculty_loading fl
+    FROM manual_generated_schedule fl
     JOIN subjects s ON fl.subject_description = s.subject_description
     JOIN subjects sd ON sd.subject_type = s.subject_type";
 $result = $conn->query($query);
@@ -48,12 +48,12 @@ if (isset($_POST['update'])) {
     $course_name = $_POST['course_name'];
     $section_name = $_POST['section_name'];
     $year_section = $_POST['year_section'];
-    $startTime = 
+   
 
-    $sql = "UPDATE faculty_loading SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
+    $sql = "UPDATE manual_generated_schedule SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Record updated successfully');</script>";
-        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+        echo "<script>window.location.href = 'manual_schedule_list.php';</script>";
     } else {
         echo "Error updating record: " . $conn->error;
     }
@@ -75,7 +75,7 @@ if (isset($_POST['update'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!--External CSS-->
-    <link rel="stylesheet" href="css/faculty_loading.css">
+    <link rel="stylesheet" href="css/manual_schedule_list.css">
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
@@ -97,7 +97,7 @@ if (isset($_POST['update'])) {
     <div class="container">
 
 
-        <h2>MANUAL SCHEDULING</h2>
+        <h2>Manual Schedule List</h2>
 
         <form method="POST">
             <div class="input-group mb-3">
@@ -107,11 +107,11 @@ if (isset($_POST['update'])) {
             </div>
         </form>
 
-
+        <div class="table-responsive">
         <table class="table">
             <thead>
-                <tr>
-                    <th>No.</th>
+                <tr class="text-sm">
+                    <th >No.</th>
                     <th>Sched Code</th>
                     <th>Teacher Name</th>
                     <th>Subject Code</th>
@@ -123,6 +123,7 @@ if (isset($_POST['update'])) {
                     <th>Day</th>
                     <th>Start Time</th>
                     <th>End TIme</th>
+                    <th>Room</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -131,18 +132,16 @@ if (isset($_POST['update'])) {
 
                 <?php
 
-
-
                 // Execute search query if search form is submitted
                 if (isset($_POST['search'])) {
                     $search_term = $_POST['search'];
-                    $query = "SELECT * FROM faculty_loading WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
+                    $query = "SELECT * FROM manual_generated_schedule WHERE teacher LIKE '%$search_term%' OR room_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
                     $result = $conn->query($query);
                     if (!$result) {
                         die("Error executing search query: " . $conn->error);
                     }
                 } else {
-                    $query = "SELECT * FROM faculty_loading";
+                    $query = "SELECT * FROM manual_generated_schedule";
                     $result = $conn->query($query);
                     if (!$result) {
                         die("Error executing query: " . $conn->error);
@@ -177,7 +176,7 @@ if (isset($_POST['update'])) {
 
                         // Update row in database with combined value
                         $id = $row["id"];
-                        $sql = "UPDATE faculty_loading SET course_year_section = '$course_year_section' WHERE id = '$id'";
+                        $sql = "UPDATE manual_generated_schedule SET course_year_section = '$course_year_section' WHERE id = '$id'";
                         $result2 = $conn->query($sql);
 
 
@@ -194,9 +193,10 @@ if (isset($_POST['update'])) {
                         echo "<td>" . $row["day"] . "</td>";
                         echo "<td>" . $row["start_time"] . "</td>";
                         echo "<td>" . $row["end_time"] . "</td>";
+                        echo "<td>" . $row["room_name"] . "</td>";
 
                         echo "<td>";
-                        echo "<a href='faculty_loading_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
+                        echo "<a href='manual_schedule_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
                         echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
                         echo "</td>";
                         echo "</tr>";
@@ -204,26 +204,23 @@ if (isset($_POST['update'])) {
                     }
 
                 } else {
-                    echo "<tr><td colspan='5'>No faculty_loading found</td></tr>";
+                    echo "<tr><td colspan='5'>No manual_generated_schedule found</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
 
-        <a href="manual_schedule.php" class="btn btn-success"><i class='fas fa-user-plus'></i>Assign subject</a>
+        <a href="manual_schedule.php" class="btn btn-success sm"><i class='fas fa-user-plus'></i>Assign timeslot</a>
         <button type="button" class="btn btn-danger" id="truncate-btn">Delete all the data in faculty loading table</button>
         
-
-
-
-    </div>
+    </div> </div>
 
     <script>
         $(document).ready(function () {
             $('#truncate-btn').click(function () {
                 if (confirm("Are you sure you want to truncate the table?")) {
                     $.ajax({
-                        url: "truncate_table.php", // the PHP script t hat truncates the table
+                        url: "truncate_table_manual_schedule.php", // the PHP script t hat truncates the table
                         success: function (response) {
                             alert(response); // show the response message from the PHP script
                         }

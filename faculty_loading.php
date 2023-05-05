@@ -31,7 +31,7 @@
         if (empty($teacher) || empty($subjectDescription) || empty($courseName) || empty($sectionName) || empty($sectionYear)) {
             $error = 'Please fill in all required fields.';
         } else {
-            // Check teacher load
+            // Check teacher load>5 not inserting data anymore
             $teacher_load = check_teacher_load($teacher);
             if ($teacher_load >= 5) {
                 $error = 'Teacher has already been assigned 5 subjects.';
@@ -55,7 +55,7 @@
                 $subjectType = "";
                 $subjectHours = "";
                 $subject_code = "";
-            }}
+            }}  
 
             // Check if the data already exists in the faculty_loading table
             $stmt = $conn->prepare("SELECT * FROM faculty_loadings WHERE teacher=? AND subject_description=? AND course_name=? AND section_name=? AND section_year=?");
@@ -129,8 +129,7 @@
                     $result = $conn->query($sql);
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["firstname"] . '' . $row["lastname"] . '">' . $row["firstname"] . ' ' . $row["lastname"] . '</option>';
-                        }
+                            echo '<option value="' . $row['firstname'] . ' ' . $row['lastname'] . '"' . $selected . '>' . $row['firstname'] . ' ' . $row['lastname'] . '</option>';                        }
                     }
                     ?>
                 </select>
@@ -152,10 +151,7 @@
                 </select>
             </div>
 
-
-
             <!-- Form for selecting a subject -->
-
             <div class="form-group">
                 <label for="subject_description">Subject Description</label>
                 <select class="form-control" id="subject_description" name="subject_description">
@@ -169,9 +165,8 @@
                     }
                     ?>
                 </select>
-
-
             </div>
+
             <!-- Dropdown for selecting a section -->
             <div class="form-group">
                 <label for="section_name">Section</label>
@@ -201,12 +196,11 @@
                 </select>
             </div>
 
-
             <button type="submit" class="btn btn-primary" name="submit">Create</button>
             <a href="faculty_loading_list.php" class="btn btn-danger" name="back">Back</a>
 
         </div>
+        </form>
         </body>
-    </form>
-
-    </html>
+    
+</html>
