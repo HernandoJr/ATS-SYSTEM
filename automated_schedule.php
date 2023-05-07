@@ -1,75 +1,122 @@
 <?php
+
 include 'database_connection.php';
 
-// Function to generate timeslots from 7 AM to 7 PM, Monday to Friday, with a 30-minute interval
-function generate_timeslots() {
-    $start_time = new DateTime('07:00');
-    $end_time = new DateTime('19:00');
-    $interval = new DateInterval('PT30M'); // 30-minute interval
-    $timeslots = array();
-    $current_time = clone $start_time;
-    while ($current_time <= $end_time) {
-        $day = $current_time->format('D');
-        if ($day != 'Sat' && $day != 'Sun') {
-            $timeslots[] = $current_time->format('H:i');
-        }
-        $current_time->add($interval);
+
+// Function to assign random timeslot based on subject hours
+function assignTimeslot($subject_hours) {
+    $timeslots = array("MWF 7:00-7:30 AM", "MWF 7:30-8:00 AM", "MWF 8:00-8:30 AM", "MWF 8:30-9:00 AM", "MWF 9:00-9:30 AM", "MWF 9:30-10:00 AM", "MWF 10:00-10:30 AM", "MWF 10:30-11:00 AM", "MWF 11:00-11:30 AM", "MWF 11:30-12:00 PM", "MWF 12:00-12:30 PM", "MWF 12:30-1:00 PM", "MWF 1:00-1:30 PM", "MWF 1:30-2:00 PM", "MWF 2:00-2:30 PM", "MWF 2:30-3:00 PM", "MWF 3:00-3:30 PM", "MWF 3:30-4:00 PM", "MWF 4:00-4:30 PM", "MWF 4:30-5:00 PM", "TTH 7:00-7:30 AM", "TTH 7:30-8:00 AM", "TTH 8:00-8:30 AM", "TTH 8:30-9:00 AM", "TTH 9:00-9:30 AM", "TTH 9:30-10:00 AM", "TTH 10:00-10:30 AM", "TTH 10:30-11:00 AM", "TTH 11:00-11:30 AM", "TTH 11:30-12:00 PM", "TTH 12:00-12:30 PM", "TTH 12:30-1:00 PM", "TTH 1:00-1:30 PM", "TTH 1:30-2:00 PM", "TTH 2:00-2:30 PM", "TTH 2:30-3:00 PM", "TTH 3:00-3:30 PM", "TTH 3:30-4:00 PM", "TTH 4:00-4:30 PM", "TTH 4:30-5:00 PM");
+    $timeslot_count = count($timeslots);
+    
+    // Determine the number of timeslots needed based on subject hours
+    if ($subject_hours == 1) {
+        $num_timeslots = 2;
+    } elseif ($subject_hours == 1.5) {
+        $num_timeslots = 3;
+    } elseif ($subject_hours == 3) {
+        $num_timeslots = 6;
     }
-    return $timeslots;
+    
+    // Choose a random starting timeslot
+    $start_index = array_rand($timeslots, 1);
+    $end_index = $start_index + $num_timeslots - 1;
+    
+    // Check if chosen timeslot is within available time range
+$start_time = substr($timeslots[$start_index], -11, 5);
+$end_time = substr($timeslots[$end_index], -5);
+if ($start_time < '07:00' || $end_time > '19:00') {
+// Timeslot is outside available range, try again
+assignTimeslot($subject_hours);
+} else {
+// Timeslot is valid, return the chosen timeslots
+return array_slice($timeslots, $start_index, $num_timeslots);
+}
 }
 
-// Execute search query if search form is submitted
-if (isset($_POST['search'])) {
-    $search_term = $_POST['search'];
-    $query = "SELECT * FROM faculty_loadings WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
+// Function to save schedule to the appropriate table based on course and year
+function saveSchedule($course, $year, $schedule) {
+$table_name = $course . $year;
+global $conn;
+$sql = "INSERT INTO " . $table_name . " (schedule) VALUES ('" . $schedule . "')";
+if (mysqli_query($conn, $sql)) {
+echo "Schedule saved successfully!";
 } else {
-    $query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
-    FROM faculty_loadings fl
-    JOIN subjects s ON fl.subject_description = s.subject_description
-    JOIN subjects sd ON sd.subject_type = s.subject_type";
-    $result = $conn->query($query);
+echo "Error: " . $sql . "<br>" . mysqli_error($conn);
 }
+}
+
+// Sample usage
+$subject_hours = 3;
+$timeslots = assignTimeslot($subject_hours);
+$course = 'BSCS';
+$year = '4th Year';
+$schedule = implode(',', $timeslots);
+saveSchedule($course, $year, $schedule);
+
+mysqli_close($conn);
 
 ?>
 
-<!-- Output the table -->
-<table>
-    <thead>
-        <tr>
-            <th>Teacher Name</th>
-            <th>Subject Code</th>
-            <th>Subject Description</th>
-            <th>Subject Units</th>
-            <th>Subject Hours</th>
-            <th>Course Name</th>
-            <th>Section Name</th>
-            <th>Year Section</th>
-            <th>Assigned Timeslot</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
+<!doctype html>
+<html lang="en">
 
-<tbody>
-    <?php
-    while ($row = $result->fetch_assoc()) {
-        $timeslots = generate_timeslots();
-        $index = rand(0, count($timeslots) - 1); // randomly choose a timeslot from the array
-        $sched_code = $timeslots[$index];}
-    ?>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CDN Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!--External CSS-->
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- CDN Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
+    </script>
+    <!-- CDN jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous">
+    </script>
+</head>
+
+<body>
+
+<table class="table table-bordered table-striped weight-20px">
+  <thead>
     <tr>
-        <td><?php echo $row['teacher_name']; ?></td>
-        <td><?php echo $row['subject_code']; ?></td>
-        <td><?php echo $row['subject_description']; ?></td>
-        <td><?php echo $row['subject_units']; ?></td>
-        <td><?php echo $row['subject_hours']; ?></td>
-        <td><?php echo $row['course_name']; ?></td>
-        <td><?php echo $row['section_name']; ?></td>
-        <td><?php echo $row['section_year']; ?></td>
-        <td><?php echo $sched_code; ?></td>
-        <td>
-            <a href="faculty_loading_edit.php?update_id=<?php echo $row['id']; ?>">Edit</a>
-            <a href="faculty_loading_list.php?delete_id=<?php echo $row['id']; ?>">Delete</a>
-        </td>
+      <th></th>
+      <th>Monday</th>
+      <th>Tuesday</th>
+      <th>Wednesday</th>
+      <th>Thursday</th>
+      <th>Friday</th>
     </tr>
-</tbody>
+  </thead>
+  <tbody>
+    <?php
+      // Generate rows for each 30-minute interval from 7:00am to 7:00pm
+      $start_time = strtotime('7:00am');
+      $end_time = strtotime('7:00pm');
+      $current_time = $start_time;
+      while ($current_time <= $end_time) {
+        echo '<tr>';
+        echo '<th>' . date('g:i A', $current_time) . '</th>';
+        for ($i = 0; $i < 5; $i++) {
+          echo '<td></td>';
+        }
+        echo '</tr>';
+        $current_time = strtotime('+30 minutes', $current_time);
+      }
+    ?>
+  </tbody>
+</table>
+
+
+
+</body>
+</html>
+
