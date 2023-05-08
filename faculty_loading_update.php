@@ -1,4 +1,5 @@
 <?php
+
 include 'database_connection.php';
 include 'index.php';
 $error = '';
@@ -34,18 +35,49 @@ if (isset($_POST['submit'])) {
             $subject_code = "";
         }
 
-        // Update the data in the faculty_loading table
-        $stmt = $conn->prepare("UPDATE faculty_loadings SET teacher=?, subject_description=?, subject_code=?, subject_hours=?, subject_type=?, subject_units=?, course_name=?, section_name=?, section_year=? WHERE id=?");
-        $stmt->bind_param("sssssssssi", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $id);
+        // Check if data already exists in the table
+$stmt = $conn->prepare("SELECT * FROM faculty_loadings WHERE teacher=? AND subject_code=? AND subject_description=? AND course_name=? AND section_name =? AND section_year=?");
+$stmt->bind_param("ssssss", $teacher, $subjectCode, $subjectDescription, $courseName, $sectionYear, $sectionName);
+$stmt->execute();
+$result = $stmt->get_result();
 
-        try {
-            $stmt->execute();
-            echo "<script>alert('Data updated successfully');</script>";
-            echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
-        } catch (Exception $error) {
-            echo '<div class="alert alert-danger" role="alert">Error: ' . $error->getMessage() . '</div>';
-        }
+if ($result->num_rows > 0) {
+    // Data already exists, return an error message
+    $row = $result->fetch_assoc();
+    if ($row['id'] != $id) {
+        // The existing data is not the same as the data being updated, so update the data
+        $error = "Data already exists in the database.";
+    } else {
+        // The existing data is the same as the data being updated, so don't update the data
+        echo "<script>alert('Data is already up to date.');</script>";
+        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+        exit();
     }
+} else {
+    // Data does not exist, update the data in the manual_generated_schedule table
+    // Update the data in the faculty_loading table
+    $stmt = $conn->prepare("UPDATE faculty_loadings SET teacher=?, subject_description=?, subject_code=?, subject_hours=?, subject_type=?, subject_units=?, course_name=?, section_name=?, section_year=? WHERE id=?");
+    $stmt->bind_param("sssssssssi", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $id);
+    
+    try {
+        $stmt->execute();
+        echo "<script>alert('Data updated successfully');</script>";
+        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+        exit();
+    } catch (Exception $e) {
+        $error = 'Error: ' . $e->getMessage();
+        echo '<div class="alert alert-danger" role="alert">' . $error . '</div>';
+    }
+}
+
+        }
+        
+        if (!empty($error)) {
+            // If an error occurred, display the error message to the user
+            echo '<div class="alert alert-danger" role="alert">' . $error . '</div>';
+        }
+        
+    
 } else {
     // Get the data to pre-populate the form
     $id = $_GET['id'];
@@ -53,7 +85,6 @@ if (isset($_POST['submit'])) {
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
-
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $teacher = $row['teacher'];
@@ -65,7 +96,9 @@ if (isset($_POST['submit'])) {
         $error = 'Invalid data.';
     }
 }
+
 ?>
+
 <!DOCTYPE html>
 <html>
 

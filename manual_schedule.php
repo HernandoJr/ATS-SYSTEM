@@ -38,9 +38,9 @@ if (isset($_POST['submit'])) {
             $subject_code = "";
         }
 
-        // Check if the data already exists in the manual_generated_schedule table
-        $stmt = $conn->prepare("SELECT * FROM manual_generated_schedule WHERE start_time =? AND end_time=? AND day=? AND room_name=? ");
-        $stmt->bind_param("ssss", $startTime, $endTime, $day, $room_name);
+        // Check if the data already exists in the manual_generated_schedule table/AVOID DUPLICATION OF TIMESLOT
+        $stmt = $conn->prepare("SELECT * FROM manual_generated_schedule WHERE room_name = ? AND day = ? AND ((start_time <= ? AND end_time > ?) OR (start_time >= ? AND start_time < ?))");
+        $stmt->bind_param("ssssss", $room_name, $day, $endTime, $startTime, $startTime, $endTime);
         $stmt->execute();
         $result = $stmt->get_result();
 

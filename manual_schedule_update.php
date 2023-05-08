@@ -1,4 +1,6 @@
+
 <?php
+//UPDATING CONFLICT
 include 'database_connection.php';
 
 $error = '';
@@ -15,28 +17,7 @@ if (isset($_POST['submit'])) {
     $room_name = $_POST['room_name'];
     $id = $_POST['id'];
 
-    // Validate form fields (PDO)
-    if (empty($teacher) || empty($subjectDescription) || empty($courseName) || empty($sectionName) || empty($sectionYear)) {
-        $error = 'Please fill in all required fields.';
-    } else {
-        // Get the subject units/type/cpode/ hours of selected subject description from the database
-        $stmt = $conn->prepare("SELECT subject_units, subject_type, subject_hours, subject_code FROM subjects WHERE subject_description = ?");
-        $stmt->bind_param("s", $subjectDescription);
-        $stmt->execute();
-        $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $subjectUnits = $row['subject_units'];
-            $subjectType = $row['subject_type'];
-            $subjectHours = $row['subject_hours'];
-            $subjectCode = $row['subject_code'];
-        } else {
-            $subjectUnits = "";
-            $subjectType = "";
-            $subjectHours = "";
-            $subject_code = "";
-        }
 
         // Check if the data already exists in the manual_generated_schedule table except for the current ID
         $stmt = $conn->prepare("SELECT * FROM manual_generated_schedule WHERE start_time =? AND end_time=? AND day=? AND room_name=? AND id!=?");
@@ -61,7 +42,6 @@ if (isset($_POST['submit'])) {
             }
         }
     }
-}
 
 // Get the data of the selected ID from the manual_generated_schedule table
 if (isset($_GET['id'])) {
@@ -264,26 +244,37 @@ if (!empty($error)) {
             $endTime = $_POST['end_time'];
             $day = $_POST['day'];
 
-            if ($id == "") {
-                // Insert the new record
-                $stmt = $conn->prepare("INSERT INTO classes (teacher, subject_description, course_name, section_name, section_year, start_time, end_time, day) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("ssssisss", $teacher, $subjectDescription, $courseName, $sectionName, $sectionYear, $startTime, $endTime, $day);
-                $stmt->execute();
-                $stmt->close();
-            } else {
-                // Update the existing record
-                $stmt = $conn->prepare("UPDATE classes SET teacher=?, subject_description=?, course_name=?, section_name=?, section_year=?, start_time=?, end_time=?, day=? WHERE id=?");
-                $stmt->bind_param("ssssisssi", $teacher, $subjectDescription, $courseName, $sectionName, $sectionYear, $startTime, $endTime, $day, $id);
-                $stmt->execute();
-                $stmt->close();
-            }
+            
+                //  // Check if the data already exists in the manual_generated_schedule table/AVOID DUPLICATION OF TIMESLOT
+        $stmt = $conn->prepare("SELECT * FROM manual_generated_schedule WHERE room_name = ? AND day = ? AND ((start_time <= ? AND end_time > ?) OR (start_time >= ? AND start_time < ?))");
+        $stmt->bind_param("ssssss", $room_name, $day, $endTime, $startTime, $startTime, $endTime);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            // Redirect to the list page
-            header("Location: manual_schedule_list.php");
-            exit();
+        if ($result->num_rows > 0) {
+            // Data already exists, do nothing
+            echo "<script>alert('Data already exist!');</script>";
+        } else {
+            // Data does not exist, insert the data into the faculty_loading table
+           // Update the existing record
+            $stmt = $conn->prepare("UPDATE classes SET teacher=?, subject_description=?, course_name=?, section_name=?, section_year=?, start_time=?, end_time=?, day=? WHERE id=?");
+            $stmt->bind_param("ssssisssi", $teacher, $subjectDescription, $courseName, $sectionName, $sectionYear, $startTime, $endTime, $day, $id);
+            $stmt->execute();
+            $stmt->close();
+            try {
+                $stmt->execute();
+                echo "<script>alert('Data added successfully');</script>";
+                echo "<script>window.location.href = 'manual_schedule_list.php';</script>";
+            } catch (Exception $error) {
+                echo '<div class="alert alert-danger" role="alert">Error: ' . $error->getMessage() . '</div>';
+            }
         }
+    }
+
+         
         ?>
     </div>
 </body>
 
 </html>
+

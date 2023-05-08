@@ -1,59 +1,82 @@
 <?php
 
 include 'database_connection.php';
+include 'index.php';
 
+// Define the available time range for the course schedule
+$start_time = strtotime("7:00am");
+$end_time = strtotime("7:00pm");   
+$timeslot_duration = 60 * 60; // 1 hour in seconds
 
-// Function to assign random timeslot based on subject hours
-function assignTimeslot($subject_hours) {
-    $timeslots = array("MWF 7:00-7:30 AM", "MWF 7:30-8:00 AM", "MWF 8:00-8:30 AM", "MWF 8:30-9:00 AM", "MWF 9:00-9:30 AM", "MWF 9:30-10:00 AM", "MWF 10:00-10:30 AM", "MWF 10:30-11:00 AM", "MWF 11:00-11:30 AM", "MWF 11:30-12:00 PM", "MWF 12:00-12:30 PM", "MWF 12:30-1:00 PM", "MWF 1:00-1:30 PM", "MWF 1:30-2:00 PM", "MWF 2:00-2:30 PM", "MWF 2:30-3:00 PM", "MWF 3:00-3:30 PM", "MWF 3:30-4:00 PM", "MWF 4:00-4:30 PM", "MWF 4:30-5:00 PM", "TTH 7:00-7:30 AM", "TTH 7:30-8:00 AM", "TTH 8:00-8:30 AM", "TTH 8:30-9:00 AM", "TTH 9:00-9:30 AM", "TTH 9:30-10:00 AM", "TTH 10:00-10:30 AM", "TTH 10:30-11:00 AM", "TTH 11:00-11:30 AM", "TTH 11:30-12:00 PM", "TTH 12:00-12:30 PM", "TTH 12:30-1:00 PM", "TTH 1:00-1:30 PM", "TTH 1:30-2:00 PM", "TTH 2:00-2:30 PM", "TTH 2:30-3:00 PM", "TTH 3:00-3:30 PM", "TTH 3:30-4:00 PM", "TTH 4:00-4:30 PM", "TTH 4:30-5:00 PM");
-    $timeslot_count = count($timeslots);
-    
-    // Determine the number of timeslots needed based on subject hours
-    if ($subject_hours == 1) {
-        $num_timeslots = 2;
-    } elseif ($subject_hours == 1.5) {
-        $num_timeslots = 3;
-    } elseif ($subject_hours == 3) {
-        $num_timeslots = 6;
+// Check if the faculty_loading table is empty
+$sql = "SELECT COUNT(*) AS count FROM faculty_loadings";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$count = $row['count'];
+
+// Set the button state based on whether the faculty_loading table is empty or not
+$button_disabled = "";
+$button_text = "Assign Timeslots";
+if ($count == 0) {
+    $button_disabled = "disabled";
+    $button_text = "No Data";
+}
+
+// Check if the button was clicked
+if (isset($_POST['assign_timeslots'])) {
+    // Retrieve the data from the faculty_loading table
+    $sql = "SELECT * FROM faculty_loadings";
+    $result = mysqli_query($conn, $sql);
+
+  // Loop through each row in the result set
+while ($row = mysqli_fetch_assoc($result)) {
+  // Calculate the number of timeslots needed for the subject
+  $subject_hours = $row['subject_hours'];
+  $timeslots_needed = 0;
+  if ($subject_hours == 1) {
+      $timeslots_needed = 1;
+  } else if ($subject_hours == 1.5) {
+      $timeslots_needed = 2;
+  } else if ($subject_hours == 3) {
+      $timeslots_needed = 3;
+  }
+  // Generate a random timeslot within the available time rangea
+  $available_timeslots = array();
+  $current_time = $start_time;
+  while ($current_time < $end_time) {
+      $timeslot_start = date("g:i A", $current_time);
+      $timeslot_end = date("g:i A", $current_time + $timeslot_duration);
+      $available_timeslots[] = "$timeslot_start - $timeslot_end";
+      $current_time += $timeslot_duration;
+  }
+  // Shuffle the array of available timeslots to randomize the selection
+  shuffle($available_timeslots);
+ // Get the first and last timeslots from the selected timeslots
+$first_timeslot = explode(" - ", $selected_timeslots[0]);
+$last_timeslot = explode(" - ", $selected_timeslots[$timeslots_needed - 1]);
+
+// Extract the start and end times from the first and last timeslots
+$start = date("H:i:s", strtotime($first_timeslot[0]));
+$end = date("H:i:s", strtotime($last_timeslot[1]));
+
+  // Get the faculty name, subject name, and section from the row
+  $teacher = $row['teacher'];
+  $subject_description = $row['subject_description'];
+  $section_name = $row['section_name'];
+  $day = $row['day'];
+  $start = $row['start_time'];
+  $end = $row['end_time'];
+
+  // Insert the data into the faculty_loadings table
+  $sql = "INSERT INTO faculty_loadings (teacher, subject_description, section_name, day, start_time, end_time) VALUES ('$teacher', '$subject_description', '$section_name', '$day', '$start', '$end')";
+  mysqli_query($conn, $sql);
+
+  // Update the faculty_loading table to indicate that the timeslots have been assigned
+  $sql = "UPDATE faculty_loadings SET timeslots_assigned = 1 WHERE schedcode = '{$row['schedcode']}'";
+  mysqli_query($conn, $sql);
+}
+
     }
-    
-    // Choose a random starting timeslot
-    $start_index = array_rand($timeslots, 1);
-    $end_index = $start_index + $num_timeslots - 1;
-    
-    // Check if chosen timeslot is within available time range
-$start_time = substr($timeslots[$start_index], -11, 5);
-$end_time = substr($timeslots[$end_index], -5);
-if ($start_time < '07:00' || $end_time > '19:00') {
-// Timeslot is outside available range, try again
-assignTimeslot($subject_hours);
-} else {
-// Timeslot is valid, return the chosen timeslots
-return array_slice($timeslots, $start_index, $num_timeslots);
-}
-}
-
-// Function to save schedule to the appropriate table based on course and year
-function saveSchedule($course, $year, $schedule) {
-$table_name = $course . $year;
-global $conn;
-$sql = "INSERT INTO " . $table_name . " (schedule) VALUES ('" . $schedule . "')";
-if (mysqli_query($conn, $sql)) {
-echo "Schedule saved successfully!";
-} else {
-echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-}
-}
-
-// Sample usage
-$subject_hours = 3;
-$timeslots = assignTimeslot($subject_hours);
-$course = 'BSCS';
-$year = '4th Year';
-$schedule = implode(',', $timeslots);
-saveSchedule($course, $year, $schedule);
-
-mysqli_close($conn);
 
 ?>
 
@@ -85,38 +108,16 @@ mysqli_close($conn);
 
 <body>
 
-<table class="table table-bordered table-striped weight-20px">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Monday</th>
-      <th>Tuesday</th>
-      <th>Wednesday</th>
-      <th>Thursday</th>
-      <th>Friday</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-      // Generate rows for each 30-minute interval from 7:00am to 7:00pm
-      $start_time = strtotime('7:00am');
-      $end_time = strtotime('7:00pm');
-      $current_time = $start_time;
-      while ($current_time <= $end_time) {
-        echo '<tr>';
-        echo '<th>' . date('g:i A', $current_time) . '</th>';
-        for ($i = 0; $i < 5; $i++) {
-          echo '<td></td>';
-        }
-        echo '</tr>';
-        $current_time = strtotime('+30 minutes', $current_time);
-      }
-    ?>
-  </tbody>
-</table>
-
-
+     
+  <div class="container">
+  <h1>AUTOMATE ASSIGNING OF TIMESLOTS</h1>
+	<form method="POST">
+		<button class="btn btn-success" type="submit" name="assign_timeslots" <?php echo $button_disabled; ?>><?php echo $button_text; ?></button>
+	</form>
+  </div>
 
 </body>
 </html>
+
+
 

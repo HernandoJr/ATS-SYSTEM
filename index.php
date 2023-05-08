@@ -150,7 +150,7 @@ if (isset($_POST['logout'])) {
     </div>
     <!-- footer -->
 
-    <footer class="footer bg-dark bg-gradient py-3 fixed-bottom mt-auto">
+   <!-- <footer class="footer bg-dark bg-gradient py-3  mt-auto">
 
         <div class="container">
             <p class="text-muted">Copyright © 2023 Cavite State University CCAT Campus (Automated Timetable
@@ -159,7 +159,7 @@ if (isset($_POST['logout'])) {
             </p>
         </div>
 
-    </footer>
+    </footer>-->
 
 
 </body>
