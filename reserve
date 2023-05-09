@@ -1,0 +1,85 @@
+<?php
+
+include 'database_connection.php';
+include 'index.php';
+
+// Define the available time range for the course schedule
+$start_time = strtotime("7:00am");
+$end_time = strtotime("7:00pm");   
+$timeslot_duration = 60 * 60; // 1 hour in seconds
+
+// Define the variables and constraints
+$subjects = array();
+$teachers = array();
+$classrooms = array();
+$preferences = array();
+$sql = "SELECT * FROM faculty_loadings";
+$result = mysqli_query($conn, $sql);
+while ($row = mysqli_fetch_assoc($result)) {
+    $subject = $row['subject'];
+    $teacher = $row['teacher'];
+    $classroom = $row['classroom'];
+    $hours = $row['subject_hours'];
+    $preferences[$subject] = array();
+    $preferences[$subject][] = $row['preferred_timeslot_1'];
+    $preferences[$subject][] = $row['preferred_timeslot_2'];
+    $preferences[$subject][] = $row['preferred_timeslot_3'];
+    $subjects[] = array(
+        'name' => $subject,
+        'hours' => $hours,
+        'timeslot' => null,
+        'preferences' => $preferences[$subject],
+        'teacher' => $teacher,
+        'classroom' => $classroom,
+    );
+    if (!in_array($teacher, $teachers)) {
+        $teachers[] = $teacher;
+    }
+    if (!in_array($classroom, $classrooms)) {
+        $classrooms[] = $classroom;
+    }
+}
+
+// Define the backtrack function
+function backtrack($subjects, $teachers, $classrooms, $start_time, $end_time, $timeslot_duration) {
+    // Check if all subjects are assigned a timeslot
+    $unassigned_subjects = array_filter($subjects, function($subject) {
+        return $subject['timeslot'] === null;
+    });
+    if (empty($unassigned_subjects)) {
+        return true;
+    }
+    // Select a subject to assign a timeslot
+    $subject = reset($unassigned_subjects);
+    $preferences = $subject['preferences'];
+    // Try each available timeslot for the subject
+    $current_time = $start_time;
+    while ($current_time < $end_time) {
+        $timeslot_start = date("g:i A", $current_time);
+        $timeslot_end = date("g:i A", $current_time + $timeslot_duration);
+        $timeslot = "$timeslot_start - $timeslot_end";
+        // Check if the timeslot satisfies all constraints
+        $teacher_available = true;
+        $classroom_available = true;
+        $hours_available = true;
+        foreach ($subjects as $s) {
+            if ($s['timeslot'] === $timeslot) {
+                if ($s['teacher'] === $subject['teacher']) {
+                    $teacher_available = false;
+                }
+                if ($s['classroom'] === $subject['classroom']) {
+                    $classroom_available = false;
+                }
+                if (($s['timeslot'] !== null) && ($s['name'] === $subject['name'])) {
+                    $hours_available = false;
+                }
+            }
+        }
+        if ($teacher_available && $classroom_available && $hours_available && in_array($timeslot, $preferences)) {
+            // Assign the timeslot to the subject
+            $subject['timeslot'] = $timeslot;
+            // Save the assigned timeslot
+            $sql = "INSERT INTO course_schedule (subject, teacher, classroom, timeslot) VALUES ('".$subject['name']."', '".$subject['teacher']."', '".$subject['classroom']."', '".$timeslot."')";
+mysqli_query($conn, $sql);
+$sql = "INSERT INTO course_schedule (subject, teacher, classroom, timeslot) VALUES ('".$subject['name']."', '".$subject['teacher']."', '".$subject['classroom']."', '".$timeslot."')";
+mysqli_query($conn, $sql);
