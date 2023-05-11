@@ -36,6 +36,9 @@ if (isset($_POST['assign_timeslots'])) {
         if ($subject_hours == 1) {
             $timeslots_needed = 1;
             $duration = $timeslot_durations[0];
+        } else if ($subject_hours == 1.5) {
+            $timeslots_needed = 1;
+            $duration = $timeslot_durations[0] + 1800; // Add 30 minutes to the duration of the 1-hour timeslot
         } else if ($subject_hours == 2) {
             $timeslots_needed = 1;
             $duration = $timeslot_durations[1];
@@ -48,52 +51,53 @@ if (isset($_POST['assign_timeslots'])) {
         }
 
         // Define the available time range for the course schedule
-        $current_time = strtotime('7:00 AM', $start_time);
+        $current_time = strtotime('7:00 AM');
         $end_time = strtotime("7:00pm");
         $available_timeslots = array();
 
         while ($current_time < $end_time && $current_time < $end_time) {
             // Check if the current time is equal or greater than 7 AM
-            if ($current_time >= $start_time) {
-                $timeslot_start = date("g:i A", $current_time);
-                $timeslot_end = date("g:i A", $current_time + $duration);
-
-                // Check if the timeslot end is less than or equal to 7 PM
-                if (strtotime($timeslot_end) <= $end_time) {
-                    $available_timeslots[] = "$timeslot_start - $timeslot_end";
+            if ($current_time< $start_time) {
+                $current_time = strtotime('+1 hour', $start_time); // Move the current time to the next hour
+                continue;
                 }
-            }
-            $current_time += $duration;
+                        // Check if the current time + duration is less than or equal to the end time
+        if ($current_time + $duration > $end_time) {
+            break; // No more available timeslots
         }
 
-        // Shuffle the array of available timeslots to randomize the selection
-        shuffle($available_timeslots);
+        // Check if the current time is not in conflict with the existing timeslots
+        $conflict = false;
+        foreach ($available_timeslots as $timeslot) {
+            if ($current_time >= $timeslot['start_time'] && $current_time < $timeslot['end_time']) {
+                $conflict = true;
+                break;
+            }
+        }
 
-        // Get the selected timeslots
-        $selected_timeslots = array_slice($available_timeslots, 0, $timeslots_needed);
+        if (!$conflict) {
+            // Add the current timeslot to the available timeslots
+            $available_timeslots[] = array(
+                'start_time' => $current_time,
+                'end_time' => $current_time + $duration,
+            );
+        }
 
-        // Remove the selected timeslots from the list of available timeslots
-        $available_timeslots = array_diff($available_timeslots, $selected_timeslots);
-
-        // Get the start and end times from the selected timeslots
-        $first_timeslot = current($selected_timeslots);
-        $last_timeslot = end($selected_timeslots);
-        $start_time = strtotime(substr($first_timeslot, 0, strpos($first_timeslot, "-") - 1));
-        $end_time = strtotime(substr($last_timeslot, strpos($last_timeslot, "-") + 2));
-
-        // Update the faculty_loading table with the selected timeslots
-        $faculty_loading_id = $row['id'];
-        $sql = "UPDATE faculty_loadings SET start_time = '" . date("Y-m-d H:i:s", $start_time) . "', end_time = '" . date("Y-m-d H:i:s", $end_time) . "' WHERE id = " . $faculty_loading_id;
-        mysqli_query($conn, $sql);
+        $current_time = strtotime('+1 hour', $current_time); // Move the current time to the next hour
     }
 
-
+    // If enough timeslots are found, assign them to the faculty_loadings table
+    if (count($available_timeslots) >= $timeslots_needed) {
+        for ($i = 0; $i < $timeslots_needed; $i++) {
+            $start_time = date('H:i:s', $available_timeslots[$i]['start_time']);
+            $end_time = date('H:i:s', $available_timeslots[$i]['end_time']);
+            $sql = "UPDATE faculty_loadings SET start_time='$start_time', end_time='$end_time' WHERE id=" . $row['id'];
+            mysqli_query($conn, $sql);
+        }
+    }
 }
-
+}
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html>
