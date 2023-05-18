@@ -95,6 +95,7 @@ if (isset($_POST['submit'])) {
                 <select class="form-select" id="subject_hours" name="subject_hours" required>
                     <option value="">Select </option>
                     <option value="1">1 hour</option>
+                    <option value="2">2 hours</option>
                     <option value="1.5">1 hour and 30 minutes</option>
                     <option value="3">3 hours</option>
                 </select>

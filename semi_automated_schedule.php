@@ -10,7 +10,7 @@ $count = $row['count'];
 
 // Set the button state based on whether the faculty_loading table is empty or not
 $button_disabled = "";
-$button_text = "Assign Timeslots";
+$button_text = "Randomize the schedule";
 if ($count == 0) {
     $button_disabled = "disabled";
     $button_text = "No Data";
@@ -34,11 +34,11 @@ if (isset($_POST['assign_timeslots'])) {
                 $duration = "01:00:00";
             } elseif ($subjectHours == 1.5) {
                 $duration = "01:30:00";
+            } elseif ($subjectHours == 2) {
+                $duration = "02:00:00";
             } elseif ($subjectHours == 3) {
                 $duration = "03:00:00";
             }
-
-            $day = $row['day'];
 
             $timeslot_sql = "SELECT * FROM timeslots WHERE TIMEDIFF(end_time, start_time) = '$duration' ORDER BY RAND() LIMIT 1";
             $timeslot_result = mysqli_query($conn, $timeslot_sql);
@@ -57,9 +57,21 @@ if (isset($_POST['assign_timeslots'])) {
                     $room_name = $room_row['room_name'];
                     $room_type = $room_row['room_type'];
 
-                    // Update the faculty_loading row with the assigned timeslot, room name, and room type
-                    $update_sql = "UPDATE faculty_loadings SET start_time = '{$timeslot_row['start_time']}', end_time = '{$timeslot_row['end_time']}', day = '{$timeslot_row['day']}', room_name = '$room_name', room_type = '$room_type' WHERE id = {$row['id']}";
-                    mysqli_query($conn, $update_sql);
+                    // Randomly select a day from available_days
+                    $day_sql = "SELECT day FROM available_days ORDER BY RAND() LIMIT 1";
+                    $day_result = mysqli_query($conn, $day_sql);
+
+                    // Check for SQL query error
+                    if ($day_result) {
+                        $day_row = mysqli_fetch_assoc($day_result);
+                        $day = $day_row['day'];
+
+                        // Update the faculty_loading row with the assigned timeslot, day, room name, and room type
+                        $update_sql = "UPDATE faculty_loadings SET start_time = '{$timeslot_row['start_time']}', end_time = '{$timeslot_row['end_time']}', day = '$day', room_name = '$room_name', room_type = '$room_type' WHERE id = {$row['id']}";
+                        mysqli_query($conn, $update_sql);
+                    } else {
+                        die('Error retrieving day: ' . mysqli_error($conn));
+                    }
                 } else {
                     die('Error retrieving room: ' . mysqli_error($conn));
                 }
@@ -70,6 +82,20 @@ if (isset($_POST['assign_timeslots'])) {
     } else {
         die('Error retrieving faculty_loadings data: ' . mysqli_error($conn));
     }
+}
+
+$result = $conn->query("SELECT day FROM available_days");
+// Check if there are any days in the database
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // Retrieve the day value
+        $day = $row['day'];
+
+        // Display the day value in the HTML table
+        echo "<td>" . $day . "</td>";
+    }
+} else {
+    echo "<tr><td colspan='5'>No days found</td></tr>";
 }
 ?>
 
@@ -111,7 +137,7 @@ if (isset($_POST['assign_timeslots'])) {
                     echo "<td>" . $row['teacher'] . "</td>";
                     echo "<td>" . date("g:i A", strtotime($row['start_time'])) . "</td>";
                     echo "<td>" . date("g:i A", strtotime($row['end_time'])) . "</td>";
-                    echo "<td>" . $row['day'] . "</td>";
+                    echo "<td>" . (isset($row['day']) ? $row['day'] : "") . "</td>";
                     echo "<td>" . $row['room_name'] . "</td>";
                     echo "<td>" . $row['room_type'] . "</td>";
                     echo "</tr>";

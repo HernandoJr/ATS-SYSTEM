@@ -126,7 +126,7 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-muted" href="semi_automated_schedule.php">Semi-Automated Scheduling</a>
+                        <a class="nav-link text-muted" href="semi_automated_schedule.php">Schedule Randomizer</a>
                     </li>
                     
                     <li class="nav-item">
