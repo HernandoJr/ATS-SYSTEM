@@ -1,29 +1,26 @@
 <?php
+// include the database connection file
 include 'database_connection.php';
 include 'index.php';
+// Fetch the time slots from the database and order them by timeslot_id
+$result = $conn->query("SELECT start_time, end_time, duration, timeslot_id_based_on_duration FROM timeslots ORDER BY timeslot_id_based_on_duration ASC");
 
-// Delete timeslot if delete_id is set in the URL parameters
-if (isset($_GET['delete_id'])) {
-    $id = $_GET['delete_id'];
-    $sql = "DELETE FROM timeslots WHERE id='$id'";
-    if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Timeslot deleted successfully');</script>";
-        echo "<script>window.location.href = 'timeslot_list.php';</script>";
-    } else {
-        echo "Error deleting record: " . $conn->error;
-    }
+// Check if there are any time slots in the database
+while ($row = $result->fetch_assoc()) {
+    // Determine AM or PM based on the hour value
+    $start_time = date('h:i A', strtotime($row['start_time']));
+    $end_time = date('h:i A', strtotime($row['end_time']));
+    
+    $timeSlots[] = array(
+        'start_time' => $start_time,
+        'end_time' => $end_time,
+        'duration' => $row['duration'],
+        'timeslot_id' => $row['timeslot_id_based_on_duration']
+    );
 }
 
-// Execute search query if search form is submitted
-if (isset($_POST['search'])) {
-    $search_term = $_POST['search'];
-    $query = "SELECT * FROM timeslots WHERE start_time LIKE '%$search_term%' OR end_time LIKE '%$search_term%' OR day LIKE '%$search_term%'";
-} else {
-    $query = "SELECT * FROM timeslots";
-    $result = $conn->query($query);
-}
+
 ?>
-
 <!doctype html>
 <html lang="en">
 
@@ -35,99 +32,62 @@ if (isset($_POST['search'])) {
     <!-- CDN Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!--External CSS-->
-    <link rel="stylesheet" href="css/subjects.css">
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/dashboard.css">
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
     </script>
-    <!-- CDN jquery -->
+    <!-- CDN jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-        integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-8t+gWy0JhGjbOxbtu2QzKACoVrAJRz/iBRymx1Ht/W1hXxrFL05t8PChqoo3sLsP" crossorigin="anonymous">
-    </script>
 
 </head>
 
 <body>
 
-    <div class="container">
-        <div class="container">
-
-            <h2>Timeslot List</h2>
-
-            <form method="POST" onsubmit="return validateForm();">
-
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control rounded" placeholder="Search by Start Time/End Time/Day"
-                        name="search">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
-            </form>
-
-            <table class="table">
+<div class="container">
+  <h4 class="mt-4 fw-bold text-center bg-warning">
+    <p class="lead fw-bold">TIMESLOT ID IS BASED ON THE FOLLOWING: [1 = 1 HOUR] [4 = 1 HOUR AND 30 MINUTES] [2 = 2 HOURS] [3 = 3 HOURS]</p>
+  </h4>
+  <table class="table mt-4">
                 <thead>
+                    
                     <tr>
                         <th>No.</th>
                         <th>Start Time</th>
                         <th>End Time</th>
-                        <th>Day</th>
-                        <th>Action</th>
+         
+                        <th>Timeslot ID</th>
+              
                     </tr>
                 </thead>
-                <tbody><s/tbody>
-                    <?php
-                    if ($result->num_rows > 0) {
-                        // output data of each row
-                        $i = 1;
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $i . "</td>";
-                            echo "<td>" . date('h:i A', strtotime($row["start_time"])) . "</td>";
-                            echo "<td>" . date('h:i A', strtotime($row["end_time"])) . "</td>";
-                            echo "<td>" . $row["day"] . "</td>";
-                            echo "<td>";
-                            echo "<a href='timeslot_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
-                            echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this timeslot?')\">Delete<i class='fas fa-trash'></i></a>";
-                            echo "</td>";
-                            echo "</tr>";
-                            $i++;
-                        }
-                    } else {
-                        echo "<tr><td colspan='5'>No timeslots found</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                <tbody>
+    <?php
+    if (!empty($timeSlots)) {
+        $counter = 1;
+        foreach ($timeSlots as $slot) {
+            echo "<tr>";
+            echo "<td>" . $counter . "</td>";
+            echo "<td>" . $slot['start_time'] . "</td>";
+            echo "<td>" . $slot['end_time'] . "</td>";
+     
+            echo "<td>" . $slot['timeslot_id'] . "</td>";
+            echo "<td>";
+            echo "</td>";
+            echo "</tr>";
+            $counter++;
+        }
+    } else {
+        echo "<tr><td colspan='6'>No time slots found</td></tr>";
+    }
+    ?>
+</tbody>
 
-            <a href="timeslot_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Timeslot</a>
+            </table>
 
         </div>
     </div>
 
 </body>
-
-<script>
-    function validateForm() {
-        var startTime = document.getElementById("start_time").value;
-        var endTime = document.getElementById("end_time").value;
-    
-        
-        // Get the hour component of the start time and end time
-        var startHour = startTime;
-        var endHour =
-        
-        // Check if the start time is before 7 am or the end time is after 7 pm
-        if (startHour < 7 || endHour > 19) {
-            alert("Start time must be after 7 am and end time must be before 7 pm");
-            return false;
-        }
-        
-        return true;
-    }
-</script>
-
 
 </html>

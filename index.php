@@ -114,7 +114,7 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="timeslot_list.php">Add Timeslot</a>
+                        <a class="nav-link" href="timeslot_list.php">View All Timeslot</a>
                     </li>
 
                     <li class="nav-item">
