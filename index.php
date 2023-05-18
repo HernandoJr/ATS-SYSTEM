@@ -114,6 +114,10 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link" href="timeslot_list.php">Add Timeslot</a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link text-muted" href="faculty_loading_list.php">Faculty Loading</a>
                     </li>
 
@@ -122,8 +126,13 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link text-muted" href="semi_automated_schedule.php">Semi-Automated Scheduling</a>
+                    </li>
+                    
+                    <li class="nav-item">
                         <a class="nav-link text-muted" href="automated_schedule.php">Automated Scheduling</a>
                     </li>
+
 
                     <li class="nav-item">
 

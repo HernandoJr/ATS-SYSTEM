@@ -15,17 +15,17 @@ if (isset($_POST['submit'])) {
     $subject_hours = $_POST['subject_hours'];
 
 
-  // check if a record with the same subject code and type already exists
-$sql = "SELECT * FROM subjects WHERE subject_code='$subject_code' and subject_type='$subject_type' or 'subject_description=$subject_description'";
-$result = mysqli_query($conn, $sql);
+    // check if a record with the same subject code and type already exists
+    $sql = "SELECT * FROM subjects WHERE subject_code='$subject_code' and subject_type='$subject_type' or 'subject_description=$subject_description'";
+    $result = mysqli_query($conn, $sql);
 
-if (mysqli_num_rows($result) > 0) {
-    echo '<script type="text/javascript">';
-    echo ' alert("A Subject with the same subject code and type already exists!");';
-    echo ' window.location.href = "subject_create.php";';
-    echo '</script>';
-    exit;
-}
+    if (mysqli_num_rows($result) > 0) {
+        echo '<script type="text/javascript">';
+        echo ' alert("A Subject with the same subject code and type already exists!");';
+        echo ' window.location.href = "subject_create.php";';
+        echo '</script>';
+        exit;
+    }
 
 
     // insert the data into the database
@@ -83,7 +83,7 @@ if (mysqli_num_rows($result) > 0) {
                     <option value="Lec">Lec</option>
                 </select>
             </div>
-            
+
             <div class="mb-3">
                 <label for="subject_units">Units</label>
                 <input type="number" class="form-control" id="subject_units" name="subject_units"
@@ -99,7 +99,7 @@ if (mysqli_num_rows($result) > 0) {
                     <option value="3">3 hours</option>
                 </select>
             </div>
-            
+
             <button type="submit" class="btn btn-primary" name="submit">Create</button>
             <a href="subject_list.php" class="btn btn-danger" name="back">Back</a>
         </form>
