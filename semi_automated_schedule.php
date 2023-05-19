@@ -40,6 +40,7 @@ if (isset($_POST['assign_timeslots'])) {
                 $duration = "03:00:00";
             }
 
+            // Check if there is a matching timeslot in the database with the same duration
             $timeslot_sql = "SELECT * FROM timeslots WHERE TIMEDIFF(end_time, start_time) = '$duration' ORDER BY RAND() LIMIT 1";
             $timeslot_result = mysqli_query($conn, $timeslot_sql);
 
@@ -84,71 +85,102 @@ if (isset($_POST['assign_timeslots'])) {
     }
 }
 
-$result = $conn->query("SELECT day FROM available_days");
-// Check if there are any days in the database
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        // Retrieve the day value
-        $day = $row['day'];
-
-        // Display the day value in the HTML table
-        echo "<td>" . $day . "</td>";
+// Check if the faculty_loading table is not empty
+if ($count > 0) {
+    
+    echo '
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Faculty Loading System</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
+      
+if ($count > 0) {
+    <style>
+    @media print {
+        body {
+            visibility: hidden;
+        }
+        .print-page {
+            visibility: visible;
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            padding: 20mm;
+            box-sizing: border-box;
+            page-break-after: always;
+        }
     }
-} else {
-    echo "<tr><td colspan='5'>No days found</td></tr>";
-}
-?>
+</style>
+<div class="container print-page">
+    
+    <h1 class="mt-5">Assigning a Random Timeslot, Day, Room</h1>
+    <table class="table mt-4 print-table">
+                <thead>
+                    <tr>
+                        <th></th>'; // Empty cell for spacing
+    
+    // Loop through the days (Monday to Friday)
+    $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday');
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Faculty Loading System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container">
-        <h1 class="mt-5">Assigning a Random Timeslot, Day, Room</h1>
-        <table class="table mt-4">
-            <thead>
-                <tr>
-                    <th>Course Year and Section</th>
-                    <th>Subject Code</th>
-                    <th>Subject Hours</th>
-                    <th>Instructor</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Day</th>
-                    <th>Room Name</th>
-                    <th>Room Type</th>
-                </tr>
+    foreach ($days as $day) {
+        echo "<th>{$day}</th>";
+    }
+    
+    echo '</tr>
             </thead>
-            <tbody>
-                <?php
-                // Retrieve the data from the faculty_loading table in ascending order by course section and year
-                $sql = "SELECT * FROM faculty_loadings ORDER BY course_year_section ASC";
-                $result = mysqli_query($conn, $sql);
+            <tbody>';
 
-                // Loop through each row in the result set and display the data in the table
+    // Loop through the time slots
+    $start_time = strtotime('07:00:00');
+    $end_time = strtotime('19:00:00');
+
+    while ($start_time < $end_time) {
+        $end_time_formatted = date('h:i A', strtotime('+30 minutes', $start_time));
+        echo "<tr>";
+        echo "<th>" . date('h:i A', $start_time) . " - " . $end_time_formatted . "</th>";
+    
+        // Loop through the days (Monday to Friday)
+        foreach ($days as $day) {
+            echo '<td>';
+
+            // Retrieve the data from the faculty_loading table for the current day and time interval
+            $sql = "SELECT * FROM faculty_loadings WHERE day = '$day' AND start_time <= '" . date('H:i:s', $start_time) . "' AND end_time > '" . date('H:i:s', $start_time) . "'";
+            $result = mysqli_query($conn, $sql);
+
+            // Check for SQL query error
+            if ($result) {
+                $combined_data = '';
                 while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>";
-                    echo "<td>" . $row['course_year_section'] . "</td>";
-                    echo "<td>" . $row['subject_code'] . "</td>";
-                    echo "<td>" . $row['subject_hours'] . "</td>";
-                    echo "<td>" . $row['teacher'] . "</td>";
-                    echo "<td>" . date("g:i A", strtotime($row['start_time'])) . "</td>";
-                    echo "<td>" . date("g:i A", strtotime($row['end_time'])) . "</td>";
-                    echo "<td>" . (isset($row['day']) ? $row['day'] : "") . "</td>";
-                    echo "<td>" . $row['room_name'] . "</td>";
-                    echo "<td>" . $row['room_type'] . "</td>";
-                    echo "</tr>";
+                    $combined_data .= '<div class="text-center">' . $row['teacher'] . '<br>' . $row['subject_code'] . '<br>' . $row['course_year_section'] . '<br>' . $row['room_name'] . '<br><br></div>';
                 }
-                ?>
-            </tbody>
+                echo $combined_data;
+            } else {
+                die('Error retrieving faculty_loadings data: ' . mysqli_error($conn));
+            }
+
+            echo '</td>';
+        }
+
+        echo '</tr>';
+
+        $start_time = strtotime('+30 minutes', $start_time);
+    }
+
+    echo '</tbody>
         </table>
+
         <form method="post">
-            <button type="submit" name="assign_timeslots" class="btn btn-primary mt-4" <?php echo $button_disabled; ?>><?php echo $button_text; ?></button>
+        <button type="submit" name="assign_timeslots" class="btn btn-primary mt-4" ' . $button_disabled . '>' . $button_text . '</button>
+        <button class="btn btn-danger mt-4" onclick="window.print()">Print</button>
+
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    </body>
+    </html>';
+} else {
+    echo "No data available in the faculty_loading table.";
+}
+?>
+
