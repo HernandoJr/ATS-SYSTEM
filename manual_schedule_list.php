@@ -108,7 +108,7 @@ if (isset($_POST['update'])) {
         </form>
 
         <div class="table-responsive">
-        <table class="table">
+        <table class="table  table-bordered table table-hover table-sm">
             <thead>
                 <tr class="text-sm">
                     <th >No.</th>

@@ -70,7 +70,7 @@ if (isset($_POST['search'])) {
             </form>
 
 
-            <table class="table">
+            <table class="table table-bordered table table-hover">
                 <thead>
                     <tr>
                         <th>No.</th>

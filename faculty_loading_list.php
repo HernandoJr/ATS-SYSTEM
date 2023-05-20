@@ -109,7 +109,7 @@ if (isset($_POST['update'])) {
         </form>
 
 
-        <table class="table">
+        <table class="table  table-bordered table table-hover">
             <thead>
                 <tr>
                     <th>No.</th>
@@ -189,8 +189,6 @@ if (isset($_POST['update'])) {
                         echo "<td>" . $row["subject_hours"] . "</td>";
                         echo "<td>" . $row["subject_units"] . "</td>";
                         echo "<td>" . $course_year_section . "</td>";
-
-
                         echo "<td>";
                         echo "<a href='faculty_loading_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
                         echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";

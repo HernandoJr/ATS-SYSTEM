@@ -49,7 +49,7 @@ while ($row = $result->fetch_assoc()) {
   <h4 class="mt-4 fw-bold text-center bg-warning">
     <p class="lead fw-bold">TIMESLOT ID IS BASED ON THE FOLLOWING: [1 = 1 HOUR] [4 = 1 HOUR AND 30 MINUTES] [2 = 2 HOURS] [3 = 3 HOURS]</p>
   </h4>
-  <table class="table mt-4">
+  <table class="table mt-4 table-bordered table table-hover">
                 <thead>
                     
                     <tr>

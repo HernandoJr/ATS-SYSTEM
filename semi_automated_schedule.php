@@ -97,10 +97,16 @@ if ($count > 0) {
       
 if ($count > 0) {
     <style>
+    .table-bordered {
+        border:.2rem solid;
+        text-align:center;
+        background-color:white;
+    }
+    
     @media print {
         body {
             visibility: hidden;
-        }
+    
         .print-page {
             visibility: visible;
             width: 210mm;
@@ -112,12 +118,13 @@ if ($count > 0) {
         }
     }
 </style>
-<div class="container print-page">
+<div class="container print-page ">
     
     <h1 class="mt-5">Assigning a Random Timeslot, Day, Room</h1>
-    <table class="table mt-4 print-table">
-                <thead>
-                    <tr>
+    <table class="table mt-4 print-table table-bordered table table-hover table-sm">
+
+    <thead class="thead-dark bg-dark text-light">                 
+       <tr>
                         <th></th>'; // Empty cell for spacing
     
     // Loop through the days (Monday to Friday)

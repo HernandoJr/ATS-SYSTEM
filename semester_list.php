@@ -62,7 +62,7 @@ if (isset($_GET['delete_id'])) {
                 </div>
             </form>
 
-            <table class="table">
+            <table class="table table-bordered table table-hover">
                 <thead>
                     <tr>
                         <th>No.</th>
