@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 <html lang="en">
 
 <head>
- 
+
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -48,7 +48,7 @@ if (!isset($_SESSION['user_id'])) {
         <div class="row justify-content-center" style="margin-right:0px;margin-left:190px;">
 
             <!-- TEACHER DASHBOARD -->
-            <div class="col-4">
+            <div class="col-5">
                 <div class="dashboard">
 
                     <?php
@@ -82,7 +82,7 @@ if (!isset($_SESSION['user_id'])) {
 
 
             <!--  COURSE DASHBOARD-->
-            <div class="col-4">
+            <div class="col-5">
                 <div class="dashboard">
 
                     <?php
@@ -114,7 +114,7 @@ if (!isset($_SESSION['user_id'])) {
             </div>
 
             <!--  SECTION DASHBOARD-->
-            <div class="col-4">
+            <div class="col-5">
                 <div class="dashboard">
 
                     <?php
@@ -147,7 +147,7 @@ if (!isset($_SESSION['user_id'])) {
 
 
             <!--  SUBJECT DASHBOARD-->
-            <div class="col-6">
+            <div class="col-5">
                 <div class="dashboard">
 
                     <?php
@@ -179,7 +179,7 @@ if (!isset($_SESSION['user_id'])) {
             </div>
 
             <!--  Rooms DASHBOARD-->
-            <div class="col-6">
+            <div class="col-5">
                 <div class="dashboard">
 
                     <?php
@@ -208,8 +208,38 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
 
                 </div>
-            </div>
+                </div>
 
+                <!--  randomize DASHBOARD-->
+                <div class="col-5">
+                    <div class="dashboard">
+
+                        <?php
+                        $query = "SELECT COUNT(*) AS total_sched FROM faculty_loadings";
+                        $result = mysqli_query($conn, $query);
+
+                        if ($result) {
+                            $row = mysqli_fetch_assoc($result);
+                            $total_sched = $row['total_sched'];
+                        } else {
+                            $total_sched = "N/A";
+                        }
+                        ?>
+
+                        <img class="logo" src="logos/sched.png" alt="ATS">
+                        <div class="metric rounded-circle">
+
+                            <div class="value">
+                                <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_sched . '</div>'; // Replace display-1 with the desired size class.?>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="label text-dark">Total Generated Schedules</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
     </div>

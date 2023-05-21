@@ -92,17 +92,17 @@ if ($count > 0) {
     <!DOCTYPE html>
     <html>
     <head>
+    
         <title>Faculty Loading System</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
-      
-if ($count > 0) {
+ 
     <style>
     .table-bordered {
         border:.2rem solid;
         text-align:center;
         background-color:white;
     }
-    
+
     @media print {
         body {
             visibility: hidden;
@@ -120,12 +120,12 @@ if ($count > 0) {
 </style>
 <div class="container print-page ">
     
-    <h1 class="mt-5">Assigning a Random Timeslot, Day, Room</h1>
+    <h1 class="mt-5">RANDOMIZE PLOTTING OF SCHEDULE</h1>
     <table class="table mt-4 print-table table-bordered table table-hover table-sm">
 
-    <thead class="thead-dark bg-dark text-light">                 
+    <thead class="thead-dark bg-dark text-light">               
        <tr>
-                        <th></th>'; // Empty cell for spacing
+                        <th>Time</th>'; // Empty cell for spacing
     
     // Loop through the days (Monday to Friday)
     $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday');

@@ -31,10 +31,12 @@ if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
     $query = "SELECT * FROM faculty_loadings WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
 } else {
-    $query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
+$query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
     FROM faculty_loadings fl
     JOIN subjects s ON fl.subject_description = s.subject_description
-    JOIN subjects sd ON sd.subject_type = s.subject_type";
+    JOIN subjects sd ON sd.subject_type = s.subject_type
+    ORDER BY fl.course_year_section ASC";
+
 $result = $conn->query($query);
 
 }
@@ -49,7 +51,7 @@ if (isset($_POST['update'])) {
     $subject_hours = $_POST['subject_hours'];
     $course_name = $_POST['course_name'];
     $section_name = $_POST['section_name'];
-    $year_section = $_POST['year_section'];
+    $section_year = $_POST['section_year'];
 
     $sql = "UPDATE faculty_loadings SET teacher='$teacher', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {

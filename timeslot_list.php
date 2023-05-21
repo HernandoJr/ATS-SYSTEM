@@ -49,16 +49,14 @@ while ($row = $result->fetch_assoc()) {
   <h4 class="mt-4 fw-bold text-center bg-warning">
     <p class="lead fw-bold">TIMESLOT ID IS BASED ON THE FOLLOWING: [1 = 1 HOUR] [4 = 1 HOUR AND 30 MINUTES] [2 = 2 HOURS] [3 = 3 HOURS]</p>
   </h4>
-  <table class="table mt-4 table-bordered table table-hover">
+  <table class="table mt-4 table-bordered table table-hover text-center">
                 <thead>
                     
                     <tr>
                         <th>No.</th>
                         <th>Start Time</th>
                         <th>End Time</th>
-         
                         <th>Timeslot ID</th>
-              
                     </tr>
                 </thead>
                 <tbody>
@@ -70,9 +68,7 @@ while ($row = $result->fetch_assoc()) {
             echo "<td>" . $counter . "</td>";
             echo "<td>" . $slot['start_time'] . "</td>";
             echo "<td>" . $slot['end_time'] . "</td>";
-     
             echo "<td>" . $slot['timeslot_id'] . "</td>";
-            echo "<td>";
             echo "</td>";
             echo "</tr>";
             $counter++;

@@ -34,7 +34,6 @@ if (isset($_POST['submit'])) {
         $teacher_load = check_teacher_load($teacher);
         if ($teacher_load >= 7) {
             $error = 'Teacher has already been assigned 7 subjects.';
-            // new line added to display the error message
             echo "<script>alert('$error');</script>";
         } else {
             // Get the subject units from the database
@@ -52,7 +51,7 @@ if (isset($_POST['submit'])) {
                 $subjectUnits = "";
                 $subjectType = "";
                 $subjectHours = "";
-                $subject_code = "";
+                $subjectCode = "";
             }
 
             // Check if the data already exists in the faculty_loading table
@@ -65,21 +64,33 @@ if (isset($_POST['submit'])) {
                 // Data already exists, do nothing
                 echo "<script>alert('The subject was already assigned with the same teacher!');</script>";
             } else {
-                // Data does not exist, insert the data into the faculty_loading table
-                $stmt = $conn->prepare("INSERT INTO faculty_loadings (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear);
-                try {
-                    $stmt->execute();
-                    echo "<script>alert('Data added successfully');</script>";
-                    echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
-                } catch(Exception $e) {
-                $error = "Error adding data: " . $e->getMessage();
+                // Check if the subject and course_year_section combination already exists
+                $stmt = $conn->prepare("SELECT * FROM faculty_loadings WHERE subject_description=? AND course_name=? AND section_name=? AND section_year=?");
+                $stmt->bind_param("ssss", $subjectDescription, $courseName, $sectionName, $sectionYear);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    // Subject and course_year_section combination already exists, do not assign
+                    echo "<script>alert('The subject and course section are already assigned!');</script>";
+                } else {
+                    // Data does not exist, insert the data into the faculty_loading table
+                    $stmt = $conn->prepare("INSERT INTO faculty_loadings (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->bind_param("sssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear);
+                    try {
+                        $stmt->execute();
+                        echo "<script>alert('Data added successfully');</script>";
+                        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+                    } catch(Exception $e) {
+                        $error = "Error adding data: " . $e->getMessage();
+                    }
                 }
-                }
-                }
-                }
-                }
-                ?>
+            }
+        }
+    }
+}
+?>
+
                 
 <!doctype html>
 <html lang="en">
