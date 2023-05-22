@@ -51,7 +51,7 @@ if ($result !== false && $result->num_rows > 0) {
 
     while ($row = $result->fetch_assoc()) {
         $course_year_section = $row['course_year_section'];
-        $sql = "SELECT * FROM faculty_loadings WHERE course_year_section = '$course_year_section' ORDER BY course_year_section";
+        $sql = "SELECT * FROM faculty_loadings WHERE course_year_section = '$course_year_section' ORDER BY course_year_section ASC";
         $scheduleResult = $conn->query($sql);
 
         if ($scheduleResult !== false && $scheduleResult->num_rows > 0) {
@@ -65,7 +65,7 @@ if ($result !== false && $result->num_rows > 0) {
                 echo '<td>' . $scheduleRow['subject_units'] . '</td>';
                 echo '<td>' . $scheduleRow['subject_hours'] . '</td>';
                 echo '<td>' . $scheduleRow['teacher'] . '</td>';
-                echo '<td>' . $scheduleRow['room_name'] . '</td>';
+          
 
                 // Format the start time and end time in 12-hour format with AM/PM
                 $start_time = date("h:i A", strtotime($scheduleRow['start_time']));
@@ -73,7 +73,7 @@ if ($result !== false && $result->num_rows > 0) {
 
                 echo '<td>' . $start_time . '</td>';
                 echo '<td>' . $end_time . '</td>';
-
+                echo '<td>' . $scheduleRow['room_name'] . '</td>';
                 echo '<td>' . $scheduleRow['day'] . '</td>';
                 echo '</tr>';
             }

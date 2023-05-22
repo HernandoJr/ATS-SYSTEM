@@ -54,12 +54,12 @@ if ($result !== false && $result->num_rows > 0) {
 
     while ($row = $result->fetch_assoc()) {
         $room_name = $row['room_name'];
-        $sql = "SELECT * FROM faculty_loadings WHERE room_name = '$room_name' ORDER BY day, start_time, end_time";
+        $sql = "SELECT * FROM faculty_loadings WHERE room_name = '$room_name' ORDER BY room_name ASC";
         $scheduleResult = $conn->query($sql);
 
         if ($scheduleResult !== false && $scheduleResult->num_rows > 0) {
             echo '<tr>';
-            echo '<td class="header_row" rowspan="' . $scheduleResult->num_rows . '">' . $room_name . '</td>';
+            echo '<td class="header_row" rowspan="' . $scheduleResult->num_rows . '">' . $room_name. '</td>';
 
             while ($scheduleRow = $scheduleResult->fetch_assoc()) {
                 echo '<td>' . $scheduleRow['teacher'] . '</td>';

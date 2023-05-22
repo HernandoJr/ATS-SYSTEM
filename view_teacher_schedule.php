@@ -48,12 +48,12 @@ $result = $conn->query($sql);
 if ($result !== false && $result->num_rows > 0) {
     echo '<div class="container print-page">';
     echo '<table class="table mt-4 print-table table-bordered table table-hover">';
-    echo '<thead class="fw-bolder bg-dark text-light"><tr><th>Teacher</th><th>Subject Code</th><th>Subject Description</th><th>Room</th><th>Course Year & Section</th><th>Start_Time</th><th>End_Time</th><th>Day</th></tr></thead>';
+    echo '<thead class="fw-bolder bg-dark text-light"><tr><th>Teacher</th><th>Subject Code</th><th>Subject Description</th><th>Subject Type</th><th>Subject Hours</th><th>Room</th><th>Course Year & Section</th><th>Start_Time</th><th>End_Time</th><th>Day</th></tr></thead>';
     echo '<tbody>';
 
     while ($row = $result->fetch_assoc()) {
         $teacher = $row['teacher'];
-        $sql = "SELECT * FROM faculty_loadings WHERE teacher = '$teacher' ORDER BY course_year_section";
+        $sql = "SELECT * FROM faculty_loadings WHERE teacher = '$teacher' ORDER BY course_year_section ASC";
         $scheduleResult = $conn->query($sql);
 
         if ($scheduleResult !== false && $scheduleResult->num_rows > 0) {
@@ -63,6 +63,8 @@ if ($result !== false && $result->num_rows > 0) {
             while ($scheduleRow = $scheduleResult->fetch_assoc()) {
                 echo '<td>' . $scheduleRow['subject_code'] . '</td>';
                 echo '<td>' . $scheduleRow['subject_description'] . '</td>';
+                echo '<td>' . $scheduleRow['subject_type'] . '</td>';
+                echo '<td>' . $scheduleRow['subject_hours'] . '</td>';
                 echo '<td>' . $scheduleRow['room_name'] . '</td>';
                 echo '<td>' . $scheduleRow['course_year_section'] . '</td>';
 

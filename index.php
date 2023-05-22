@@ -152,14 +152,14 @@ if (isset($_POST['logout'])) {
                             Create Schedule
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
-                            <li><a class="nav-link text-primary" href="schedule_randomizer.php">Schedule Randomizer</a>
+                         <a class="nav-link text-success" href="automated_schedule.php">Automated Scheduling</a>
                             </li>
-                            <li><a class="nav-link text-primary" href="manual_schedule_list.php">Manual Scheduling</a>
-                            <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            </li>
-                            <a class="nav-link text-success" href="automated_schedule.php">Automated Scheduling</a>
+                      
+                                <a class="nav-link text-primary" href="manual_schedule_list.php">Manual Scheduling</a>
+                         
+                          
 
                         </ul>
                     </li>

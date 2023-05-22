@@ -2,6 +2,8 @@
 include 'database_connection.php';
 include 'index.php';
 
+
+
 // Function to check if a teacher is available at the given day and time
 function isTeacherAvailable($teacher, $day, $start_time, $end_time)
 {
@@ -22,17 +24,6 @@ function isRoomAvailable($room_name, $day, $start_time, $end_time)
     $result = mysqli_query($conn, $sql);
 
     return mysqli_num_rows($result) == 0;
-}
-
-// Function to check if there is a conflict in course_year_section
-function isCourseYearSectionConflict($course_year_section, $day, $start_time, $end_time)
-{
-    global $conn;
-
-    $sql = "SELECT * FROM faculty_loadings WHERE course_year_section = '$course_year_section' AND day = '$day' AND (start_time < '$end_time' AND end_time > '$start_time')";
-    $result = mysqli_query($conn, $sql);
-
-    return mysqli_num_rows($result) > 0;
 }
 
 // Function to assign timeslots to courses using backtracking
@@ -72,7 +63,7 @@ function assignTimeslots($courses)
 
     // Loop through each available timeslot
     while ($timeslot_row = mysqli_fetch_assoc($timeslot_result)) {
-       // $timeslot_id = $timeslot_row['timeslot_id'];
+        $timeslot_id = $timeslot_row['timeslot_id'];
 
         // Randomly select a room and retrieve its name and type
         $room_sql = "SELECT room_name, room_type FROM rooms ORDER BY RAND()";
@@ -101,10 +92,9 @@ function assignTimeslots($courses)
             while ($day_row = mysqli_fetch_assoc($day_result)) {
                 $day = $day_row['day'];
 
-                // Check if the teacher, room, and course year section are available at the selected day and timeslot
+                // Check if the teacher and room are available at the selected day and timeslot
                 if (isTeacherAvailable($course['teacher'], $day, $timeslot_row['start_time'], $timeslot_row['end_time']) &&
-                    isRoomAvailable($room_name, $day, $timeslot_row['start_time'], $timeslot_row['end_time']) &&
-                    !isCourseYearSectionConflict($course['course_year_section'], $day, $timeslot_row['start_time'], $timeslot_row['end_time'])) {
+                    isRoomAvailable($room_name, $day, $timeslot_row['start_time'], $timeslot_row['end_time'])) {
                     // Assign the timeslot, day, room name, and room type to the course
                     $update_sql = "UPDATE faculty_loadings SET start_time = '{$timeslot_row['start_time']}', end_time = '{$timeslot_row['end_time']}', day = '$day', room_name = '$room_name', room_type = '$room_type' WHERE id = {$course['id']}";
                     mysqli_query($conn, $update_sql);
@@ -169,8 +159,6 @@ if (isset($_POST['assign_timeslots'])) {
         die('Error retrieving faculty_loadings data: ' . mysqli_error($conn));
     }
 }
-
-
 
 // Check if the faculty_loading table is not empty
 if ($count > 0) {
@@ -269,12 +257,11 @@ if ($count > 0) {
         <button class="btn btn-danger mt-4" onclick="window.print()">Print</button>
 
         </form>
-    </
-
-div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js"></script>
     </body>
     </html>';
 } else {
-    echo "No data available.";
+    echo "No data available in the faculty_loading table.";
 }
 ?>
