@@ -207,7 +207,7 @@ if ($count > 0) {
 </style>
 <div class="container print-page ">
     
-    <h1 class="mt-5">RANDOMIZE PLOTTING OF SCHEDULE</h1>
+    <h1 class="mt-5 bg-dark  border-warning text-center text-light">AUTOMATED SCHEDULE</h1>
     <table class="table mt-4 print-table table-bordered table table-hover table-sm">
 
     <thead class="thead-dark bg-dark text-light">               

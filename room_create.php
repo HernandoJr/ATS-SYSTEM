@@ -13,7 +13,7 @@ if (isset($_POST['submit'])) {
     $room_capacity = mysqli_real_escape_string($conn, $_POST['room_capacity']);
 
     // check if a record with the same room_id already exists
-    $sql = "SELECT * FROM rooms WHERE  room_id = '$room_id' OR room_name = '$room_name'";
+    $sql = "SELECT * FROM rooms WHERE room_id = '$room_id' OR room_name = '$room_name'";
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
@@ -28,12 +28,20 @@ if (isset($_POST['submit'])) {
         echo '</script>';
         exit;
     }
+// insert the data into the appropriate table based on room_type
+if ($room_type === "Lab") {
+    $sql_lab = "INSERT INTO rooms_lab (room_id, room_name, room_type, room_capacity) VALUES ('$room_id', '$room_name', '$room_type', '$room_capacity')";
+    $sql_rooms = "INSERT INTO rooms (room_id, room_name, room_type, room_capacity) VALUES ('$room_id', '$room_name', '$room_type', '$room_capacity')";
+} elseif ($room_type === "Lec") {
+    $sql_lab = "INSERT INTO rooms_lab (room_id, room_name, room_type, room_capacity) VALUES ('$room_id', '$room_name', '$room_type', '$room_capacity')";
+    $sql_rooms = "INSERT INTO rooms_lec (room_id, room_name, room_type, room_capacity) VALUES ('$room_id', '$room_name', '$room_type', '$room_capacity')";
+} else {
+    echo "Invalid room type!";
+    exit;
+}
 
-    // insert the data into the database
-    $sql = "INSERT INTO rooms (room_id, room_name, room_type, room_capacity) VALUES ('$room_id', '$room_name', '$room_type', '$room_capacity')";
-
-    if (mysqli_query($conn, $sql)) {
-        echo '<script type="text/javascript">';
+if ($conn->query($sql_lab) === TRUE && $conn->query($sql_rooms) === TRUE) {
+    echo '<script type="text/javascript">';
         echo ' alert("New record added successfully!");';
         echo ' window.location.href = "room_list.php";';
         echo '</script>';
@@ -43,6 +51,7 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
+
 
 <!doctype html>
 <html lang="en">

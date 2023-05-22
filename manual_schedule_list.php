@@ -97,7 +97,7 @@ if (isset($_POST['update'])) {
     <div class="container">
 
 
-        <h2>Manual Schedule List</h2>
+        <h2 class="bg-dark text-light text-center mt-3">MANUAL SCHEDULE LIST</h2>
 
         <form method="POST">
             <div class="input-group mb-3">

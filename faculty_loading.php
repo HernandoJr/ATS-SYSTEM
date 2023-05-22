@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
     } else {
         // Check teacher load>5 not inserting data anymore
         $teacher_load = check_teacher_load($teacher);
-        if ($teacher_load >= 7) {
+        if ($teacher_load >= 30) {
             $error = 'Teacher has already been assigned 7 subjects.';
             echo "<script>alert('$error');</script>";
         } else {
@@ -201,10 +201,11 @@ if (isset($_POST['submit'])) {
                 ?>
             </select>
         </div>
-
+          
+        <div class="mt-3">
         <button type="submit" class="btn btn-primary" name="submit">Create</button>
         <a href="faculty_loading_list.php" class="btn btn-danger" name="back">Back</a>
-
+        </div>      
     </div>
 
 </form>

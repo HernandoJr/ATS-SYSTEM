@@ -111,8 +111,8 @@ if (isset($_POST['update'])) {
         </form>
 
 
-        <table class="table  table-bordered table table-hover">
-            <thead>
+        <table class="table table-bordered border-dark table table-hover table-white">
+            <thead class="bg-success text-white text-center">
                 <tr>
                     <th>No.</th>
                     <th>Sched Code</th>
@@ -163,7 +163,7 @@ if (isset($_POST['update'])) {
                         $course_name = $row["course_name"];
 
                         
-                        if ($section_year == "1st") {
+                        if ($section_year == "1st" ) {
                             $course_year_section = $course_name  . " 101-" . $section_name;
                         } elseif ($section_year == "2nd") {
                             $course_year_section = $course_name . " 201-" . $section_name;
@@ -181,9 +181,9 @@ if (isset($_POST['update'])) {
                         $result2 = $conn->query($sql);
 
 
-                        echo "<tr>";
+                        echo "<tr class='text-center'>";
                         echo "<td>" . $i . "</td>";
-                        echo "<td>" . $row["schedcode"] . "</td>";
+                        echo "<td>".  $row["schedcode"] . "</td>";
                         echo "<td>" . $row["teacher"] . "</td>";
                         echo "<td>" . $row["subject_code"] . "</td>";
                         echo "<td>" . $row["subject_description"] . "</td>";
@@ -191,8 +191,8 @@ if (isset($_POST['update'])) {
                         echo "<td>" . $row["subject_hours"] . "</td>";
                         echo "<td>" . $row["subject_units"] . "</td>";
                         echo "<td>" . $course_year_section . "</td>";
-                        echo "<td>";
-                        echo "<a href='faculty_loading_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
+                        echo "<td class=''>";
+                        echo "<a href='faculty_loading_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a><hr>";
                         echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
                         echo "</td>";
                         echo "</tr>";

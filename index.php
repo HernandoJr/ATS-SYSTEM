@@ -149,18 +149,14 @@ if (isset($_POST['logout'])) {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-danger" href="#" id="scheduleDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            Create Schedule
+                           Generate Schedule
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
-                         <a class="nav-link text-success" href="automated_schedule.php">Automated Scheduling</a>
+                        <ul class="dropdown-menu " aria-labelledby="scheduleDropdown">
+                         <a class="nav-link text-primary  fw-bolder text-center h5" href="automated_schedule.php">Automated</a>
                             </li>
                                 <hr class="dropdown-divider">
                             </li>
-                      
-                                <a class="nav-link text-primary" href="manual_schedule_list.php">Manual Scheduling</a>
-                         
-                          
-
+                            <a class="nav-link text-primary fw-bolder text-center h5" href="manual_schedule_list.php">Manual</a>
                         </ul>
                     </li>
 
@@ -171,15 +167,11 @@ if (isset($_POST['logout'])) {
                             View Schedule
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
-                            <li><a class="dropdown-item text-primary" href="view_room_schedule.php">View Room Schedule (SR)</a></li>
-                            <li><a class="dropdown-item text-primary" href="view_teacher_schedule.php">View Teacher Schedule (SR)</a>
-                            <li><a class="dropdown-item text-primary" href="view_section_schedule.php">View Section Schedule (SR)</a>
+                            <li><a class="dropdown-item text-primary h5" href="view_room_schedule.php">View Room Schedule</a></li>
+                            <li><a class="dropdown-item text-primary h5" href="view_teacher_schedule.php">View Teacher Schedule </a>
+                            <li><a class="dropdown-item text-primary h5" href="view_section_schedule.php">View Section Schedule </a>
                             </li>
                             <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item text-success" href="#">View Room Schedule (AR)</a></li>
-                            <li><a class="dropdown-item text-success" href="#">View Teacher Schedule (AR)</a>
                             </li>
                         </ul>
                     </li>
