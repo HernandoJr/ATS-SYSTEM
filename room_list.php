@@ -46,7 +46,7 @@ if (isset($_POST['search'])) {
 <body>
 
     <div class="container">
-        <h2>Room List</h2>
+    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">ROOM LIST</H1>
 
         <form method="POST">
             <div class="input-group mb-3">

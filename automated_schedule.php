@@ -145,6 +145,7 @@ if ($count == 0) {
 
 // Check if the button was clicked
 if (isset($_POST['assign_timeslots'])) {
+     
     // Retrieve the data from the faculty_loading table
     $sql = "SELECT * FROM faculty_loadings";
     $result = mysqli_query($conn, $sql);
@@ -187,7 +188,8 @@ if ($count > 0) {
     .table-bordered {
         border:.2rem solid;
         text-align:center;
-        background-color:white;
+        vertical-align:middle;
+
     }
 
     @media print {
@@ -207,10 +209,10 @@ if ($count > 0) {
 </style>
 <div class="container print-page ">
     
-    <h1 class="mt-5 bg-dark  border-warning text-center text-light">AUTOMATED SCHEDULE</h1>
-    <table class="table mt-4 print-table table-bordered table table-hover table-sm">
+<h1 style="  text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">AUTOMATED SCHEDULING</H1>
+<table class="table mt-4 print-table table-bordered table table-hover table-sm">
 
-    <thead class="thead-dark bg-dark text-light">               
+    <thead class="thead-dark bg-success text-light fw-bolder text-light">               
        <tr>
                         <th>Time</th>'; // Empty cell for spacing
     

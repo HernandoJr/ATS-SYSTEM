@@ -75,7 +75,7 @@ if (isset($_POST['submit'])) {
     <title>Add Course</title>
     <div class="container mt-3">
 
-        <h3>Add Course</h3>
+    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">ADD COURSE</H1>
 
         <form method="post">
 

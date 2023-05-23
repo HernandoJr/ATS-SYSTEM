@@ -93,7 +93,7 @@ $password = $row_fetch_user_data['password'];
 
     <div class="container">
 
-        <h1>Update User Account</h1>
+    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE USER ACCOUNT</H1>
 
         <?php if (isset($success_message)) { ?>
         <div class="alert alert-success"><?php echo $success_message; ?></div>

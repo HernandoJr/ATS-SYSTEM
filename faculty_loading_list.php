@@ -100,7 +100,7 @@ if (isset($_POST['update'])) {
     <div class="container">
 
 
-        <h2>Faculty Loading List</h2>
+    <h1 style="  text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">FACULTY LOADING</H1>
 
         <form method="POST">
             <div class="input-group mb-3">
@@ -191,7 +191,7 @@ if (isset($_POST['update'])) {
                         echo "<td>" . $row["subject_hours"] . "</td>";
                         echo "<td>" . $row["subject_units"] . "</td>";
                         echo "<td>" . $course_year_section . "</td>";
-                        echo "<td class=''>";
+                        echo "<td>";
                         echo "<a href='faculty_loading_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a><hr>";
                         echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
                         echo "</td>";

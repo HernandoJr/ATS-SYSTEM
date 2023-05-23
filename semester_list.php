@@ -52,7 +52,7 @@ if (isset($_GET['delete_id'])) {
     <div class="container">
         <div class="container">
 
-            <h2>Semester List</h2>
+        <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">SEMESTER LIST</H1>
 
             <form method="POST" action="semester_list.php">
                 <div class="input-group mb-3">

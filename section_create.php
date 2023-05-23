@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
 
 <body>
     <div class="container mt-3">
-        <h3>Add Section</h3>
+    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">ADD SECTION</H1>
         <form method="post">
 
             <div class="form-group mb-3">

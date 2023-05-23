@@ -103,7 +103,7 @@ if (!empty($error)) {
 
 <body>
     <div class="container">
-        <h1>Manual Update</h1>
+    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE MANUAL SCHEDULE DETAILS</H1>
         <!-- HTML form to update the data -->
         <form method="POST">
             <div class="mb-3">

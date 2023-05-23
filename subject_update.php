@@ -86,7 +86,7 @@ if (isset($_POST['update'])) {
 <body>
     <div class="container mt-3">
 
-        <h3>Update Subject</h3>
+    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE SUBJECT DETAILS</H1>
 
 
 

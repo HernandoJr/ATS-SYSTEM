@@ -124,7 +124,7 @@ if (isset($_POST['submit'])) {
 
 <form method="POST">
     <div class="container mt-3">
-
+    <h1 class="text-left text-dark">Assign Subject</h1>
         <!-- Dropdown for selecting a teacher -->
         <div class="form-group">
             <label for="teacher">Teacher</label>

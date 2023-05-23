@@ -97,7 +97,7 @@ if (isset($_POST['update'])) {
     <div class="container">
 
 
-        <h2 class="bg-dark text-light text-center mt-3">MANUAL SCHEDULE LIST</h2>
+    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">MANUAL SCHEDULE LIST</H1>
 
         <form method="POST">
             <div class="input-group mb-3">
@@ -108,8 +108,8 @@ if (isset($_POST['update'])) {
         </form>
 
         <div class="table-responsive">
-        <table class="table  table-bordered table table-hover table-sm">
-            <thead>
+        <table  style="vertical-align:middle" class="table  table-bordered table table-hover table-sm  text-center">
+            <thead class="bg-success text-dark text-white">
                 <tr class="text-sm">
                     <th >No.</th>
                     <th>Sched Code</th>
@@ -196,7 +196,7 @@ if (isset($_POST['update'])) {
                         echo "<td>" . $row["room_name"] . "</td>";
 
                         echo "<td>";
-                        echo "<a href='manual_schedule_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";
+                        echo "<a href='manual_schedule_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a><hr>";
                         echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
                         echo "</td>";
                         echo "</tr>";

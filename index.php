@@ -137,11 +137,7 @@ if (isset($_POST['logout'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="room_list.php">Add Rooms</a>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="timeslot_list.php">View All Timeslot</a>
-                    </li>
-
+                    
                     <li class="nav-item">
                         <a class="nav-link text-primary" href="faculty_loading_list.php">Faculty Loading</a>
                     </li>
