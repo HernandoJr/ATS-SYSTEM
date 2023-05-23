@@ -11,9 +11,9 @@ if (!isset($_SESSION['user_id'])) {
 
 // Inserting data for courses table
 if (isset($_POST['submit'])) {
-    $course_id = $_POST['course_id'];
-    $course_name = $_POST['course_name'];
-    $slots = $_POST['slots'];
+    $course_id = mysqli_real_escape_string($conn,$_POST['course_id']);
+    $course_name = mysqli_real_escape_string($conn,$_POST['course_name']);
+    $slots = mysqli_real_escape_string ($conn,$_POST['slots']);
 
     // Check if data already exists in the database
     $course_id = mysqli_real_escape_string($conn, $_POST['course_id']);

@@ -104,7 +104,7 @@ if (isset($_POST['update'])) {
 
             <div class="mb-3">
 
-                <label for="subject_description" class="form-label">Subject Description</label>
+                <label for="subject_description" class="form-label">Subject Title</label>
                 <input type="text" class="form-control" id="subject_description" name="subject_description"
                     value="<?php echo $row['subject_description']; ?>">
             </div>

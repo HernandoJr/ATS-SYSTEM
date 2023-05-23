@@ -17,6 +17,7 @@ if (isset($_POST['logout'])) {
     header("Location: login.php");
     exit;
 }
+
 ?>
 
 
@@ -46,7 +47,8 @@ if (isset($_POST['logout'])) {
 
 </head>
 
-<body style="background-color:ghostwhite" class="d-flex flex-column min-vh-100" ;>
+
+<body style="background-color: #d5fefd; background-image: linear-gradient(315deg, #d5fefd 0%, #fffcff 74%);" class="d-flex flex-column min-vh-100" ;>
     <!--Nested Nav Bar -->
     <!-- RESPONSIVE NAV BAR STARTS HERE -->
 
@@ -88,23 +90,25 @@ if (isset($_POST['logout'])) {
         <div class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
 
-                <a class="nav-link dropdown-toggle bg-light text-danger" href="#" id="userDropdown" role="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <?php echo $user_data['email']; ?>
-                </a>
+                <div class="dropdown">
+                    <button class="fw-bolder btn btn-danger  text-center text-light dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <?php echo $user_data['name']; ?>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="update.php">Update Account</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <form method="post">
+                                <button type="submit" name="logout" class="dropdown-item">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
 
-                <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="update.php">Update Account</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <form method="post">
-                            <button type="submit" name="logout" class="dropdown-item">Logout</button>
-                        </form>
-                    </li>
-                </ul>
-            </li>
+
         </div>
     </nav>
 
@@ -137,7 +141,7 @@ if (isset($_POST['logout'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="room_list.php">Add Rooms</a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link text-primary" href="faculty_loading_list.php">Faculty Loading</a>
                     </li>
@@ -145,32 +149,35 @@ if (isset($_POST['logout'])) {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-danger" href="#" id="scheduleDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                           Generate Schedule
+                            Generate Schedule
                         </a>
                         <ul class="dropdown-menu " aria-labelledby="scheduleDropdown">
-                         <a class="nav-link text-primary  fw-bolder text-center h5" href="automated_schedule.php">Automated</a>
-                            </li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <a class="nav-link text-primary fw-bolder text-center h5" href="manual_schedule_list.php">Manual</a>
-                        </ul>
+                            <a class="nav-link text-primary  fw-bolder text-center h5"
+                                href="automated_schedule.php">Automated</a>
                     </li>
-
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-danger" href="#" id="scheduleDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            View Schedule
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
-                            <li><a class="dropdown-item text-primary h5" href="view_room_schedule.php">View Room Schedule</a></li>
-                            <li><a class="dropdown-item text-primary h5" href="view_teacher_schedule.php">View Teacher Schedule </a>
-                            <li><a class="dropdown-item text-primary h5" href="view_section_schedule.php">View Section Schedule </a>
-                            </li>
-                            <li>
-                            </li>
-                        </ul>
+                    <hr class="dropdown-divider">
                     </li>
+                    <a class="nav-link text-primary fw-bolder text-center h5" href="manual_schedule_list.php">Manual</a>
+                </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-danger" href="#" id="scheduleDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        View Schedule
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
+                        <li><a class="dropdown-item text-primary h5" href="view_room_schedule.php">View Room
+                                Schedule</a></li>
+                        <li><a class="dropdown-item text-primary h5" href="view_teacher_schedule.php">View Teacher
+                                Schedule </a>
+                        <li><a class="dropdown-item text-primary h5" href="view_section_schedule.php">View Section
+                                Schedule </a>
+                        </li>
+                        <li>
+                        </li>
+                    </ul>
+                </li>
 
                 </ul>
             </div>

@@ -9,7 +9,7 @@ echo '
 <head>
     <title>View Schedule</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
-    <h1 style="  text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">ROOM SCHEDULES</H1>
+    <h1 style="  text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);" class="fw-bolder text-center text-warning mt-3 text-outline">ROOM SCHEDULES</H1>
 
 <style>
 .table-bordered {
@@ -149,7 +149,17 @@ echo '
     
     
 }
-</style>';
+</style>
+
+<script>
+// Handle Ctrl+P key press event
+document.addEventListener("keydown", function(event) {
+    if (event.ctrlKey && event.key === "p" || "P") {
+        event.preventDefault(); // Prevent default print action
+        window.location.href = "view_room_generatePDF.php"; // Redirect to generatePDF.php
+    }
+});
+</script>';
 
 
 $sql = "SELECT DISTINCT room_name FROM faculty_loadings";
@@ -212,7 +222,9 @@ if ($result !== false && $result->num_rows > 0) {
 
                 echo '</tr>';
             }
-
+            
+         
+            
             echo '</tbody>';
             echo '</table>';
         } else {

@@ -100,7 +100,7 @@ if (isset($_POST['update'])) {
     <div class="container">
 
 
-    <h1 style="  text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">FACULTY LOADING</H1>
+    <h1 style="text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">FACULTY LOADING</H1>
 
         <form method="POST">
             <div class="input-group mb-3">
@@ -112,13 +112,13 @@ if (isset($_POST['update'])) {
 
 
         <table class="table table-bordered border-dark table table-hover table-white">
-            <thead class="bg-success text-white text-center">
+            <thead class="bg-success text-white text-center" style=" vertical-align:middle;" >
                 <tr>
                     <th>No.</th>
                     <th>Sched Code</th>
                     <th>Teacher Name</th>
                     <th>Subject Code</th>
-                    <th>Subject Description</th>
+                    <th>Subject Title</th>
                     <th>Subject Type</th>
                     <th>Contact Hours</th>
                     <th>Units</th>
@@ -181,7 +181,7 @@ if (isset($_POST['update'])) {
                         $result2 = $conn->query($sql);
 
 
-                        echo "<tr class='text-center'>";
+                        echo "<tr class='text-center' style='vertical-align:middle;'>";
                         echo "<td>" . $i . "</td>";
                         echo "<td>".  $row["schedcode"] . "</td>";
                         echo "<td>" . $row["teacher"] . "</td>";
@@ -219,7 +219,7 @@ if (isset($_POST['update'])) {
             $('#truncate-btn').click(function () {
                 if (confirm("Are you sure you want to truncate the table?")) {
                     $.ajax({
-                        url: "truncate_table.php", // the PHP script t hat truncates the table
+                        url: "truncate_table.php", // the PHP script ghat truncates the table
                         success: function (response) {
                             alert(response); // show the response message from the PHP script
                         }

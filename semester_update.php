@@ -26,11 +26,11 @@ if (isset($_POST['update'])) {
 
     $semester_id = mysqli_real_escape_string($conn, $_POST['semester_id']);
     $semester_name = mysqli_real_escape_string($conn, $_POST['semester_name']);
-    $start_date = mysqli_real_escape_string($conn, $_POST['start_date']);
-    $end_date = mysqli_real_escape_string($conn, $_POST['end_date']);
+    $start_year = mysqli_real_escape_string($conn, $_POST['start_year']);
+    $end_year = mysqli_real_escape_string($conn, $_POST['end_year']);
 
     // Then, check if the semester name, start date and end date already exists in the database
-    $sql = "SELECT * FROM semesters WHERE semester_id='$semester_id'  AND semester_name='$semester_name' AND start_date='$start_date' AND end_date='$end_date' AND id!='$id'";
+    $sql = "SELECT * FROM semesters WHERE semester_id='$semester_id'  AND semester_name='$semester_name' AND start_year='$start_year' AND end_year='$end_year' AND id!='$id'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -40,7 +40,7 @@ if (isset($_POST['update'])) {
         echo '</script>';
     } else {
         // If the semester with the same name, start date and end date does not exist, update the data in the database
-        $sql = "UPDATE semesters SET semester_id='$semester_id', semester_name='$semester_name', start_date ='$start_date', end_date='$end_date' WHERE id='$id'";
+        $sql = "UPDATE semesters SET semester_id='$semester_id', semester_name='$semester_name', start_year ='$start_year', end_year='$end_year' WHERE id='$id'";
         if (mysqli_query($conn, $sql)) {
             // Data updated successfully, display an alert message and redirect to semester_list.php
             echo '<script type="text/javascript">';
@@ -85,7 +85,8 @@ if (isset($_POST['update'])) {
 <body>
     <div class="container mt-3">
 
-    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE SEMESTER DETAILS</H1>
+        <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)"
+            class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE SEMESTER DETAILS</H1>
 
 
 
@@ -114,15 +115,16 @@ if (isset($_POST['update'])) {
 
             </div>
             <div class="mb-3">
-                <label for="start_date" class="form-label">Start Date</label>
-                <input type="date" class="form-control" id="start_date" name="start_date"
-                    value="<?php echo $row['start_date']; ?>">
+                <label for="start_year" class="form-label">Start Year</label>
+                <input type="number" class="form-control" id="start_year" name="start_year"
+                    value="<?php echo $row['start_year']; ?>" min="2022" max="2099" required>
             </div>
             <div class="mb-3">
-                <label for="end_date" class="form-label">End Date</label>
-                <input type="date" class="form-control" id="end_date" name="end_date"
-                    value="<?php echo $row['end_date']; ?>">
+                <label for="end_year" class="form-label">End Year</label>
+                <input type="number" class="form-control" id="end_year" name="end_year"
+                    value="<?php echo $row['end_year']; ?>" min="2022" max="2099" required>
             </div>
+
             <button type="submit" name="update" class="btn btn-primary">Update</button>
             <a href="semester_list.php" class="btn btn-danger">Back</a>
         </form>

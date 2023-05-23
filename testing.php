@@ -6,56 +6,22 @@ include 'index.php';
 function isTeacherAvailable($teacher, $day, $start_time, $end_time)
 {
     global $conn;
-$room_type = getRoomTypeForSubjectType($subject_type);
-assignTimeslots($courses, $room_type);
-    $sql = "SELECT * FROM faculty_loadings WHERE teacher = '$teacher' AND day = '$day' AND (start_time < '$end_time' AND end_time > '$start_time')";
+
+    $sql = "SELECT * FROM faculty_loadings_testing WHERE teacher = '$teacher' AND day = '$day' AND (start_time < '$end_time' AND end_time > '$start_time')";
     $result = mysqli_query($conn, $sql);
 
     return mysqli_num_rows($result) == 0;
 }
+
 // Function to check if a room is available at the given day and time
 function isRoomAvailable($room_name, $day, $start_time, $end_time)
 {
     global $conn;
 
-    $sql = "SELECT * FROM faculty_loadings WHERE room_name = '$room_name' AND day = '$day' AND (start_time < '$end_time' AND end_time > '$start_time')";
+    $sql = "SELECT * FROM faculty_loadings_testing WHERE room_name = '$room_name' AND day = '$day' AND (start_time < '$end_time' AND end_time > '$start_time')";
     $result = mysqli_query($conn, $sql);
 
     return mysqli_num_rows($result) == 0;
-}
-// Function to get the room type for a given subject type
-function getRoomTypeForSubjectType($subject_type)
-{
-    if ($subject_type == 'lab') {
-        return 'lab';
-    } elseif ($subject_type == 'lec') {
-        return 'lec';
-    }
-    // Add more conditions if needed for other subject types
-
-    return null; // Return null if no matching room type found
-}
-
-// Function to get the list of available rooms for a given subject type
-function getAvailableRoomsForSubjectType($subject_type)
-{
-    global $conn;
-
-    $room_type = getRoomTypeForSubjectType($subject_type);
-
-    if ($room_type) {
-        $sql = "SELECT * FROM rooms WHERE room_type = '$room_type'";
-        $result = mysqli_query($conn, $sql);
-
-        $available_rooms = array();
-        while ($row = mysqli_fetch_assoc($result)) {
-            $available_rooms[] = $row['room_name'];
-        }
-
-        return $available_rooms;
-    }
-
-    return null; // Return null if no matching room type found
 }
 
 // Function to check if there is a conflict in course_year_section
@@ -63,14 +29,14 @@ function isCourseYearSectionConflict($course_year_section, $day, $start_time, $e
 {
     global $conn;
 
-    $sql = "SELECT * FROM faculty_loadings WHERE course_year_section = '$course_year_section' AND day = '$day' AND (start_time < '$end_time' AND end_time > '$start_time')";
+    $sql = "SELECT * FROM faculty_loadings_testing WHERE course_year_section = '$course_year_section' AND day = '$day' AND (start_time < '$end_time' AND end_time > '$start_time')";
     $result = mysqli_query($conn, $sql);
 
     return mysqli_num_rows($result) > 0;
 }
-// Function to assign timeslots to courses using backtracking$room_type = getRoomTypeForSubjectType($subject_type);
-assignTimeslots($courses, $room_type);
-function assignTimeslots($courses, $room_type)
+
+// Function to assign timeslots to courses using backtracking
+function assignTimeslots($courses)
 {
     global $conn;
 
@@ -106,8 +72,10 @@ function assignTimeslots($courses, $room_type)
 
     // Loop through each available timeslot
     while ($timeslot_row = mysqli_fetch_assoc($timeslot_result)) {
+        // $timeslot_id = $timeslot_row['timeslot_id'];
+
         // Randomly select a room and retrieve its name and type
-        $room_sql = "SELECT room_name, room_type FROM rooms WHERE room_type = '$room_type' ORDER BY RAND()";
+        $room_sql = "SELECT room_name, room_type FROM rooms ORDER BY RAND()";
         $room_result = mysqli_query($conn, $room_sql);
 
         // Check for SQL query error
@@ -118,6 +86,7 @@ function assignTimeslots($courses, $room_type)
         // Loop through each available room
         while ($room_row = mysqli_fetch_assoc($room_result)) {
             $room_name = $room_row['room_name'];
+            $room_type = $room_row['room_type'];
 
             // Randomly select a day from available_days
             $day_sql = "SELECT day FROM available_days ORDER BY RAND()";
@@ -133,60 +102,85 @@ function assignTimeslots($courses, $room_type)
                 $day = $day_row['day'];
 
                 // Check if the teacher, room, and course year section are available at the selected day and timeslot
-                if (isTeacherAvailable($course['teacher'], $day, $timeslot_row['start_time'], $timeslot_row['end_time']) &&
+                if (
+                    isTeacherAvailable($course['teacher'], $day, $timeslot_row['start_time'], $timeslot_row['end_time']) &&
                     isRoomAvailable($room_name, $day, $timeslot_row['start_time'], $timeslot_row['end_time']) &&
-                    !isCourseYearSectionConflict($course['course_year_section'], $day, $timeslot_row['start_time'], $timeslot_row['end_time'])) {
+                    !isCourseYearSectionConflict($course['course_year_section'], $day, $timeslot_row['start_time'], $timeslot_row['end_time'])
+                ) {
                     // Assign the timeslot, day, room name, and room type to the course
-                    $update_sql = "UPDATE faculty_loadings SET start_time = '{$timeslot_row['start_time']}', end_time = '{$timeslot_row['end_time']}', day = '$day', room_name = '$room_name', room_type = '$room_type' WHERE course_code = '{$course['course_code']}'";
-                    $update_result = mysqli_query($conn, $update_sql);
-
-                    // Check for SQL query error
-                    if (!$update_result) {
-                        die('Error updating faculty loadings: ' . mysqli_error($conn));
-                    }
+                    $update_sql = "UPDATE faculty_loadings_testing SET start_time = '{$timeslot_row['start_time']}', end_time = '{$timeslot_row['end_time']}', day = '$day', room_name = '$room_name', room_type = '$room_type' WHERE id = {$course['id']}";
+                    mysqli_query($conn, $update_sql);
 
                     // Recursively assign timeslots to the remaining courses
-                    if (assignTimeslots($courses, $room_type)) {
+                    $success = assignTimeslots($courses);
+
+                    // If a valid assignment is found for all courses, return true
+                    if ($success) {
                         return true;
                     }
 
-                    // If the assignment was unsuccessful, undo the assignment
-                    $undo_sql = "UPDATE faculty_loadings SET start_time = NULL, end_time = NULL, day = NULL, room_name = NULL, room_type = NULL WHERE course_code = '{$course['course_code']}'";
-                    $undo_result = mysqli_query($conn, $undo_sql);
-
-                    // Check for SQL query error
-                    if (!$undo_result) {
-                        die('Error undoing faculty loadings update: ' . mysqli_error($conn));
-                    }
+                    // If the assignment was not successful, backtrack by resetting the timeslot, day, room name, and room type
+                    $update_sql = "UPDATE faculty_loadings_testing SET start_time = NULL, end_time = NULL, day = NULL, room_name = NULL, room_type = NULL WHERE id = {$course['id']}";
+                    mysqli_query($conn, $update_sql);
                 }
             }
         }
     }
 
-    // If no valid assignment is possible, return false
+    // If no valid assignment is found, return false
     return false;
 }
 
-
 // Check if the faculty_loading table is empty
-$sql = "SELECT COUNT(*) AS count FROM faculty_loadings";
+$sql = "SELECT COUNT(*) AS count FROM faculty_loadings_testing";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
 $count = $row['count'];
-
 // Set the button state based on whether the faculty_loading table is empty or not
+// SQL query to select data from the table where start_time is empty
+$sql = "SELECT * FROM faculty_loadings_testing WHERE start_time IS NULL";
+$result_start_time = $conn->query($sql);
+
+if ($result_start_time->num_rows > 0) {
+    // The start_time column is empty for some rows
+    while ($row = $result_start_time->fetch_assoc()) {
+        // Process each row of data
+        $columnValue = $row["start_time"];
+
+
+        $button_text = "Generate";
+        // Retrieve the updated value from the database
+        $select_sql = "SELECT start_time FROM faculty_loadings_testing WHERE id = " . $row["id"];
+        $result_updated_start_time = $conn->query($select_sql);
+        $updated_start_time = $result_updated_start_time->fetch_assoc()["start_time"];
+
+        // Check if the start_time value is not null
+        if ($updated_start_time !== null) {
+            // Additional processing or output
+            $button_text = "Regenerate";
+        } else {
+            $button_text = "Generate";
+        }
+    }
+} else {
+    // The start_time column is not empty for any rows
+    echo "No rows found.";
+    $button_text = "Regenerate";
+}
+
+
+// Assuming $count is the variable representing the count of rows in the faculty_loadings_testing array
 $button_disabled = "";
-$button_text = "Randomize the schedule";
+
 if ($count == 0) {
     $button_disabled = "disabled";
-    $button_text = "No Data";
 }
 
 // Check if the button was clicked
 if (isset($_POST['assign_timeslots'])) {
-     
+
     // Retrieve the data from the faculty_loading table
-    $sql = "SELECT * FROM faculty_loadings";
+    $sql = "SELECT * FROM faculty_loadings_testing";
     $result = mysqli_query($conn, $sql);
 
     // Check for SQL query error
@@ -206,7 +200,7 @@ if (isset($_POST['assign_timeslots'])) {
             echo "Unable to assign timeslots without conflicts.";
         }
     } else {
-        die('Error retrieving faculty_loadings data: ' . mysqli_error($conn));
+        die('Error retrieving faculty_loadings_testing data: ' . mysqli_error($conn));
     }
 }
 
@@ -246,22 +240,28 @@ if ($count > 0) {
         }
     }
 </style>
+
 <div class="container print-page ">
-    
-    <h1 class="mt-5 bg-dark text-center text-light">AUTOMATED SCHEDULE</h1>
-    <table class="table mt-4 print-table table-bordered table table-hover table-sm">
+<h1 style="  text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">AUTOMATED SCHEDULING</H1>
+
+<div class="containe-fluid text-center "><form method="post">
+<button type="submit" name="assign_timeslots" class="btn btn-primary mt-4" ' . $button_disabled . '>' . $button_text . '</button>
+<button type="button" class=" mt-4 btn btn-danger" id="truncate">Delete Generated Schedule</button>
+</form></div>
+
+<table class="table mt-4 print-table table-bordered table table-hover table-sm">
 
     <thead class="thead-dark bg-success text-light fw-bolder text-light">               
        <tr>
                         <th>Time</th>'; // Empty cell for spacing
-    
+
     // Loop through the days (Monday to Friday)
-    $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday');
+    $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday');
 
     foreach ($days as $day) {
         echo "<th>{$day}</th>";
     }
-    
+
     echo '</tr>
             </thead>
             <tbody>';
@@ -274,13 +274,13 @@ if ($count > 0) {
         $end_time_formatted = date('h:i A', strtotime('+30 minutes', $start_time));
         echo "<tr>";
         echo "<th>" . date('h:i A', $start_time) . " - " . $end_time_formatted . "</th>";
-    
+
         // Loop through the days (Monday to Friday)
         foreach ($days as $day) {
             echo '<td>';
 
             // Retrieve the data from the faculty_loading table for the current day and time interval
-            $sql = "SELECT * FROM faculty_loadings WHERE day = '$day' AND start_time <= '" . date('H:i:s', $start_time) . "' AND end_time > '" . date('H:i:s', $start_time) . "'";
+            $sql = "SELECT * FROM faculty_loadings_testing WHERE day = '$day' AND start_time <= '" . date('H:i:s', $start_time) . "' AND end_time > '" . date('H:i:s', $start_time) . "'";
             $result = mysqli_query($conn, $sql);
 
             // Check for SQL query error
@@ -291,7 +291,7 @@ if ($count > 0) {
                 }
                 echo $combined_data;
             } else {
-                die('Error retrieving faculty_loadings data: ' . mysqli_error($conn));
+                die('Error retrieving faculty_loadings_testing data: ' . mysqli_error($conn));
             }
 
             echo '</td>';
@@ -304,18 +304,28 @@ if ($count > 0) {
 
     echo '</tbody>
         </table>
-
-        <form method="post">
-        <button type="submit" name="assign_timeslots" class="btn btn-primary mt-4" ' . $button_disabled . '>' . $button_text . '</button>
-        <button class="btn btn-danger mt-4" onclick="window.print()">Print</button>
-
-        </form>
-    </
-
-div>
+    </div>
     </body>
     </html>';
 } else {
-    echo "No data available.";
+    echo '<script type="text/javascript">';
+    echo ' alert("NO DATA AVAILABLE!");';
+    echo '</script>';
 }
 ?>
+<!-- DELETE SCHED AJAX -->
+
+<script>
+    $(document).ready(function () {
+        $('#truncate').click(function () {
+            if (confirm("Are you sure you want to delete the generated schedule?")) {
+                $.ajax({
+                    url: "delete_generated_sched.php", // the PHP script t hat truncates the table
+                    success: function (response) {
+                        alert(response); // show the response message from the PHP script
+                    }
+                });
+            }
+        });
+    });
+</script>

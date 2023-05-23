@@ -70,7 +70,7 @@ if (isset($_POST['submit'])) {
             </div>
 
             <div class="mb-3">
-                <label for="subject_description">Subject Description</label>
+                <label for="subject_description">Subject Title</label>
                 <input type="text" class="form-control" id="subject_description" name="subject_description"
                     placeholder="Enter Subject Description">
             </div>

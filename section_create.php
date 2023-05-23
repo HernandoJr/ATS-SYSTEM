@@ -8,8 +8,8 @@ include 'index.php';
 if (isset($_POST['submit'])) {
 
     // get the form data
-    $section_id = $_POST['section_id'];
-    $section_name = $_POST['section_name'];
+    $section_id = mysqli_real_escape_string($conn, $_POST['section_id']);
+    $section_name = mysqli_real_escape_string($conn,$_POST['section_name']);
 
 
     // check if a record with the same section name, start date, and end date already exists

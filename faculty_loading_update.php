@@ -1,5 +1,5 @@
 <?php
-
+//UPDATING CONFLICTS
 include 'database_connection.php';
 include 'index.php';
 $error = '';
@@ -113,7 +113,7 @@ if ($result->num_rows > 0) {
 
         <head>
             
-        <h1>Edit Faculty Loading</h1>
+        <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE FACULTY LOADING DETAILS</H1>
 
             <?php
             // Show error message if there is any
@@ -131,7 +131,7 @@ if ($result->num_rows > 0) {
                 </div>
 
                 <div class="mb-3">
-                    <label for="subject_description" class="form-label">Subject Description:</label>
+                    <label for="subject_description" class="form-label">Subject Title:</label>
                     <select name="subject_description" id="subject_description" class="form-select" required>
                         <option value="" disabled selected>Select subject description</option>
                         <?php

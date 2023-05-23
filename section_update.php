@@ -130,7 +130,7 @@ if (isset($_POST['update'])) {
 
                     if ($result && mysqli_num_rows($result) > 0) {
                         $row = mysqli_fetch_assoc($result);
-                        $selected_course_name = $row['course_name']; // Retrieve the selected course_name from the database
+                        $selected_course_name = $row['section_name']; // Retrieve the selected course_name from the database
                     } else {
                         // If there was an error in the query, display an error message and exit
                         echo "Error: " . $sql . "<br>" . mysqli_error($conn);

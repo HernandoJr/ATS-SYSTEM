@@ -8,13 +8,13 @@ include 'index.php';
 if (isset($_POST['submit'])) {
 
     // get the form data
-    $semester_id = $_POST['semester_id'];
-    $semester_name = $_POST['semester_name'];
-    $start_date = $_POST['start_date'];
-    $end_date = $_POST['end_date'];
+    $semester_id = mysqli_real_escape_string($conn,$_POST['semester_id']);
+    $semester_name = mysqli_real_escape_string($conn,$_POST['semester_name']);
+    $start_year = mysqli_real_escape_string($conn,$_POST['start_year']);
+    $end_year = mysqli_real_escape_string($conn,$_POST['end_year']);
 
     // check if a record with the same semester name, start date, and end date already exists
-    $sql = "SELECT * FROM semesters WHERE semester_name = '$semester_name' AND start_date = '$start_date' AND end_date = '$end_date'";
+    $sql = "SELECT * FROM semesters WHERE semester_name = '$semester_name' AND start_year = '$start_year' AND end_year = '$end_year'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -26,7 +26,7 @@ if (isset($_POST['submit'])) {
     }
 
     // insert the data into the database
-    $sql = "INSERT INTO semesters (semester_id, semester_name, start_date, end_date) VALUES ('$semester_id', '$semester_name', '$start_date', '$end_date')";
+    $sql = "INSERT INTO semesters (semester_id, semester_name, start_year, end_year) VALUES ('$semester_id', '$semester_name', '$start_year', '$end_year')";
 
     if (mysqli_query($conn, $sql)) {
         echo '<script type="text/javascript">';
@@ -58,35 +58,37 @@ if (isset($_POST['submit'])) {
     <div class="container mt-3">
     <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">ADD SEMESTER</H1>
 
+    <form method="post">
+        <div class="mb-3">
+            <label for="semester_id">Semester ID:</label>
+            <input type="text" class="form-control" id="semester_id" name="semester_id" placeholder="Enter Semester ID">
+        </div>
 
-        <form method="post">
-            <div class="mb-3">
-                <label for="semester_id">Semester ID:</label>
-                <input type="text" class="form-control" id="semester_id" name="semester_id"
-                    placeholder="Enter Semester ID">
-            </div>
+        <div class="mb-3 mt-3">
+            <label for="semester_name" class="form-label">Name</label>
+            <select class="form-select" id="semester_name" name="semester_name" required>
+                <option value="">Select</option>
+                <option value="1st SEM">1st SEM</option>
+                <option value="2nd Sem">2nd Sem</option>
+                <option value="Midyear">Midyear</option>
+            </select>
+        </div>
 
-            <div class="mb-3 mt-3">
-                <label for="semester_name" class="form-label"> Name</label>
-                <select class="form-select" id="semester_name" name="semester_name" required>
-                    <option value="">Select </option>
-                    <option value="1st SEM">1st SEM</option>
-                    <option value="2nd Sem">2nd Sem</option>
-                    <option value="Midyear">Midyear</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="start_date" class="form-label">Start Date:</label>
-                <input type="date" class="form-control" id="start_date" name="start_date" required>
-            </div>
-            <div class="mb-3">
-                <label for="end_date" class="form-label">End Date:</label>
-                <input type="date" class="form-control" id="end_date" name="end_date" required>
-            </div>
-            <button type="submit" class="btn btn-primary" name="submit">Create</button>
-            <a href="semester_list.php" class="btn btn-danger" name="back">Back</a>
-        </form>
-    </div>
+        <div class="mb-3">
+            <label for="start_year" class="form-label">Start Year:</label>
+            <input type="number" class="form-control" id="start_year" name="start_year" min="2022" max="2099" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="end_year" class="form-label">End Year:</label>
+            <input type="number" class="form-control" id="end_year" name="end_year" min="2023" max="2099" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" name="submit">Create</button>
+        <a href="semester_list.php" class="btn btn-danger" name="back">Back</a>
+    </form>
+</div>
+
 </body>
 
 </html>

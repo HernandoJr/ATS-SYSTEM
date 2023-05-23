@@ -74,7 +74,7 @@ if (isset($_POST['search'])) {
                     <tr>
                         <th>No.</th>
                         <th>Subject Code</th>
-                        <th>Subject Description</th>
+                        <th>Subject Title</th>
                         <th>Subject Type</th>
                         <th>Units</th>
                         <th>Contact hours</th>

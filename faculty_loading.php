@@ -2,8 +2,35 @@
 include 'database_connection.php';
 include 'index.php';
 
-$error = '';
 
+// Check the number of rows in the rooms table, course table
+$sql = "SELECT COUNT(*) AS subject_count FROM subjects";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$subject_count = $row['subject_count'];
+
+$sql = "SELECT COUNT(*) AS courses_count FROM courses";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$courses_count = $row['courses_count'];
+
+$sql = "SELECT COUNT(*) AS section_count FROM sections";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$section_count = $row['section_count'];
+
+$sql = "SELECT COUNT(*) AS teacher_count FROM teachers";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$teacher_count = $row['teacher_count'];
+
+
+if ($teacher_count <=0 || $courses_count <=0 || $section_count <=0 || $subject_count <=0) {
+    echo '<script>alert("Please make sure that you inserted data on the following table:\n 1. Teacher\n 2. Course \n 3. Section \n 4. Subject");</script>';
+    echo "<script>window.location.href = 'course_list.php';</script>";
+} else {
+
+$error = '';
 function check_teacher_load($teacher_id) {
     global $conn;
     $query = "SELECT COUNT(*) as count FROM faculty_loadings WHERE teacher=?";
@@ -89,6 +116,7 @@ if (isset($_POST['submit'])) {
         }
     }
 }
+}
 ?>
 
                 
@@ -124,7 +152,7 @@ if (isset($_POST['submit'])) {
 
 <form method="POST">
     <div class="container mt-3">
-    <h1 class="text-left text-dark">Assign Subject</h1>
+    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">ASSIGN SUBJECT TO TEACHER</H1>
         <!-- Dropdown for selecting a teacher -->
         <div class="form-group">
             <label for="teacher">Teacher</label>
