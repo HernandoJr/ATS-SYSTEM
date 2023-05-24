@@ -161,6 +161,20 @@ document.addEventListener("keydown", function(event) {
 });
 </script>';
 
+function calculateRowspan($course_year_section, $day)
+{
+    global $conn;
+    // Query to count the number of rows for the teacher and day combination
+    $countQuery = "SELECT COUNT(*) AS num_rows FROM faculty_loadings WHERE course_year_section = '$course_year_section' AND day = '$day'";
+    $countResult = $conn->query($countQuery);
+
+    if ($countResult !== false && $countResult->num_rows > 0) {
+        $countRow = $countResult->fetch_assoc();
+        return $countRow['num_rows'];
+    }
+
+    return 1; // Default rowspan value
+}
 
 $sql = "SELECT DISTINCT course_year_section FROM faculty_loadings";
 $result = $conn->query($sql);
@@ -179,7 +193,9 @@ if ($result !== false && $result->num_rows > 0) {
             echo '<thead class="fw-bolder  text-light"><tr><th>Course Year & Section</th><th>Day</th><th>Subject Code</th><th>Subject Title</th><th>Teacher</th><th>Room</th><th>Start_Time</th><th>End_Time</th></tr></thead>';
             echo '<tbody>';
 
-            $firstRow = true; // Flag to check if it's the first row for the course_year_section
+            $firstRow = true; // Flag to check if it's the first row for the course_year_section     
+            $previousDay = ""; // Variable to store the previous day
+            $rowspan = 0; // Variable to store the rowspan value for the day
 
             while ($scheduleRow = $scheduleResult->fetch_assoc()) {
                 $day = $scheduleRow['day'];
@@ -194,8 +210,6 @@ if ($result !== false && $result->num_rows > 0) {
                     $bgColorClass = 'table-info';
                 } elseif ($day == 'Thursday') {
                     $bgColorClass = 'table-danger';
-                } elseif ($day == 'Friday') {
-                    $bgColorClass = 'table-secondary';
                 }
 
                 echo '<tr class="' . $bgColorClass . '">';
@@ -206,7 +220,13 @@ if ($result !== false && $result->num_rows > 0) {
                     echo '<td class="header_row bg-light" rowspan="' . $scheduleResult->num_rows . '">' . $course_year_section . '</td>';
                 }
 
-                echo '<td>' . $day . '</td>';
+                // Check if the current day is the same as the previous day
+                if ($day != $previousDay) {
+                    // Calculate the rowspan value for the day
+                    $rowspan = calculateRowspan($course_year_section, $day);
+                    echo '<td class="header_row bg-light" rowspan="' . $rowspan . '">' . $day . '</td>';
+                }
+
                 echo '<td>' . $scheduleRow['subject_code'] . '</td>';
                 echo '<td>' . $scheduleRow['subject_description'] . '</td>';
                 echo '<td>' . $scheduleRow['teacher'] . '</td>';
@@ -221,15 +241,18 @@ if ($result !== false && $result->num_rows > 0) {
                 echo '<td>' . $end_time . '</td>';
 
                 echo '</tr>';
+                // Update the previous day variable
+                $previousDay = $day;
+
             }
-            
-    echo '</div>'; // Close the print-content container
-    echo '</div>'; // Close the print-page container
+
+            echo '</div>'; // Close the print-content container
+            echo '</div>'; // Close the print-page container
 
             echo '</tbody>';
             echo '</table>';
         } else {
-            echo 'No rooms found.'; 
+            echo 'No rooms found.';
         }
     }
 }
