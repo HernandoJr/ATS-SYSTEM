@@ -181,7 +181,7 @@ if ($result !== false && $result->num_rows > 0) {
 
     while ($row = $result->fetch_assoc()) {
         $course_year_section = $row['course_year_section'];
-        $sql = "SELECT * FROM faculty_loadings WHERE course_year_section = '$course_year_section' ORDER BY FIELD(day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday'), start_time, end_time";
+        $sql = "SELECT * FROM faculty_loadings WHERE course_year_section = '$course_year_section' ORDER BY FIELD(day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'), start_time, end_time";
         $scheduleResult = $conn->query($sql);
 
         if ($scheduleResult !== false && $scheduleResult->num_rows > 0) {
@@ -207,6 +207,8 @@ if ($result !== false && $result->num_rows > 0) {
                     $bgColorClass = 'table-info';
                 } elseif ($day == 'Thursday') {
                     $bgColorClass = 'table-danger';
+                } elseif ($day == 'Friday') {
+                    $bgColorClass = 'table-danger';
                 }
                 $html .= '<tr class="' . $bgColorClass . '">';
 
@@ -230,7 +232,7 @@ if ($result !== false && $result->num_rows > 0) {
                 $html .=  '<td>'. $start_time = date("h:i A", strtotime($scheduleRow['start_time'])).'</td>';
                 $html .=  '<td>'. $end_time = date("h:i A", strtotime($scheduleRow['end_time'])).'</td>';           
                 $html .= '</tr>';
-                
+
                 $previousDay = $day;
 
 

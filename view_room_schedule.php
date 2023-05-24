@@ -185,7 +185,7 @@ if ($result !== false && $result->num_rows > 0) {
 
     while ($row = $result->fetch_assoc()) {
         $room_name = $row['room_name'];
-        $sql = "SELECT * FROM faculty_loadings WHERE room_name = '$room_name' ORDER BY FIELD(day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday'), start_time, end_time";
+        $sql = "SELECT * FROM faculty_loadings WHERE room_name = '$room_name' ORDER BY FIELD(day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday'), start_time, end_time";
         $scheduleResult = $conn->query($sql);
 
         if ($scheduleResult !== false && $scheduleResult->num_rows > 0) {
@@ -210,7 +210,10 @@ if ($result !== false && $result->num_rows > 0) {
                     $bgColorClass = 'table-info';
                 } elseif ($day == 'Thursday') {
                     $bgColorClass = 'table-danger';
+                }elseif ($day == 'Friday') {
+                    $bgColorClass = 'table-secondary';
                 }
+
 
                 echo '<tr class="' . $bgColorClass . '">';
 

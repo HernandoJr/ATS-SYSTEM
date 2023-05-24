@@ -214,6 +214,8 @@ while ($scheduleRow = $scheduleResult->fetch_assoc()) {
         $bgColorClass = 'table-info';
     } elseif ($day == 'Thursday') {
         $bgColorClass = 'table-danger';
+    } elseif ($day == 'Friday') {
+        $bgColorClass = 'table-secondary';
     } 
 
     echo '<tr class="' . $bgColorClass . '">';

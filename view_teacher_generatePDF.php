@@ -205,7 +205,10 @@ if ($result !== false && $result->num_rows > 0) {
                     $bgColorClass = 'table-info';
                 } elseif ($day == 'Thursday') {
                     $bgColorClass = 'table-danger';
-                }
+                }elseif ($day == 'Friday') {
+                    $bgColorClass = 'table-secondary';
+                } 
+            
                 $html .= '<tr class="' . $bgColorClass . '">';
 
                 // Output teacher only for the first row

@@ -13,13 +13,24 @@ $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
 $courses_count = $row['courses_count'];
 
-if ($roomCount <10 || $courses_count <=1) {
+
+$sql = "SELECT COUNT(*) AS day_count FROM available_days";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$day_count = $row['day_count'];
+
+
+if ($roomCount <10 || $courses_count <=1 || $day_count <4) {
     if($courses_count <=1){
         echo '<script>alert("Required number of course is 2");</script>';
         echo "<script>window.location.href = 'course_list.php';</script>";
         }
-    else if($roomCount < 10 && $courses_count <=1){
-        echo '<script>alert("[Required Course = 2||Required Rooms = 10]");</script>';
+     else if($day_count <4){
+            echo '<script>alert("Required number of days is 4");</script>';
+            echo "<script>window.location.href = 'dashboard.php';</script>";
+        }
+    else if($roomCount < 10 && $courses_count <=1 && $day_count <=4){
+        echo '<script>alert("[Required Course = 2|\n|Required Rooms = 10]\n[Required Days = 4]");</script>';
         echo "<script>window.location.href = 'dashboard.php';</script>";
     }
     else{
@@ -275,7 +286,7 @@ if ($count > 0) {
                         <th>Time</th>'; // Empty cell for spacing
     
     // Loop through the days (Monday to Friday)
-    $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday');
+    $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday');
 
     foreach ($days as $day) {
         echo "<th>{$day}</th>";

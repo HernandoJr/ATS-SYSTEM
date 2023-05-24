@@ -123,6 +123,10 @@ if (isset($_POST['logout'])) {
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link" href="days_list.php">Add Day</a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link" href="teacher_list.php">Add Teacher</a>
                     </li>
 
