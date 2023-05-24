@@ -208,38 +208,38 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
 
                 </div>
-                </div>
+            </div>
 
-                <!--  randomize DASHBOARD-->
-                <div class="col-5">
-                    <div class="dashboard">
+            <!--  randomize DASHBOARD-->
+            <div class="col-5">
+                <div class="dashboard">
 
-                        <?php
-                        $query = "SELECT COUNT(*) AS total_sched FROM faculty_loadings";
-                        $result = mysqli_query($conn, $query);
+                    <?php
+                    $query = "SELECT COUNT(start_time) AS total_sched FROM faculty_loadings WHERE start_time IS NOT NULL";
+                    $result = mysqli_query($conn, $query);
 
-                        if ($result) {
-                            $row = mysqli_fetch_assoc($result);
-                            $total_sched = $row['total_sched'];
-                        } else {
-                            $total_sched = "N/A";
-                        }
-                        ?>
+                    if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $total_sched = $row['total_sched'];
+                    } else {
+                        $total_sched = "N/A";
+                    }
+                    ?>
 
-                        <img class="logo" src="logos/sched.png" alt="ATS">
-                        <div class="metric rounded-circle">
+                    <img class="logo" src="logos/sched.png" alt="ATS">
+                    <div class="metric rounded-circle">
 
-                            <div class="value">
-                                <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_sched . '</div>'; // Replace display-1 with the desired size class.?>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="label text-dark">Total Generated Schedules</div>
-                            </div>
-
+                        <div class="value">
+                            <?php echo '<div class="display-2 fw-bolder text-dark">' . $total_sched . '</div>'; // Replace display-1 with the desired size class.?>
                         </div>
+
+                        <div class="card-body">
+                            <div class="label text-dark">Total Generated Schedules</div>
+                        </div>
+
                     </div>
                 </div>
+            </div>
         </div>
     </div>
     </div>

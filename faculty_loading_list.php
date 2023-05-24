@@ -99,18 +99,25 @@ if (isset($_POST['update'])) {
 
     <div class="container">
 
+ 
+
 
     <h1 style="text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">FACULTY LOADING</H1>
 
         <form method="POST">
+
+               
             <div class="input-group mb-3">
 
                 <input type="text" class="form-control rounded" placeholder="Search by Teacher ID/Name" name="search">
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
-
-
+        <div class="containe-fluid text-center ">
+        <a href="faculty_loading.php" style ="text-align:center" class="btn btn-primary mb-3 mt-3"><i class='fas fa-user-plus'></i>Assign subject</a>
+        <button type="button" class="btn btn-danger mb-3 text-center mt-3" id="truncate-btn">Delete All Data</button>
+        </div>
+  
         <table class="table table-bordered border-dark table table-hover table-white">
             <thead class="bg-success text-white text-center" style=" vertical-align:middle;" >
                 <tr>
@@ -205,13 +212,6 @@ if (isset($_POST['update'])) {
                 ?>
             </tbody>
         </table>
-
-        <a href="faculty_loading.php" class="btn btn-success"><i class='fas fa-user-plus'></i>Assign subject</a>
-        <button type="button" class="btn btn-danger" id="truncate-btn">Delete all the data in faculty loading table</button>
-        
-
-
-
     </div>
 
     <script>
