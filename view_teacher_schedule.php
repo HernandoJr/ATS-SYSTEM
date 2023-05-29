@@ -177,7 +177,7 @@ function calculateRowspan($teacher, $day) {
 
     return 1; // Default rowspan value
 }
-$sql = "SELECT DISTINCT teacher FROM faculty_loadings";
+$sql = "SELECT DISTINCT teacher FROM faculty_loadings ORDER BY teacher ASC";
 $result = $conn->query($sql);
 
 if ($result !== false && $result->num_rows > 0) {
@@ -192,7 +192,7 @@ if ($result !== false && $result->num_rows > 0) {
         
 if ($scheduleResult !== false && $scheduleResult->num_rows > 0) {
     echo '<table class="table mt-4 print-table table-bordered table table-hover">';
-    echo '<thead class="fw-bolder bg-dark text-light"><tr><th>Teacher</th><th>Day</th><th>Subject Code</th><th>Subject Title</th><th>Room</th><th>Course Year & Section</th><th>Start_Time</th><th>End_Time</th></tr></thead>';
+    echo '<thead class="fw-bolder bg-dark text-light"><tr><th>Teacher</th><th>Day</th><th>Subject Code</th><th>Subject Title</th><th>Subject Type</th></th><th>Room</th><th>Course Year & Section</th><th>Start_Time</th><th>End_Time</th></tr></thead>';
     echo '<tbody>';
 
     $firstRow = true; // Flag to check if it's the first row for the teacher
@@ -236,6 +236,7 @@ while ($scheduleRow = $scheduleResult->fetch_assoc()) {
     // Output the remaining table cells
     echo '<td>' . $scheduleRow['subject_code'] . '</td>';
     echo '<td>' . $scheduleRow['subject_description'] . '</td>';
+    echo '<td>' . $scheduleRow['subject_type'] . '</td>';
     echo '<td>' . $scheduleRow['room_name'] . '</td>';
     echo '<td>' . $scheduleRow['course_year_section'] . '</td>';
 

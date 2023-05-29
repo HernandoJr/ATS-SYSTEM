@@ -62,6 +62,8 @@ if (isset($_GET['delete_id'])) {
                 </div>
             </form>
 
+            <a href="semester_create.php" class="btn btn-success mb-3">Add Semester</a>
+
             <table class="table table-bordered table table-hover">
                 <thead>
                     <tr>
@@ -114,7 +116,6 @@ if (isset($_GET['delete_id'])) {
                 </tbody>
             </table>
 
-            <a href="semester_create.php" class="btn btn-success">Add Semester</a>
 
         </div>
     </div>

@@ -74,6 +74,8 @@ if (isset($_POST['submit'])) {
 <body>
     <title>Add Course</title>
     <div class="container mt-3">
+    <button type="submit" class="btn btn-primary" name="submit">Create</button>
+            <a href="course_list.php" class="btn btn-danger" name="back">Back</a>
 
     <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">ADD COURSE</H1>
 
@@ -96,9 +98,7 @@ if (isset($_POST['submit'])) {
                     name="slots" required>
             </div>
             
-            <button type="submit" class="btn btn-primary" name="submit">Create</button>
-            <a href="course_list.php" class="btn btn-danger" name="back">Back</a>
-
+        
         </form>
     </div>
 

@@ -173,7 +173,7 @@ function calculateRowspan($course_year_section, $day) {
 }
 
 
-$sql = "SELECT DISTINCT course_year_section FROM faculty_loadings";
+$sql = "SELECT DISTINCT course_year_section FROM faculty_loadings ORDER BY course_year_section ASC ";
 $result = $conn->query($sql);
 
 if ($result !== false && $result->num_rows > 0) {

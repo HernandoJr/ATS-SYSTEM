@@ -69,6 +69,8 @@ if (isset($_POST['search'])) {
                 </div>
             </form>
 
+            <a href="section_create.php" class="btn btn-success mb-3"><i class='fas fa-user-plus'></i> Add section</a>
+
 
             <table class="table table-bordered table table-hover">
                 <thead>
@@ -123,7 +125,6 @@ if (isset($_POST['search'])) {
                 </tbody>
             </table>
 
-            <a href="section_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add section</a>
 
         </div>
     </div>

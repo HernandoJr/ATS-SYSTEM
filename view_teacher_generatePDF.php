@@ -171,7 +171,7 @@ function calculateRowspan($teacher, $day) {
     return 1; // Default rowspan value
 }
 
-$sql = "SELECT DISTINCT teacher FROM faculty_loadings";
+$sql = "SELECT DISTINCT teacher FROM faculty_loadings ORDER BY teacher ASC";
 $result = $conn->query($sql);
 
 if ($result !== false && $result->num_rows > 0) {

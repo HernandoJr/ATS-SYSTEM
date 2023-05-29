@@ -62,13 +62,13 @@ if (isset($_POST['search'])) {
 
             <form method="POST">
                 <div class="input-group mb-3">
-
                     <input type="text" class="form-control rounded" placeholder="Search by course_name or slots"
                         name="search">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
-            </form>
 
+                <a href="course_create.php" class="btn btn-success mb-3"><i class='fas fa-user-plus'></i> Add Course</a>
+            </form>
 
             <table class="table table-bordered table table-hover">
                 <thead>
@@ -105,7 +105,6 @@ if (isset($_POST['search'])) {
                 </tbody>
             </table>
 
-            <a href="course_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Course</a>
             
         </div>
     </div>

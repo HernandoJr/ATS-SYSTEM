@@ -56,6 +56,9 @@ if (isset($_POST['search'])) {
             </div>
         </form>
 
+        <a href="room_create.php" class="btn btn-success mb-3"><i class='fas fa-user-plus'></i> Add Rooms</a>
+
+
         <table class="table table-bordered table table-hover">
             <thead>
                 <tr>
@@ -105,9 +108,6 @@ if (isset($_POST['search'])) {
                 ?>
             </tbody>
         </table>
-
-        <a href="room_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Rooms</a>
-
     </div>
 
     

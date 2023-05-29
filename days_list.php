@@ -67,6 +67,7 @@ if (isset($_POST['search'])) {
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </form>
+            <a href="days_create.php" class="btn btn-success mb-3"><i class='fas fa-user-plus'></i> Add Day</a>
 
 
             <table class="table table-bordered table table-hover">
@@ -100,7 +101,6 @@ if (isset($_POST['search'])) {
                 </tbody>
             </table>
 
-            <a href="days_create.php" class="btn btn-success"><i class='fas fa-user-plus'></i> Add Day</a>
             
         </div>
     </div>

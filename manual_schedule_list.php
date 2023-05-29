@@ -106,9 +106,12 @@ if (isset($_POST['update'])) {
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
-
+        <div class="mb-3 text-center">
+        <a href="manual_schedule.php" class="btn btn-success sm"><i class='fas fa-user-plus'></i>Assign timeslot</a>
+        <button type="button" class="btn btn-danger" id="truncate-btn">Delete all manual generated schedule</button>
+        </div>
         <div class="table-responsive">
-        <table  style="vertical-align:middle" class="table  table-bordered table table-hover table-sm  text-center">
+        <table  style="vertical-align:middle;border:2px solid black;" class="table  table-bordered table table-hover table-sm  text-center">
             <thead class="bg-success text-dark text-white">
                 <tr class="text-sm">
                     <th >No.</th>
@@ -210,8 +213,7 @@ if (isset($_POST['update'])) {
             </tbody>
         </table>
 
-        <a href="manual_schedule.php" class="btn btn-success sm"><i class='fas fa-user-plus'></i>Assign timeslot</a>
-        <button type="button" class="btn btn-danger" id="truncate-btn">Delete all the data in faculty loading table</button>
+     
         
     </div> </div>
 

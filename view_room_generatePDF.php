@@ -173,7 +173,7 @@ function calculateRowspan($room_name, $day) {
 }
 
 
-$sql = "SELECT DISTINCT room_name FROM faculty_loadings";
+$sql = "SELECT DISTINCT room_name FROM faculty_loadings ORDER BY room_name";
 $result = $conn->query($sql);
 
 if ($result !== false && $result->num_rows > 0) {

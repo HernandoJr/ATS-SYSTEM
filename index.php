@@ -25,6 +25,7 @@ if (isset($_POST['logout'])) {
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/x-icon" href="logos/CVSU_LOGO.png">
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -44,23 +45,32 @@ if (isset($_POST['logout'])) {
         integrity="sha384-PoX9L+uPbsAVCv+jcUscle6Udq7VrypQT8Uv7zsLAbB6C9fV0pG8yBlxkdgsHOD+" crossorigin="anonymous">
     <title>ATS-SYSTEM</title>
 
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+
+
 
 </head>
 
 
-<body style="background-color: #d5fefd; background-image: linear-gradient(315deg, #d5fefd 0%, #fffcff 74%);" class="d-flex flex-column min-vh-100" ;>
+<body style="background-color: #d5fefd; background-image: linear-gradient(to left top, #f0f2ee, #f1f5f3, #f3f7f7, #f7fafb, #fbfcfd, #fbfdfd, #fcfdfd, #fdfefd, #fcfdfd, #fbfcfc, #fafafa, #f9f9f9);"
+    class="d-flex flex-column min-vh-100" ;>
+
     <!--Nested Nav Bar -->
     <!-- RESPONSIVE NAV BAR STARTS HERE -->
-
     <nav class="navbar navbar-expand bg-light sticky-top">
-        <ul class="navbar-nav">
-            <a class="navbar-brand" href="dashboard.php">
-                <img src="logos/logo.png" alt="ATS">
-                <span class="navbar-brand-label fw-bolder fs-2 text-dark"
-                    style="margin-left:60px;font-family:monospace">ATS SYSTEM</span>
-
-            </a>
-        </ul>
+        <a class="navbar-brand" href="dashboard.php">
+            <div class="d-flex align-items-center">
+            <img src="logos/CVSU_LOGO.png" alt="Logo" id="logo" class="sidebar-toggle-image">
+                    
+                </div>
+                <span class="navbar-brand-label"
+                        style="color: #2e6113; font-family: Consolas, monospace; font-size: 2.2rem;">ATS SYSTEM</span>
+            </div>
+        </a>
 
         <div class=" bg-gray text-warning border ms-12  fw-bolder ">
             <?php
@@ -91,8 +101,8 @@ if (isset($_POST['logout'])) {
             <li class="nav-item dropdown">
 
                 <div class="dropdown">
-                    <button class="fw-bolder btn btn-danger  text-center text-light dropdown-toggle" type="button" id="userDropdown"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="fw-bolder btn btn-danger  text-center text-light dropdown-toggle" type="button"
+                        id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <?php echo $user_data['name']; ?>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
@@ -112,95 +122,111 @@ if (isset($_POST['logout'])) {
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <div class="d-flex">
-            <div class="sidebar bg-white">
+    <div class="container-fluid wrapper">
+        <div class="d-flex content">
+            <div class="sidebar">
                 <!-- Your sidebar content here -->
                 <ul class="navbar-nav">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="semester_list.php">Add Semester</a>
+                        <a class="nav-link hover-color" href="semester_list.php">Add Semester</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="days_list.php">Add Day</a>
+                        <a class="nav-link hover-color" href="days_list.php">Add Day</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="teacher_list.php">Add Teacher</a>
+                        <a class="nav-link hover-color" href="teacher_list.php">Add Teacher</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="course_list.php">Add Course</a>
+                        <a class="nav-link hover-color" href="course_list.php">Add Course</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="section_list.php">Add Section</a>
+                        <a class="nav-link hover-color" href="section_list.php">Add Section</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="subject_list.php">Add Subject</a>
+                        <a class="nav-link hover-color" href="subject_list.php">Add Subject</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="room_list.php">Add Rooms</a>
+                        <a class="nav-link hover-color" href="room_list.php">Add Rooms</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-primary" href="faculty_loading_list.php">Faculty Loading</a>
+                        <a class="nav-link hover-color text-danger" href="faculty_loading_list.php">Faculty Loading</a>
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-danger" href="#" id="scheduleDropdown" role="button"
+                        <a class="nav-link hover-color dropdown-toggle text-danger" href="#" id="scheduleDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             Generate Schedule
                         </a>
                         <ul class="dropdown-menu " aria-labelledby="scheduleDropdown">
-                            <a class="nav-link text-primary  fw-bolder text-center h5"
+                            <a class="nav-link hover-color text-primary  fw-bolder text-center h5"
                                 href="automated_schedule.php">Automated</a>
                     </li>
                     <hr class="dropdown-divider">
                     </li>
-                    <a class="nav-link text-primary fw-bolder text-center h5" href="manual_schedule_list.php">Manual</a>
+                    <a class="nav-link hover-color text-primary fw-bolder text-center h5" href="manual_schedule_list.php">Manual</a>
                 </ul>
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-danger" href="#" id="scheduleDropdown" role="button"
+
+                    <a class="nav-link hover-color dropdown-toggle text-danger" href="#" id="scheduleDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         View Schedule
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
-                        <li><a class="dropdown-item text-primary h5" href="view_room_schedule.php">View Room
-                                Schedule</a></li>
-                        <li><a class="dropdown-item text-primary h5" href="view_teacher_schedule.php">View Teacher
-                                Schedule </a>
-                        <li><a class="dropdown-item text-primary h5" href="view_section_schedule.php">View Section
-                                Schedule </a>
+                        <li><a class="dropdown-item text-primary h5" href="view_room_schedule.php">View RoomSchedule</a>
                         </li>
-                        <li>
-                        </li>
-                    </ul>
+                        <li><a class="dropdown-item hover-color text-primary h5" href="view_teacher_schedule.php">View Teacher
+                                Schedule </a>
+                        <li><a class="dropdown-item hover-color text-primary h5" href="view_section_schedule.php">View Section
+                                Schedule </a></li>
+                </li>
+                </ul>
+
                 </li>
 
-                </ul>
+
+                <button id="hideSidebar" class="sidebar-toggle btn-warning text-dark text-center mt-3"
+                    style="padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; transition: background-color 0.3s; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
+                    <i class="fas fa-bars" style="margin-right: 5px;"></i> Hide Sidebar
+                </button>
+                
+
             </div>
         </div>
 
     </div>
-    </div>
 
-    <!-- footer -->
+    <script>
+        $(document).ready(function () {
+            $('.sidebar').show(); // Show the sidebar by default
 
-    <!-- <footer class="footer bg-dark bg-gradient py-3  mt-auto">
+            // Hide the sidebar with a slide animation when the "Hide Sidebar" button is clicked
+            $('#hideSidebar').click(function () {
+                $('.sidebar').slideUp(900); // Set the desired animation duration (e.g., 500ms)
+            });
+  });
+    </script>
 
-        <div class="container">
-            <p class="text-muted">Cavite State University CCAT Campus (Automated Timetable Scheduling System)
-                <span class="float-end"><a href="dashboard.php">Back to top</a></span>
-            </p>
-        </div>
+<script>
+  $(document).ready(function () {
+            $('.sidebar').show(); // Show the sidebar by default
 
-    </footer>-->
+    // Show the sidebar when hovering over the logo
+    $('#logo').hover(function () {
+      $('.sidebar').slideDown(900);
+    });
+  });
+</script>
+
 
 
 </body>
