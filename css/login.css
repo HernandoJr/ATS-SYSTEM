@@ -1,5 +1,10 @@
-body {
-    background-color:ghostwhite;
-    background-repeat: repeat;
-  }
-  
+
+    body {
+        background-color: ghostwhite;
+        background-image: url(logos/cvsu_logo2.jpg);
+        background-repeat: repeat;
+        background-position: center;
+    }
+    .text-shadow {
+      text-shadow: 2px 2px 4px rgba(3, 0, 2, 0.1);
+    }

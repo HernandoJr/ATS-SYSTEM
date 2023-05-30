@@ -73,7 +73,7 @@ if ($roomCount < 10 || $courses_count <= 1 || $day_count < 4) {
             return true;
         }
 
-        // Select the first course from the list
+        // Select the first course from the list and remove it from the array
         $course = array_shift($courses);
         $subjectHours = $course['subject_hours'];
 
@@ -141,13 +141,15 @@ if ($roomCount < 10 || $courses_count <= 1 || $day_count < 4) {
 
                         // If a valid assignment is found for all courses, return true
                         if ($success) {
-                            echo '<script>alert("Generated successfully!");</script>';
+                            //echo '<script>alert("Generated successfully!");</script>'; PROMPT AFTER SUCCESSFUL LOGIN
                             return true;
                         }
+                       
 
                         // If the assignment was not successful, backtrack by resetting the timeslot, day, room name, and room type
                         $update_sql = "UPDATE faculty_loadings SET start_time = NULL, end_time = NULL, day = NULL, room_name = NULL WHERE id = {$course['id']}";
                         mysqli_query($conn, $update_sql);
+                    
                     }
                 }
             }
@@ -217,9 +219,13 @@ if ($roomCount < 10 || $courses_count <= 1 || $day_count < 4) {
             if ($success) {
                 echo '<script type="text/javascript">';
                 echo ' alert("Schedule is Generated Successfully without conflicts!");';
+                echo '</script>';
             } else {
-                echo "Unable to assign timeslots without conflicts.";
+                echo '<script type="text/javascript">';
+                echo ' alert("Unable to assign timeslots without conflicts.");';
+                echo '</script>';
             }
+            
         } else {
             die('Error retrieving faculty_loadings data: ' . mysqli_error($conn));
         }
@@ -288,9 +294,9 @@ if ($roomCount < 10 || $courses_count <= 1 || $day_count < 4) {
         
         echo '</tr>
                 </thead>
-                <tbody>';
+                <tbody style="font-size:1rem;">';
 
-        // Loop through the time slots
+        // Loop through the time slots MODIFY THIS IF YOU WANT TO ADD TIME RANGE
         $start_time = strtotime('07:00:00');
         $end_time = strtotime('19:00:00');
 

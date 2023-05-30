@@ -76,7 +76,7 @@ if (isset($_POST['register'])) {
                                 <input type="password" class="form-control" id="confirm_password"
                                     name="confirm_password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary" name="register">Register</button>
+                            <button type="submit" class="btn btn-success" name="register">Register</button>
                             <p class="text-center">Already have an account? <a href="login.php">Login here</a></p>
 
                         </form>

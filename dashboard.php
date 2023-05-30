@@ -52,23 +52,25 @@ if (!isset($_SESSION['user_id'])) {
     $result = mysqli_query($conn, $sql);
     $user_data = mysqli_fetch_assoc($result);
     $user_name = $user_data['name'];
-    echo "<h3 style='font-family:monospace;' class='fw-bolder text-warning'>ATS (Automated Timetable Scheduling System)</h3>";
+    echo "<h3 style='font-family:monospace;' class='fw-bolder text-warning'>Automated Timetable Scheduling System (ATS)</h3>";
 
     ?>
     <div class="mt-4">
         <ul class="list-unstyled text-white ">
             <em>
-                The Academic Timetable System (ATS) is a web-based application developed for the Department of Computer
-                Studies at Cavite State University CCAT Campus. Its main purpose is to automate the scheduling process,
-                ensuring that schedules for teachers, students, and rooms are conflict-free. ATS considers various
-                constraints and determines the duration of each timeslot based on subject hours. It also assigns
-                appropriate rooms for different subjects. The ultimate goal of ATS is to generate an optimized timetable
-                that maximizes efficiency and minimizes conflicts.
+                Automated Timetable Scheduling System (ATS) is a web-based application developed for the Department
+                of Computer Studies at Cavite State University CCAT Campus. Its main purpose is to automate the
+                scheduling process, ensuring that schedules for teachers, students, and rooms are conflict-free. ATS
+                considers various constraints such as the duration of each timeslot should be based on subject hours. It
+                also assigns appropriate rooms for different subjects based on subject type and room type. By automating
+                the scheduling process, ATS aims to generate an optimized schedule that maximizes efficiency, minimizes
+                conflicts, and reduces the time required to create schedules.
             </em>
         </ul>
     </div>
 
-    <button type="button" id="button_close" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button type="button" id="button_close" class="btn-close btn-close-white" data-bs-dismiss="alert"
+        aria-label="Close"></button>
 </div>
 
 

@@ -106,19 +106,22 @@ if (isset($_POST['update'])) {
 
         <form method="POST">
 
-               
             <div class="input-group mb-3">
-
                 <input type="text" class="form-control rounded" placeholder="Search by Teacher ID/Name" name="search">
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
+
         </form>
+
         <div class="containe-fluid text-center ">
-        <a href="faculty_loading.php" style ="text-align:center" class="btn btn-primary mb-3 mt-3"><i class='fas fa-user-plus'></i>Assign subject</a>
-        <button type="button" class="btn btn-danger mb-3 text-center mt-3" id="truncate-btn">Delete All Data</button>
+
+            <a href="faculty_loading.php" style ="text-align:center" class="btn btn-primary mb-3 mt-3"><i class='fas fa-user-plus'></i>Assign subject</a>
+            <button type="button" class="btn btn-danger mb-3 text-center mt-3" id="truncate-btn">Delete All Data</button>
+       
         </div>
+
   
-        <table class="table table-bordered border-dark table table-hover table-white">
+        <table class="table table-bordered border-dark table-hover">
             <thead class="bg-success text-white text-center" style=" vertical-align:middle;" >
                 <tr>
                     <th>No.</th>
@@ -134,7 +137,7 @@ if (isset($_POST['update'])) {
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody style="font-size:1.2rem;font-family:monospace">
 
                 <?php
 

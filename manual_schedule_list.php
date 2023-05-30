@@ -111,13 +111,13 @@ if (isset($_POST['update'])) {
         <button type="button" class="btn btn-danger" id="truncate-btn">Delete all manual generated schedule</button>
         </div>
         <div class="table-responsive">
-        <table  style="vertical-align:middle;border:2px solid black;" class="table  table-bordered table table-hover table-sm  text-center">
+        <table  style="vertical-align:middle;border:1px solid black;" class="table table-bordered table table-hover text-center">
             <thead class="bg-success text-dark text-white">
                 <tr class="text-sm">
                     <th >No.</th>
                     <th>Sched Code</th>
                     <th>Teacher Name</th>
-                    <th>Subject Code</th>
+                    <th>Subject Code</th>          
                     <th>Subject Description</th>
                     <th>Subject Type</th>
                     <th>Contact Hours</th>

@@ -54,11 +54,11 @@ if (isset($_POST['search'])) {
 
 <body>
 
-    <div class="container">
+    <div class="container" style="background-color:#FAF8FF">
         <div class="container">
 
 
-        <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">COURSE LIST</H1>
+        <h1 style="text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">COURSE LIST</H1>
 
             <form method="POST">
                 <div class="input-group mb-3">
@@ -70,8 +70,8 @@ if (isset($_POST['search'])) {
                 <a href="course_create.php" class="btn btn-success mb-3"><i class='fas fa-user-plus'></i> Add Course</a>
             </form>
 
-            <table class="table table-bordered table table-hover">
-                <thead>
+            <table class="table table-bordered table-hover text-center" style="border:1px solid black">
+                 <thead class="bg-warning">
                     <tr>
                         <th>No.</th>
                         <th>Course ID</th>
@@ -80,7 +80,7 @@ if (isset($_POST['search'])) {
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="font-size:1.2rem;font-family:monospace">
                     <?php
                     if ($result->num_rows > 0) {
                         // output data of each row

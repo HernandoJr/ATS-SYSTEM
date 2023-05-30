@@ -77,7 +77,7 @@ $password = $row_fetch_user_data['password'];
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
-    </script>
+        </script>
     <!-- CDN jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
@@ -93,13 +93,18 @@ $password = $row_fetch_user_data['password'];
 
     <div class="container">
 
-    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE USER ACCOUNT</H1>
+        <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)"
+            class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE USER ACCOUNT</H1>
 
         <?php if (isset($success_message)) { ?>
-        <div class="alert alert-success"><?php echo $success_message; ?></div>
+            <div class="alert alert-success">
+                <?php echo $success_message; ?>
+            </div>
         <?php } ?>
         <?php if (isset($error_message)) { ?>
-        <div class="alert alert-danger"><?php echo $error_message; ?></div>
+            <div class="alert alert-danger">
+                <?php echo $error_message; ?>
+            </div>
         <?php } ?>
 
         <form method="post">
@@ -117,13 +122,20 @@ $password = $row_fetch_user_data['password'];
 
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password"
-                    value="<?php echo $user_data['password']; ?>">
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password" name="password"
+                        value="<?php echo $user_data['password']; ?>">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-success" type="button" id="togglePassword">Show</button>
+                    </div>
+                </div>
             </div>
+
             <!-- Form inputs go here -->
             <div class="form-group mt-3">
                 <button type="submit" name="submit" class="btn btn-primary">Update</button>
                 <button type="button" class="btn btn-danger" onclick="window.history.back()">Back</button>
+
             </div>
         </form>
 
@@ -131,6 +143,19 @@ $password = $row_fetch_user_data['password'];
     </div>
 </body>
 
+<!-- JavaScript jquery to toggle password visibility -->
+<script>
+    $(document).ready(function() {
+        const passwordField = $('input[name="password"]');
+        const togglePasswordButton = $('#togglePassword');
+
+        togglePasswordButton.on('click', function() {
+            const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+            passwordField.attr('type', type);
+            togglePasswordButton.text(type === 'password' ? 'Show' : 'Hide');
+        });
+    });
+</script>
 </html>
 <?php
 // Close the database connection

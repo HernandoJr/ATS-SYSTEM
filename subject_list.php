@@ -70,8 +70,8 @@ if (isset($_POST['search'])) {
 
             <a href="subject_create.php" class="btn btn-success mb-3"><i class='fas fa-user-plus'></i> Add Subject</a>
 
-            <table class="table  table-bordered table table-hover">
-                <thead>
+            <table class="table table-bordered table-hover text-center" style="border:1px solid black">
+                <thead class="bg-warning">
                     <tr>
                         <th>No.</th>
                         <th>Subject Code</th>
@@ -83,7 +83,7 @@ if (isset($_POST['search'])) {
 
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="font-size:1.2rem;font-family:monospace">
 
                     <?php
                     // Execute search query if search form is submitted

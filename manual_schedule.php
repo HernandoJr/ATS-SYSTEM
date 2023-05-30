@@ -4,6 +4,7 @@ include 'index.php';
 
 $error = '';
 
+// Check if the form is submitted
 if (isset($_POST['submit'])) {
     $teacher = $_POST['teacher'];
     $subjectDescription = $_POST['subject_description'];
@@ -19,7 +20,7 @@ if (isset($_POST['submit'])) {
     if (empty($teacher) || empty($subjectDescription) || empty($courseName) || empty($sectionName) || empty($sectionYear)) {
         $error = 'Please fill in all required fields.';
     } else {
-        // Get the subject units/type/cpode/ hours of selected subject description from the database
+        // Get the subject units/type/code/hours of selected subject description from the database
         $stmt = $conn->prepare("SELECT subject_units, subject_type, subject_hours, subject_code FROM subjects WHERE subject_description = ?");
         $stmt->bind_param("s", $subjectDescription);
         $stmt->execute();
@@ -38,15 +39,15 @@ if (isset($_POST['submit'])) {
             $subject_code = "";
         }
 
-        // Check if the data already exists in the manual_generated_schedule table/AVOID DUPLICATION OF TIMESLOT
+        // Check if the data already exists in the manual_generated_schedule table to avoid duplication of timeslot
         $stmt = $conn->prepare("SELECT * FROM manual_generated_schedule WHERE room_name = ? AND day = ? AND ((start_time <= ? AND end_time > ?) OR (start_time >= ? AND start_time < ?))");
         $stmt->bind_param("ssssss", $room_name, $day, $endTime, $startTime, $startTime, $endTime);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
-            // Data already exists, do nothing
-            echo "<script>alert('Data already exist!');</script>";
+            // Data already exists, show an error message or take appropriate action
+            echo "<script>alert('Data already exists!');</script>";
         } else {
             // Data does not exist, insert the data into the faculty_loading table
             $stmt = $conn->prepare("INSERT INTO manual_generated_schedule (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, start_time, end_time, day, room_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -62,6 +63,7 @@ if (isset($_POST['submit'])) {
         }
     }
 }
+?>
 ?>
 
 

@@ -12,10 +12,9 @@ if (!isset($_SESSION['user_id'])) {
 
 // Inserting data for teachers table
 if (isset($_POST['submit'])) {
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $teacher_id = $_POST['teacher_id'];
-
+    $firstname = mysqli_real_escape_string($conn,$_POST['firstname']);
+    $lastname = mysqli_real_escape_string($conn,$_POST['lastname']);
+    $teacher_id =mysqli_real_escape_string($conn,$_POST['teacher_id']);
     // Check if data already exists in the database
     $teacher_id = mysqli_real_escape_string($conn, $_POST['teacher_id']);
     $sql = "SELECT * FROM teachers WHERE teacher_id ='$teacher_id'";

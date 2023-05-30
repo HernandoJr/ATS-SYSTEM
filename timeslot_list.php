@@ -3,7 +3,7 @@
 include 'database_connection.php';
 include 'index.php';
 // Fetch the time slots from the database and order them by timeslot_id
-$result = $conn->query("SELECT start_time, end_time, duration, timeslot_id_based_on_duration FROM timeslots ORDER BY timeslot_id_based_on_duration ASC");
+$result = $conn->query("SELECT start_time, end_time, duration, timeslot_id_based_on_duration FROM timeslots ORDER BY timeslot_id_based_on_duration ASC, start_time ASC, end_time ASC, duration ASC");
 
 // Check if there are any time slots in the database
 while ($row = $result->fetch_assoc()) {

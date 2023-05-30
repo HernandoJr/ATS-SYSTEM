@@ -64,8 +64,8 @@ if (isset($_GET['delete_id'])) {
 
             <a href="semester_create.php" class="btn btn-success mb-3">Add Semester</a>
 
-            <table class="table table-bordered table table-hover">
-                <thead>
+            <table class="table table-bordered table-hover text-center" style="border:1px solid black">
+              <thead class="bg-warning">
                     <tr>
                         <th>No.</th>
                         <th>Semester ID</th>
@@ -75,7 +75,7 @@ if (isset($_GET['delete_id'])) {
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="font-size:1.2rem;font-family:monospace">
                     <?php
                     // Execute search query if search form is submitted
                     if (isset($_POST['search'])) {

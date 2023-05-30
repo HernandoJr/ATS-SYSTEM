@@ -70,16 +70,15 @@ if (isset($_POST['search'])) {
             <a href="days_create.php" class="btn btn-success mb-3"><i class='fas fa-user-plus'></i> Add Day</a>
 
 
-            <table class="table table-bordered table table-hover">
-                <thead>
+            <table class="table table-bordered table-hover text-center" style="border:1px solid black">
+                <thead class="bg-warning">
                     <tr>
                         <th>No.</th>
                         <th>Day</th>
-                      
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="font-size:1.2rem;font-family:monospace">
                     <?php
                     if ($result->num_rows > 0) {
                         // output data of each row
