@@ -28,22 +28,27 @@ $html = '
         width: 100%;
         margin-bottom: 1rem;
         color: white;
-        font-family: arial bold;
-        background-color: darkgreen;
-    }
-
-    .table-bordered {
-        border: 2px solid black;
-    }
-
-    .table-bordered th,
+        background-color: #388e3c; 
+        }
+   
     .table-bordered td {
-        border: 2px solid black;
+        border:1px solid black;
+        padding: 8px;
+        text-align: center; 
+        vertical-align: middle;
+        font-family:Georgia;
+
+    }
+
+    .table-bordered th{
+        border: 1px double black;
         padding: 8px;
         text-align: center;
+        color:white;
         vertical-align: middle;
-    }
-    
+        font-weight:bold;
+        font-size:12px;
+        }
 
     .table-hover tbody tr:hover {
         background-color: rgba(0, 0, 0, 0.075);
@@ -53,36 +58,35 @@ $html = '
     .table-primary,
     .table-primary > th,
     .table-primary > td {
-        background-color: #F3E8EA;
+    background-color: #fefaec;   
         color: black;
     }
 
     .table-warning,
     .table-warning > th,
     .table-warning > td {
-        background-color: #ffc107;
-        color: #212529;
+        background-color:  #a6e4e7; 
+        color: black;
     }
 
     .table-info,
     .table-info > th,
     .table-info > td {
-        background-color:#D4FF5A;
+        background-color:#ffd79a;  
         color: black;
     }
 
     .table-danger,
     .table-danger > th,
     .table-danger > td {
-        background-color: #A0FCFF;
+        background-color: #ccda46; 
         color: black;
     }
 
     .table-secondary,
     .table-secondary > th,
     .table-secondary > td {
-        background-color:#FF6E6E;
-        ;
+        background-color: #ff7575;
         color: black;
     }
 
@@ -208,7 +212,7 @@ if ($result !== false && $result->num_rows > 0) {
                 } elseif ($day == 'Thursday') {
                     $bgColorClass = 'table-danger';
                 } elseif ($day == 'Friday') {
-                    $bgColorClass = 'table-danger';
+                    $bgColorClass = 'table-secondary';
                 }
 $html .= '<tr class="' . $bgColorClass . '">';
 
