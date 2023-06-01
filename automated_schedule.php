@@ -283,7 +283,7 @@ if ($roomCount < 10 || $courses_count <= 1 || $day_count < 4) {
 
         <thead class="thead-dark bg-success text-light fw-bolder text-light">               
         <tr>
-                            <th>Time</th>'; // Empty cell for spacing
+            <th>Time</th>'; // Empty cell for spacing
         
         // Loop through the days (Monday to Friday)
         $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday');

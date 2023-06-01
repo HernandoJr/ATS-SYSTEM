@@ -2,6 +2,7 @@
 include 'database_connection.php';
 include 'index.php';
 
+
 // Delete section if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
@@ -70,7 +71,6 @@ if (isset($_POST['search'])) {
             </form>
 
             <a href="section_create.php" class="btn btn-success mb-3"><i class='fas fa-user-plus'></i> Add section</a>
-
 
             <table class="table table-bordered table-hover text-center" style="border:1px solid black">
                 <thead class="bg-warning">

@@ -80,7 +80,7 @@ if (!isset($_SESSION['user_id'])) {
     <div class="row justify-content-center" style="margin-right:0px;margin-left:190px;">
         <!-- TEACHER DASHBOARD -->
         <div class="col-5">
-            <div class="dashboard">
+            <div class="dashboard hover-color">
 
                 <?php
                 $query = "SELECT COUNT(*) AS total_teachers FROM teachers";
@@ -114,7 +114,7 @@ if (!isset($_SESSION['user_id'])) {
 
         <!--  COURSE DASHBOARD-->
         <div class="col-5">
-            <div class="dashboard">
+            <div class="dashboard hover-color">
 
                 <?php
                 $query = "SELECT COUNT(*) AS total_course FROM courses";
@@ -146,7 +146,7 @@ if (!isset($_SESSION['user_id'])) {
 
         <!--  SECTION DASHBOARD-->
         <div class="col-5">
-            <div class="dashboard">
+            <div class="dashboard hover-color">
 
                 <?php
                 $query = "SELECT COUNT(*) AS total_section FROM sections";
@@ -179,7 +179,7 @@ if (!isset($_SESSION['user_id'])) {
 
         <!--  SUBJECT DASHBOARD-->
         <div class="col-5">
-            <div class="dashboard">
+            <div class="dashboard hover-color">
 
                 <?php
                 $query = "SELECT COUNT(*) AS total_subject FROM subjects";
@@ -211,7 +211,7 @@ if (!isset($_SESSION['user_id'])) {
 
         <!--  Rooms DASHBOARD-->
         <div class="col-5">
-            <div class="dashboard">
+            <div class="dashboard hover-color">
 
                 <?php
                 $query = "SELECT COUNT(*) AS total_rooms FROM rooms";
@@ -243,7 +243,7 @@ if (!isset($_SESSION['user_id'])) {
 
         <!--  randomize DASHBOARD-->
         <div class="col-5">
-            <div class="dashboard">
+            <div class="dashboard hover-color">
 
                 <?php
                 $query = "SELECT COUNT(start_time) AS total_sched FROM faculty_loadings WHERE start_time IS NOT NULL";

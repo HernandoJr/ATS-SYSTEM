@@ -1,7 +1,3 @@
-<?php
-include 'database_connection.php';
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +19,53 @@ include 'database_connection.php';
 		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/login.css">
 
+	<style>
+		
+		.container {
+			padding: 40px;
+		}
+
+		.card {
+			background-color: #f0f0f0;
+			border: none;
+			border-radius: 10px;
+			box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+		}
+
+		.card-header {
+			background-color:black;
+			border: none;
+		}
+
+		.card-body {
+			background-color:floralwhite;
+		}
+
+		.form-control {
+			background-color: #f0f0f0;
+			border: none;
+			border-radius: 10px;
+			box-shadow: inset 3px 3px 7px rgba(0, 0, 0, .2), inset -3px -3px 7px rgba(255, 255, 255, 0.3);
+			padding: 10px 15px;
+		}
+
+		.btn-success {
+			background-color: #4bb543;
+			border: none;
+			border-radius: 10px;
+			box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
+			padding: 10px 15px;
+		}
+
+		.btn-success:hover {
+			background-color: #3e923f;
+		}
+
+		a {
+			color: #4bb543;
+		}
+	</style>
+
 </head>
 
 <body>
@@ -31,10 +74,10 @@ include 'database_connection.php';
 		<div class="row justify-content-center">
 			<div class="col-md-6">
 				<div class="card">
-					<div class="card-header bg-dark text-center">
+					<div class="card-header text-center">
 						<h1 style="color:gold;font-family:tahoma;font-weight:bold">LOGIN</h1>
 					</div>
-					<div class="card-body shadow-lg p-5 mb-2 bg-gray">
+					<div class="card-body">
 
 						<?php
 						session_start();

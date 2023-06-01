@@ -2,68 +2,169 @@
 include 'database_connection.php';
 include 'index.php';
 
-$error = '';
 
-// Check if the form is submitted
-if (isset($_POST['submit'])) {
-    $teacher = $_POST['teacher'];
-    $subjectDescription = $_POST['subject_description'];
-    $courseName = $_POST['course_name'];
-    $sectionName = $_POST['section_name'];
-    $sectionYear = $_POST['section_year'];
-    $startTime = $_POST['start_time'];
-    $endTime = $_POST['end_time'];
-    $day = $_POST['day'];
-    $room_name = $_POST['room_name'];
+// Check the number of rows in the rooms table, course table
+$sql = "SELECT COUNT(*) AS subject_count FROM subjects";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$subject_count = $row['subject_count'];
 
-    // Validate form fields (PDO)
-    if (empty($teacher) || empty($subjectDescription) || empty($courseName) || empty($sectionName) || empty($sectionYear)) {
-        $error = 'Please fill in all required fields.';
-    } else {
-        // Get the subject units/type/code/hours of selected subject description from the database
-        $stmt = $conn->prepare("SELECT subject_units, subject_type, subject_hours, subject_code FROM subjects WHERE subject_description = ?");
-        $stmt->bind_param("s", $subjectDescription);
+$sql = "SELECT COUNT(*) AS courses_count FROM courses";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$courses_count = $row['courses_count'];
+
+$sql = "SELECT COUNT(*) AS section_count FROM sections";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$section_count = $row['section_count'];
+
+$sql = "SELECT COUNT(*) AS teacher_count FROM teachers";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$teacher_count = $row['teacher_count'];
+
+
+if ($teacher_count <= 0 || $courses_count <= 0 || $section_count <= 0 || $subject_count <= 0) {
+    echo '<script>alert("Please make sure that you inserted data on the following table:\n 1. Teacher\n 2. Course \n 3. Section \n 4. Subject");</script>';
+    echo "<script>window.location.href = 'course_list.php';</script>";
+} else {
+
+    $error = '';
+    function check_teacher_load($teacher_id)
+    {
+        global $conn;
+        $query = "SELECT COUNT(*) as count FROM manual_generated_schedule WHERE teacher=?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("s", $teacher_id);
         $stmt->execute();
         $result = $stmt->get_result();
+        if (!$result) {
+            throw new Exception("Query failed: " . $conn->error);
+        }
+        $row = $result->fetch_assoc();
+        $count = $row['count'];
+        return $count;
+    }
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $subjectUnits = $row['subject_units'];
-            $subjectType = $row['subject_type'];
-            $subjectHours = $row['subject_hours'];
-            $subjectCode = $row['subject_code'];
+    if (isset($_POST['submit'])) {
+        $teacher = $_POST['teacher'];
+        $subjectDescription = $_POST['subject_description'];
+        $courseName = $_POST['course_name'];
+        $sectionName = $_POST['section_name'];
+        $sectionYear = $_POST['section_year'];
+        $room_name = $_POST['room_name'];
+        $day = $_POST['day'];
+        $start_time = $_POST['start_time'];
+        $end_time = $_POST['end_time'];
+
+        
+        // Combine section_name, section_year, and course_name
+        if ($sectionYear == "1st") {
+            $course_year_section = $courseName . " 101-" . $sectionName;
+        } elseif ($sectionYear == "2nd") {
+            $course_year_section = $courseName . " 201-" . $sectionName;
+        } elseif ($sectionYear == "3rd") {
+            $course_year_section = $courseName . " 301-" . $sectionName;
+        } elseif ($sectionYear == "4th") {
+            $course_year_section = $courseName . " 401-" . $sectionName;
         } else {
-            $subjectUnits = "";
-            $subjectType = "";
-            $subjectHours = "";
-            $subject_code = "";
+            $course_year_section = $courseName . $sectionYear . $sectionName;
         }
 
-        // Check if the data already exists in the manual_generated_schedule table to avoid duplication of timeslot
-        $stmt = $conn->prepare("SELECT * FROM manual_generated_schedule WHERE room_name = ? AND day = ? AND ((start_time <= ? AND end_time > ?) OR (start_time >= ? AND start_time < ?))");
-        $stmt->bind_param("ssssss", $room_name, $day, $endTime, $startTime, $startTime, $endTime);
-        $stmt->execute();
-        $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            // Data already exists, show an error message or take appropriate action
-            echo "<script>alert('Data already exists!');</script>";
+        // Validate form fields (PDO)
+        if (empty($teacher) || empty($subjectDescription) || empty($courseName) || empty($sectionName) || empty($sectionYear)) {
+            $error = 'Please fill in all required fields.';
         } else {
-            // Data does not exist, insert the data into the faculty_loading table
-            $stmt = $conn->prepare("INSERT INTO manual_generated_schedule (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, start_time, end_time, day, room_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $startTime, $endTime, $day, $room_name);
-
-            try {
+            // Check teacher load>30 not inserting data anymore
+            $teacher_load = check_teacher_load($teacher);
+            if ($teacher_load >= 30) {
+                $error = 'Teacher has already been assigned 7 subjects.';
+                echo "<script>alert('$error');</script>";
+            } else {
+                // Get the subject units from the database
+                $stmt = $conn->prepare("SELECT subject_units, subject_type, subject_hours, subject_code FROM subjects WHERE subject_description = ?");
+                $stmt->bind_param("s", $subjectDescription);
                 $stmt->execute();
-                echo "<script>alert('Data added successfully');</script>";
-                echo "<script>window.location.href = 'manual_schedule_list.php';</script>";
-            } catch (Exception $error) {
-                echo '<div class="alert alert-danger" role="alert">Error: ' . $error->getMessage() . '</div>';
+                $result = $stmt->get_result();
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $subjectUnits = $row['subject_units'];
+                    $subjectType = $row['subject_type'];
+                    $subjectHours = $row['subject_hours'];
+                    $subjectCode = $row['subject_code'];
+                } else {
+                    $subjectUnits = "";
+                    $subjectType = "";
+                    $subjectHours = "";
+                    $subjectCode = "";
+                }
+
+                // Check if the data already exists in the faculty_loading table
+                $stmt = $conn->prepare("SELECT * FROM manual_generated_schedule WHERE teacher=? AND subject_description=? AND course_name=? AND section_name=? AND section_year=?");
+                $stmt->bind_param("sssss", $teacher, $subjectDescription, $courseName, $sectionName, $sectionYear);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    // Data already exists, do nothing
+                    echo "<script>alert('The subject was already assigned with the same teacher!');</script>";
+                } else {
+                    // Check if the subject and course_year_section combination already exists
+                    $stmt_check_existence = $conn->prepare("SELECT * FROM faculty_loadings WHERE subject_description=? AND course_name=? AND section_name=? AND section_year=?");
+                    $stmt_check_existence->bind_param("ssss", $subjectDescription, $courseName, $sectionName, $sectionYear);
+                    $stmt_check_existence->execute();
+                    $result_check_existence = $stmt_check_existence->get_result();
+                
+                    if ($result_check_existence->num_rows > 0) {
+                        // Subject and course_year_section combination already exists, do not assign
+                        echo "<script>alert('The subject and course section are already assigned!');</script>";
+                    } else {
+                        // Check for conflicts with day, room_name, start_time, and end_time
+                        $stmt_check_conflicts = $conn->prepare("SELECT * FROM faculty_loadings WHERE teacher=? AND course_year_section=? AND day=? AND room_name=? AND ((start_time <= ? AND end_time > ?) OR (start_time < ? AND end_time >= ?))");
+                        $stmt_check_conflicts->bind_param("ssssssss", $teacher, $course_year_section, $day, $room_name, $start_time, $start_time, $end_time, $end_time);
+                        $stmt_check_conflicts->execute();
+                        $result_check_conflicts = $stmt_check_conflicts->get_result();
+                
+                        if ($result_check_conflicts->num_rows > 0) {
+                            // Conflict found, display error message
+                            echo "<script>alert('There is a schedule conflict for the specified day, room, and time slot!');</script>";
+                        } else {
+                            // No conflicts, insert the data into the manual_generated_schedule table
+                            $stmt_manual_generated_schedule = $conn->prepare("INSERT INTO manual_generated_schedule (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, course_year_section, room_name, day, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                            $stmt_manual_generated_schedule->bind_param("ssssssssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $course_year_section, $room_name, $day, $start_time, $end_time);
+                
+                            try {
+                                // Execute the prepared statement to insert into the manual_generated_schedule table
+                                $stmt_manual_generated_schedule->execute();
+                
+                                // Get the last inserted ID from the manual_generated_schedule table
+                                $last_inserted_id = $stmt_manual_generated_schedule->insert_id;
+                
+                                // Insert the same data into the faculty_loadings table
+                                $stmt_faculty_loadings = $conn->prepare("INSERT INTO faculty_loadings (teacher, subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, course_year_section, room_name, day, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                                $stmt_faculty_loadings->bind_param("ssssssssssssss", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $course_year_section, $room_name, $day, $start_time, $end_time);
+                    
+                                // Execute the prepared statement to insert into the faculty_loadings table
+                                $stmt_faculty_loadings->execute();
+                
+                                // Close the prepared statements
+                                $stmt_manual_generated_schedule->close();
+                                $stmt_faculty_loadings->close();
+                
+                                echo "<script>alert('Data added successfully');</script>";
+                                echo "<script>window.location.href = 'manual_schedule_list.php';</script>";
+                            } catch (Exception $e) {
+                                $error = "Error adding data: " . $e->getMessage();
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
-?>
 ?>
 
 
@@ -97,14 +198,10 @@ if (isset($_POST['submit'])) {
 
 </head>
 
-
-
 <form method="POST">
-
-
     <div class="container mt-3">
-
-    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">MANUAL ADDING OF SCHEDULE</H1>
+        <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)"
+            class="fw-bolder text-center text-warning mt-3 text-outline">ADD MANUAL SCHEDULE</H1>
         <!-- Dropdown for selecting a teacher -->
         <div class="form-group">
             <label for="teacher">Teacher</label>
@@ -114,7 +211,7 @@ if (isset($_POST['submit'])) {
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo '<option value="' . $row["firstname"] . '' . $row["lastname"] . '">' . $row["firstname"] . ' ' . $row["lastname"] . '</option>';
+                        echo '<option value="' . $row['firstname'] . ' ' . $row['lastname'] . '"' . $selected . '>' . $row['firstname'] . ' ' . $row['lastname'] . '</option>';
                     }
                 }
                 ?>
@@ -137,10 +234,7 @@ if (isset($_POST['submit'])) {
             </select>
         </div>
 
-
-
         <!-- Form for selecting a subject -->
-
         <div class="form-group">
             <label for="subject_description">Subject Description</label>
             <select class="form-control" id="subject_description" name="subject_description">
@@ -154,9 +248,8 @@ if (isset($_POST['submit'])) {
                 }
                 ?>
             </select>
-
-
         </div>
+
         <!-- Dropdown for selecting a section -->
         <div class="form-group">
             <label for="section_name">Section</label>
@@ -187,25 +280,21 @@ if (isset($_POST['submit'])) {
         </div>
 
         <div class="form-group">
-            <label for="start_time" class="form-label">Start Time:</label>
-            <input type="time" class="form-control" name="start_time" id="start_time" required>
-        </div>
-        <div class="form-group">
-            <label for="end_time" class="form-label">End Time:</label>
-            <input type="time" class="form-control" name="end_time" id="end_time" required>
-        </div>
-        <div class="form-group">
-            <label for="day" class="form-label">Day:</label>
-            <select class="form-select" name="day" id="day" required>
-                <option value="">Select a day</option>
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
+            <label for="day">Day</label>
+            <select class="form-control" id="day" name="day">
+                <?php
+                $sql = "SELECT * FROM available_days";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["day"] . '">' . $row["day"] . '</option>';
+                    }
+                }
+                ?>
             </select>
         </div>
 
+        <!-- Dropdown for selecting a room -->
         <div class="form-group">
             <label for="room_name">Room</label>
             <select class="form-control" id="room_name" name="room_name">
@@ -221,12 +310,48 @@ if (isset($_POST['submit'])) {
             </select>
         </div>
 
+        <!-- Dropdown for selecting a start time -->
+        <div class="form-group">
+            <label for="start_time">Start Time</label>
+            <select class="form-control" id="start_time" name="start_time">
+                <?php
+                $sql = "SELECT start_time FROM timeslots";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $start_time = date("h:i A", strtotime($row["start_time"]));
+                        echo '<option value="' . $row["start_time"] . '">' . $start_time . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
 
-        <button type="submit" class="btn btn-primary" name="submit">Create</button>
-        <a href="manual_schedule_list.php" class="btn btn-danger" name="back">Back</a>
+        <!-- Dropdown for selecting a start time -->
+        <div class="form-group">
+            <label for="end_time">End Time</label>
+            <select class="form-control" id="end_time" name="end_time">
+                <?php
+                $sql = "SELECT end_time FROM timeslots";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $end_time = date("h:i A", strtotime($row["end_time"]));
+                        echo '<option value="' . $row["end_time"] . '">' . $end_time . '</option>';
+                    }
+                }
+                ?>
+            </select>
+        </div>
 
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary" name="submit">Create</button>
+            <a href="manual_schedule_list.php" class="btn btn-danger" name="back">Back</a>
+        </div>
     </div>
-    </body>
+
 </form>
+</body>
 
 </html>

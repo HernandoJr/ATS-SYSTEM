@@ -182,12 +182,12 @@ if (isset($_POST['logout'])) {
                         View Schedule
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
-                        <li><a class="dropdown-item text-primary h5" href="view_room_schedule.php">View RoomSchedule</a>
+                        <li><a class="dropdown-item text-primary h5" href="view_room_schedule.php">View Room Schedules</a>
                         </li>
                         <li><a class="dropdown-item hover-color text-primary h5" href="view_teacher_schedule.php">View Teacher
-                                Schedule </a>
+                                Schedules </a>
                         <li><a class="dropdown-item hover-color text-primary h5" href="view_section_schedule.php">View Section
-                                Schedule </a></li>
+                                Schedules </a></li>
                 </li>
                 </ul>
 

@@ -12,7 +12,7 @@ if (isset($_GET['delete_id'])) {
         echo "<script>alert('Data deleted successfully');</script>";
         echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
     } else {
-        echo "Error deleting record: " . $conn->error;
+        echo "Error deleting record: " . $conn->$error;
     }
 }
 
@@ -58,7 +58,7 @@ if (isset($_POST['update'])) {
         echo "<script>alert('Record updated successfully');</script>";
         echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
     } else {
-        echo "Error updating record: " . $conn->error;
+        echo "Error updating record: " . $conn->$error;
     }
 }
 
@@ -149,13 +149,13 @@ if (isset($_POST['update'])) {
                     $query = "SELECT * FROM faculty_loadings WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
                     $result = $conn->query($query);
                     if (!$result) {
-                        die("Error executing search query: " . $conn->error);
+                        die("Error executing search query: " . $conn->$error);
                     }
                 } else {
                     $query = "SELECT * FROM faculty_loadings";
                     $result = $conn->query($query);
                     if (!$result) {
-                        die("Error executing query: " . $conn->error);
+                        die("Error executing query: " . $conn->$error);
                     }
                 }
                 ?>
@@ -222,7 +222,7 @@ if (isset($_POST['update'])) {
             $('#truncate-btn').click(function () {
                 if (confirm("Are you sure you want to truncate the table?")) {
                     $.ajax({
-                        url: "truncate_table.php", // the PHP script ghat truncates the table
+                        url: "truncate_table_faculty_loadings.php", // the PHP script ghat truncates the table
                         success: function (response) {
                             alert(response); // show the response message from the PHP script
                         }

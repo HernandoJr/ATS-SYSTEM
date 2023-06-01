@@ -48,13 +48,59 @@ function generateRandomPassword($length = 8) {
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+		
+		.container {
+			padding: 40px;
+		}
+
+		.card {
+			background-color: #f0f0f0;
+			border: none;
+			border-radius: 10px;
+			box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+		}
+
+		.card-header {
+			background-color:black;
+			border: none;
+		}
+
+		.card-body {
+			background-color:floralwhite;
+		}
+
+		.form-control {
+			background-color: #f0f0f0;
+			border: none;
+			border-radius: 10px;
+			box-shadow: inset 3px 3px 7px rgba(0, 0, 0, 0.3), inset -3px -3px 7px rgba(255, 255, 255, 0.3);
+			padding: 10px 15px;
+		}
+
+		.btn-success {
+			background-color: #4bb543;
+			border: none;
+			border-radius: 10px;
+			box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
+			padding: 10px 15px;
+		}
+
+		.btn-success:hover {
+			background-color: #3e923f;
+		}
+
+		a {
+			color: #4bb543;
+		}
+	</style>
 
 <body>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header bg-dark text-center">
+                    <div class="card-header text-center">
                         <h1 style="color:gold;font-family:tahoma;font-weight:bold">FORGOT PASSWORD</h1>
                     </div>
                     <div class="card-body shadow-lg p-5 mb-2 bg-gray">
@@ -70,12 +116,12 @@ function generateRandomPassword($length = 8) {
                         }
                         ?>
                         <form style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif" method="POST">
-                            <div class="form-group mb-2">
+                            <div class="form-group mb-3">
                                 <label for="email">Email</label>
                                 <input type="email" class="form-control" name="email" placeholder="Enter email" required>
                             </div>
                             <div class="form-group mb-3">
-                                <button type="submit" name="reset_password" class="btn btn-danger">Reset Password</button>
+                                <button type="submit" name="reset_password" class="btn btn-success">Reset Password</button>
                                 <p class="text-center"><a href="login.php">Back to Login</a></p>
                             </div>
                         </form>

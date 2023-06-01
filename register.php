@@ -42,13 +42,59 @@ if (isset($_POST['register'])) {
 
     <title>Register</title>
 </head>
+<style>
+		
+		.container {
+			padding: 40px;
+		}
+
+		.card {
+			background-color: #f0f0f0;
+			border: none;
+			border-radius: 10px;
+			box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+		}
+
+		.card-header {
+			background-color:black;
+			border: none;
+		}
+
+		.card-body {
+			background-color:floralwhite;
+		}
+
+		.form-control {
+			background-color: #f0f0f0;
+			border: none;
+			border-radius: 10px;
+			box-shadow: inset 3px 3px 7px rgba(0, 0, 0, .2), inset -3px -3px 7px rgba(255, 255, 255, 0.3);
+			padding: 10px 15px;
+		}
+
+		.btn-success {
+			background-color: #4bb543;
+			border: none;
+			border-radius: 10px;
+			box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
+			padding: 10px 15px;
+		}
+
+		.btn-success:hover {
+			background-color: #3e923f;
+		}
+
+		a {
+			color: #4bb543;
+		}
+	</style>
 
 <body>
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header bg-dark size text-center">
+                    <div class="card-header size text-center">
                         <h1 style="color:gold;font-family:tahoma;font-weight:bold" ;>REGISTER</h1>
                     </div>
                     <div class="card-body shadow-lg p-5 mb-2 bg-white">

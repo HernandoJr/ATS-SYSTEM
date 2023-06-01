@@ -2,6 +2,8 @@
 include 'database_connection.php';
 include 'index.php';
 
+
+
 // Delete section if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
@@ -10,7 +12,7 @@ if (isset($_GET['delete_id'])) {
         echo "<script>alert('Data deleted successfully');</script>";
         echo "<script>window.location.href = 'manual_schedule_list.php';</script>";
     } else {
-        echo "Error deleting record: " . $conn->error;
+        echo "Error deleting record: " . $conn->$error;
     }
 }
 
@@ -29,10 +31,12 @@ if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
     $query = "SELECT * FROM manual_generated_schedule WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
 } else {
-    $query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
-    FROM manual_generated_schedule fl
+$query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
+    FROM faculty_loadings fl
     JOIN subjects s ON fl.subject_description = s.subject_description
-    JOIN subjects sd ON sd.subject_type = s.subject_type";
+    JOIN subjects sd ON sd.subject_type = s.subject_type
+    ORDER BY fl.course_year_section ASC";
+
 $result = $conn->query($query);
 
 }
@@ -41,21 +45,20 @@ $result = $conn->query($query);
 if (isset($_POST['update'])) {
 
     $id = $_POST['id'];
-    $teacher_name = $_POST['teacher_name'];
+    $teacher = $_POST['teacher'];
     $subject_description = $_POST['subject_description'];
     $subject_units = $_POST['subject_units'];
     $subject_hours = $_POST['subject_hours'];
     $course_name = $_POST['course_name'];
     $section_name = $_POST['section_name'];
-    $year_section = $_POST['year_section'];
-   
+    $section_year = $_POST['section_year'];
 
-    $sql = "UPDATE manual_generated_schedule SET teacher_name='$teacher_name', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
+    $sql = "UPDATE manual_generated_schedule SET teacher='$teacher', subject_description='$subject_description', subject_units='$subject_units', subject_hours='$subject_hours', course_name='$course_name', section_name='$section_name', section_year='$section_year' WHERE id='$id'";
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Record updated successfully');</script>";
-        echo "<script>window.location.href = 'manual_schedule_list.php';</script>";
+        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
     } else {
-        echo "Error updating record: " . $conn->error;
+        echo "Error updating record: " . $conn->$error;
     }
 }
 
@@ -75,7 +78,7 @@ if (isset($_POST['update'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!--External CSS-->
-    <link rel="stylesheet" href="css/manual_schedule_list.css">
+    <link rel="stylesheet" href="css/faculty_loadings.css">
     <!-- CDN Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-xm/1MSCs2sDx6kLZ6Qm84zE4U6mSWJXa3gfn+Or05YnSdrgHxOmkjIVtwZgMk50D" crossorigin="anonymous">
@@ -96,58 +99,65 @@ if (isset($_POST['update'])) {
 
     <div class="container">
 
+ 
 
-    <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">MANUAL SCHEDULE LIST</H1>
+
+    <h1 style="text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">Manual Schedule List</H1>
 
         <form method="POST">
-            <div class="input-group mb-3">
 
+            <div class="input-group mb-3">
                 <input type="text" class="form-control rounded" placeholder="Search by Teacher ID/Name" name="search">
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
+
         </form>
-        <div class="mb-3 text-center">
-        <a href="manual_schedule.php" class="btn btn-success sm"><i class='fas fa-user-plus'></i>Assign timeslot</a>
-        <button type="button" class="btn btn-danger" id="truncate-btn">Delete all manual generated schedule</button>
+
+        <div class="containe-fluid text-center ">
+
+            <a href="manual_schedule.php" style ="text-align:center" class="btn btn-primary mb-3 mt-3"><i class='fas fa-user-plus'></i>Assign subject</a>
+            <button type="button" class="btn btn-danger mb-3 text-center mt-3" id="truncate-btn">Delete All Data</button>
+       
         </div>
-        <div class="table-responsive">
-        <table  style="vertical-align:middle;border:1px solid black;" class="table table-bordered table table-hover text-center">
-            <thead class="bg-success text-dark text-white">
-                <tr class="text-sm">
-                    <th >No.</th>
-                    <th>Sched Code</th>
+
+  
+        <table class="table table-bordered border-dark table-hover">
+            <thead class="bg-success text-white text-center" style=" vertical-align:middle;" >
+                <tr>
+                    <th>No.</th>
                     <th>Teacher Name</th>
-                    <th>Subject Code</th>          
-                    <th>Subject Description</th>
+                    <th>Subject Code</th>
+                    <th>Subject Title</th>
                     <th>Subject Type</th>
                     <th>Contact Hours</th>
-                    <th>Units</th>
-                    <th>Year & Section</th>
-                    <th>Day</th>
-                    <th>Start Time</th>
-                    <th>End TIme</th>
+                    <th>Course Year & Section</th>
                     <th>Room</th>
+                    <th>Day</th>
+                    <th>Start time</th>
+                    <th>End time</th>
                     <th>Action</th>
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody style="font-size:1.2rem;font-family:monospace">
 
                 <?php
+
+
 
                 // Execute search query if search form is submitted
                 if (isset($_POST['search'])) {
                     $search_term = $_POST['search'];
-                    $query = "SELECT * FROM manual_generated_schedule WHERE teacher LIKE '%$search_term%' OR room_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
+                    $query = "SELECT * FROM manual_generated_schedule WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%'";
                     $result = $conn->query($query);
                     if (!$result) {
-                        die("Error executing search query: " . $conn->error);
+                        die("Error executing search query: " . $conn->$error);
                     }
                 } else {
                     $query = "SELECT * FROM manual_generated_schedule";
                     $result = $conn->query($query);
                     if (!$result) {
-                        die("Error executing query: " . $conn->error);
+                        die("Error executing query: " . $conn->$error);
                     }
                 }
                 ?>
@@ -165,7 +175,7 @@ if (isset($_POST['update'])) {
                         $course_name = $row["course_name"];
 
                         
-                        if ($section_year == "1st") {
+                        if ($section_year == "1st" ) {
                             $course_year_section = $course_name  . " 101-" . $section_name;
                         } elseif ($section_year == "2nd") {
                             $course_year_section = $course_name . " 201-" . $section_name;
@@ -183,21 +193,18 @@ if (isset($_POST['update'])) {
                         $result2 = $conn->query($sql);
 
 
-                        echo "<tr>";
+                        echo "<tr class='text-center' style='vertical-align:middle;'>";
                         echo "<td>" . $i . "</td>";
-                        echo "<td>" . $row["schedcode"] . "</td>";
                         echo "<td>" . $row["teacher"] . "</td>";
                         echo "<td>" . $row["subject_code"] . "</td>";
                         echo "<td>" . $row["subject_description"] . "</td>";
                         echo "<td>" . $row["subject_type"] . "</td>";
                         echo "<td>" . $row["subject_hours"] . "</td>";
-                        echo "<td>" . $row["subject_units"] . "</td>";
                         echo "<td>" . $course_year_section . "</td>";
+                        echo "<td>" . $row["room_name"] . "</td>";
                         echo "<td>" . $row["day"] . "</td>";
                         echo "<td>" . $row["start_time"] . "</td>";
                         echo "<td>" . $row["end_time"] . "</td>";
-                        echo "<td>" . $row["room_name"] . "</td>";
-
                         echo "<td>";
                         echo "<a href='manual_schedule_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a><hr>";
                         echo "<a href='" . $_SERVER['PHP_SELF'] . "?delete_id=" . $row["id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this subject?')\">Delete<i class='fas fa-trash'></i></a>";
@@ -207,22 +214,19 @@ if (isset($_POST['update'])) {
                     }
 
                 } else {
-                    echo "<tr><td colspan='5'>No manual_generated_schedule found</td></tr>";
+                    echo "<tr><td colspan='5'>No manual schedule found</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
-
-     
-        
-    </div> </div>
+    </div>
 
     <script>
         $(document).ready(function () {
             $('#truncate-btn').click(function () {
-                if (confirm("Are you sure you want to truncate the table?")) {
+                if (confirm("Are you sure you want to delete manual generated schedules?")) {
                     $.ajax({
-                        url: "truncate_table_manual_schedule.php", // the PHP script t hat truncates the table
+                        url: "truncate_table_manual_generated_schedule.php", // the PHP script ghat truncates the table
                         success: function (response) {
                             alert(response); // show the response message from the PHP script
                         }
