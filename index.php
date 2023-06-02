@@ -147,6 +147,10 @@ if (isset($_POST['logout'])) {
                     <li class="nav-item">
                         <a class="nav-link hover-color" href="section_list.php">Add Section</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link hover-color" href="TEST.php">TEST</a>
+                    </li>
+
 
                     <li class="nav-item">
                         <a class="nav-link hover-color" href="subject_list.php">Add Subject</a>

@@ -20,7 +20,7 @@
 	<link rel="stylesheet" href="css/login.css">
 
 	<style>
-		
+
 		.container {
 			padding: 40px;
 		}
@@ -29,7 +29,7 @@
 			background-color: #f0f0f0;
 			border: none;
 			border-radius: 10px;
-			box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+			box-shadow: 7px 5px 20px rgba(0, 0, 0, .5);
 		}
 
 		.card-header {
@@ -45,7 +45,7 @@
 			background-color: #f0f0f0;
 			border: none;
 			border-radius: 10px;
-			box-shadow: inset 3px 3px 7px rgba(0, 0, 0, .2), inset -3px -3px 7px rgba(255, 255, 255, 0.3);
+			box-shadow: inset 3px 3px 7px rgba(0, 0, 0, .3), inset -3px -3px 7px rgba(255, 255, 255, 0.5);
 			padding: 10px 15px;
 		}
 
