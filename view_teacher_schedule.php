@@ -11,6 +11,28 @@ echo '
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
     <h1 style="  text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">TEACHER SCHEDULES</H1>
 
+    <div class="container fw-bolder text-center" style="padding: 5px;">';
+        
+        $sql = "SELECT * FROM semesters";
+        $result = mysqli_query($conn, $sql);
+
+        // Check if the query was successful
+        if ($result) {
+            // Fetch the semester name
+            $row = mysqli_fetch_assoc($result);
+            $semester_name = $row['semester_name'];
+            $start_year = $row['start_year'];
+            $end_year = $row['end_year'];
+
+            // Display the schedule
+            echo '<h1 class= "fw-bolder" style="color:dark; margin-top: 0; margin-bottom: 10px;font-family:">' . $semester_name . '</h1>';
+            echo '<p style="margin: 0;color:black;font-family:monospace; font-size: 17px; margin-bottom: 10px;">A.Y: ' . $start_year . '-' . $end_year . '</p>';
+        } else {
+            // Handle the case when the query fails
+            echo 'Error fetching semester name: ' . mysqli_error($connection);
+        }
+
+    echo '  </div>
 <style>
 .table-bordered {
     border: .2rem solid;

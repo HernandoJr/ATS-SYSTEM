@@ -1,7 +1,7 @@
 <?php
-//UPDATING CONFLICTS
 include 'database_connection.php';
 include 'index.php';
+
 $error = '';
 
 if (isset($_POST['submit'])) {
@@ -12,16 +12,15 @@ if (isset($_POST['submit'])) {
     $sectionName = $_POST['section_name'];
     $sectionYear = $_POST['section_year'];
 
-    // Validate form fields
-    if (empty($teacher) || empty($subjectDescription) || empty($courseName) || empty($sectionName) || empty($sectionYear)) {
+
+
+    if (!empty($emptyFields)) {
         $error = 'Please fill in all required fields.';
     } else {
-        // Get the subject units from the database
         $stmt = $conn->prepare("SELECT subject_units, subject_type, subject_hours, subject_code FROM subjects WHERE subject_description = ?");
         $stmt->bind_param("s", $subjectDescription);
         $stmt->execute();
         $result = $stmt->get_result();
-
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $subjectUnits = $row['subject_units'];
@@ -32,54 +31,47 @@ if (isset($_POST['submit'])) {
             $subjectUnits = "";
             $subjectType = "";
             $subjectHours = "";
-            $subject_code = "";
+            $subjectCode = "";
         }
 
-        // Check if data already exists in the table
-$stmt = $conn->prepare("SELECT * FROM faculty_loadings WHERE teacher=? AND subject_code=? AND subject_description=? AND course_name=? AND section_name =? AND section_year=?");
-$stmt->bind_param("ssssss", $teacher, $subjectCode, $subjectDescription, $courseName, $sectionYear, $sectionName);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    // Data already exists, return an error message
-    $row = $result->fetch_assoc();
-    if ($row['id'] != $id) {
-        // The existing data is not the same as the data being updated, so update the data
-        $error = "Data already exists in the database.";
-    } else {
-        // The existing data is the same as the data being updated, so don't update the data
-        echo "<script>alert('Data is already up to date.');</script>";
-        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
-        exit();
-    }
-} else {
-    // Data does not exist, update the data in the manual_generated_schedule table
-    // Update the data in the faculty_loading table
-    $stmt = $conn->prepare("UPDATE faculty_loadings SET teacher=?, subject_description=?, subject_code=?, subject_hours=?, subject_type=?, subject_units=?, course_name=?, section_name=?, section_year=? WHERE id=?");
-    $stmt->bind_param("sssssssssi", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $id);
-    
-    try {
+        $stmt = $conn->prepare("SELECT * FROM faculty_loadings WHERE teacher=? AND subject_code=? AND subject_description=? AND course_name=? AND section_name=? AND section_year=?");
+        $stmt->bind_param("ssssss", $teacher, $subjectCode, $subjectDescription, $courseName, $sectionName, $sectionYear);
         $stmt->execute();
-        echo "<script>alert('Data updated successfully');</script>";
-        echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
-        exit();
-    } catch (Exception $e) {
-        $error = 'Error: ' . $e->getMessage();
-        echo '<div class="alert alert-danger" role="alert">' . $error . '</div>';
-    }
-}
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                if ($row['id'] != $id) {
+                    $error = "Data already exist!.";
 
+                    break;
+                } else {
+                    echo "<script>alert('Data is already up to date.');</script>";
+                    echo "<script>window.location.href = 'faculty_loading.php';</script>";
+                    exit();
+                }
+            }
+        } else {
+            $stmt = $conn->prepare("UPDATE faculty_loadings SET teacher=?, subject_description=?, subject_code=?, subject_hours=?, subject_type=?, subject_units=?, course_name=?, section_name=?, section_year=? WHERE id=?");
+            $stmt->bind_param("sssssssssi", $teacher, $subjectDescription, $subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $id);
+
+            try {
+                $stmt->execute();
+                echo "<script>alert('Data updated successfully');</script>";
+                echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+                exit();
+            } catch (Exception $e) {
+                $error = 'Error: ' . $e->getMessage();
+            }
         }
-        
-        if (!empty($error)) {
-            // If an error occurred, display the error message to the user
-            echo '<div class="alert alert-danger" role="alert">' . $error . '</div>';
-        }
-        
-    
+    }
+
+    if (!empty($error)) {
+        echo "<script>alert('".$error."');</script>";
+                echo "<script>window.location.href = 'faculty_loading_list.php';</script>";
+                exit();
+    }
 } else {
-    // Get the data to pre-populate the form
     $id = $_GET['id'];
     $stmt = $conn->prepare("SELECT * FROM faculty_loadings WHERE id=?");
     $stmt->bind_param("i", $id);
@@ -96,7 +88,6 @@ if ($result->num_rows > 0) {
         $error = 'Invalid data.';
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -112,8 +103,9 @@ if ($result->num_rows > 0) {
     <div class="container">
 
         <head>
-            
-        <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE FACULTY LOADING DETAILS</H1>
+
+            <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)"
+                class="fw-bolder text-center text-warning mt-3 text-outline">UPDATE FACULTY LOADING DETAILS</H1>
 
             <?php
             // Show error message if there is any
@@ -123,8 +115,8 @@ if ($result->num_rows > 0) {
             ?>
 
             <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                
-            <input type="hidden" name="id" value="<?php echo $id; ?>">
+
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <div class="mb-3">
                     <label for="teacher" class="form-label">Teacher</label>
                     <input type="text" class="form-control" id="teacher" name="teacher" value="<?php echo $teacher; ?>">

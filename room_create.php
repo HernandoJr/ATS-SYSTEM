@@ -7,13 +7,12 @@ include 'index.php';
 if (isset($_POST['submit'])) {
 
     // sanitize and get the form data
-    $room_id = mysqli_real_escape_string($conn, $_POST['room_id']);
     $room_name = mysqli_real_escape_string($conn, $_POST['room_name']);
     $room_type = mysqli_real_escape_string($conn, $_POST['room_type']);
     $room_capacity = mysqli_real_escape_string($conn, $_POST['room_capacity']);
 
     // check if a record with the same room_id or room_name already exists
-    $sql = "SELECT * FROM rooms WHERE room_id = '$room_id' OR room_name = '$room_name'";
+    $sql = "SELECT * FROM rooms WHERE room_name = '$room_name' AND room_type ='$room_type'";
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
@@ -23,13 +22,13 @@ if (isset($_POST['submit'])) {
 
     if (mysqli_num_rows($result) > 0) {
         echo '<script type="text/javascript">';
-        echo ' alert("A room with the same room code and type already exists!");';
+        echo ' alert("Room already exists!");';
         echo ' window.location.href = "room_create.php";';
         echo '</script>';
         exit;
     } else {
         // insert the data into the table
-        $sql= "INSERT INTO rooms (room_id, room_name, room_type, room_capacity) VALUES ('$room_id', '$room_name', '$room_type', '$room_capacity')";
+        $sql= "INSERT INTO rooms (room_id, room_name, room_type, room_capacity) VALUES ('$room_name', '$room_type', '$room_capacity')";
 
         if (mysqli_query($conn, $sql)) {
             echo '<script type="text/javascript">';
@@ -67,11 +66,7 @@ if (isset($_POST['submit'])) {
 
         <form method="post">
 
-            <div class="mb-3">
-                <label for="room_id">Room ID</label>
-                <input type="text" class="form-control" id="room_id" name="room_id" placeholder="Enter Room ID">
-            </div>
-
+     
             <div class="mb-3">
                 <label for="room_name">Room Name</label>
                 <input type="text" class="form-control" id="room_name" name="room_name" placeholder="Enter Room Name">

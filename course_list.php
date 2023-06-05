@@ -10,14 +10,14 @@ if (isset($_GET['delete_id'])) {
         echo "<script>alert('Course deleted successfully');</script>";
         echo "<script>window.location.href = 'course_list.php';</script>";
     } else {
-        echo "Error deleting record: " . $conn->error;
+        echo "Error deleting record: " . $conn->$error;
     }
 }
 
 // Execute search query if search form is submitted
 if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
-    $query = "SELECT * FROM courses WHERE course_name LIKE '%$search_term%' OR course_id LIKE '%$search_term%'";
+    $query = "SELECT * FROM courses WHERE course_name LIKE '%$search_term%'";
     $result = $conn->query($query);
 } else {
     $query = "SELECT * FROM courses";
@@ -62,7 +62,7 @@ if (isset($_POST['search'])) {
 
             <form method="POST">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control rounded" placeholder="Search by course_name or slots"
+                    <input type="text" class="form-control rounded" placeholder="Search by Course name"
                         name="search">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
@@ -74,7 +74,6 @@ if (isset($_POST['search'])) {
                  <thead class="bg-warning">
                     <tr>
                         <th>No.</th>
-                        <th>Course ID</th>
                         <th>Course Name</th>
                         <th>Slots</th>
                         <th>Action</th>
@@ -88,7 +87,6 @@ if (isset($_POST['search'])) {
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . $i . "</td>";
-                            echo "<td>" . $row["course_id"] . "</td>";
                             echo "<td>" . $row["course_name"] . "</td>";
                             echo "<td>" . $row["slots"] . "</td>";
                             echo "<td>";

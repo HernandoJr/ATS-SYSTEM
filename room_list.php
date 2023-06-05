@@ -17,7 +17,7 @@ if (isset($_GET['delete_id'])) {
 // Execute search query if search form is submitted
 if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
-    $query = "SELECT * FROM rooms WHERE room_id LIKE '%$search_term%' OR room_name LIKE '%$search_term%' OR room_type LIKE '%$search_term%'";
+    $query = "SELECT * FROM rooms WHERE room_name LIKE '%$search_term%' OR room_type LIKE '%$search_term%'";
 } else {
     $query = "SELECT * FROM rooms";
     $result = $conn->query($query);

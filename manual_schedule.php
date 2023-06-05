@@ -207,7 +207,7 @@ if ($teacher_count <= 0 || $courses_count <= 0 || $section_count <= 0 || $subjec
             <label for="teacher">Teacher</label>
             <select class="form-control" id="teacher" name="teacher">
                 <?php
-                $sql = "SELECT * FROM teachers";
+                $sql = "SELECT * FROM teachers ORDER by firstname ASC";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {

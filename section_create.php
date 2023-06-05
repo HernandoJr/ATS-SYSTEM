@@ -8,12 +8,11 @@ include 'index.php';
 if (isset($_POST['submit'])) {
 
     // get the form data
-    $section_id = mysqli_real_escape_string($conn, $_POST['section_id']);
     $section_name = mysqli_real_escape_string($conn,$_POST['section_name']);
 
 
     // check if a record with the same section name, start date, and end date already exists
-    $sql = "SELECT * FROM sections WHERE section_name = '$section_name' AND section_id = '$section_id'";
+    $sql = "SELECT * FROM sections WHERE section_name = '$section_name'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -25,7 +24,7 @@ if (isset($_POST['submit'])) {
     }
 
     // insert the data into the database
-    $sql = "INSERT INTO sections (section_id, section_name) VALUES ('$section_id', '$section_name')";
+    $sql = "INSERT INTO sections ( section_name) VALUES ( '$section_name')";
 
     if (mysqli_query($conn, $sql)) {
         echo '<script type="text/javascript">';
@@ -69,11 +68,7 @@ if (isset($_POST['submit'])) {
     <h1 style="  text-shadow: 3px 2px 3px rgba(0, .5, 0, .80)" class="fw-bolder text-center text-warning mt-3 text-outline">ADD SECTION</H1>
         <form method="post">
 
-            <div class="form-group mb-3">
-                <label for="section_id">Section ID:</label>
-                <input type="text" class="form-control" id="section_id" name="section_id"
-                    placeholder="Enter section ID">
-            </div>
+
 
             <div class="mb-3 mt-3">
                 <label for="section_name" class="form-label"> Section Name</label>

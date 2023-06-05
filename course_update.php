@@ -23,22 +23,21 @@ if (isset($_GET['id'])) {
 if (isset($_POST['update'])) {
     // First, retrieve the data from the form and sanitize it
     $id = mysqli_real_escape_string($conn, $_POST['id']);
-    $course_id = mysqli_real_escape_string($conn, $_POST['course_id']);
     $course_name = mysqli_real_escape_string($conn, $_POST['course_name']);
     $slots = mysqli_real_escape_string($conn, $_POST['slots']);
 
     // Then, check if the Course name, start date and end date already exists in the database
-    $sql = "SELECT * FROM courses WHERE course_id='$course_id' AND course_name='$course_name' AND slots='$slots' AND id!='$id'";
+    $sql = "SELECT * FROM courses WHERE course_name='$course_name'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
         // If the Course with the same name, start date and end date already exists, display an error message
         echo '<script type="text/javascript">';
-        echo ' alert("Course with the same name, start date and end date already exists!")';
+        echo ' alert("Course name already exists!")';
         echo '</script>';
     } else {
         // If the Course with the same name, start date and end date does not exist, update the data in the database
-        $sql = "UPDATE courses SET course_id='$course_id', course_name='$course_name', slots ='$slots' WHERE id='$id'";
+        $sql = "UPDATE courses SET course_name='$course_name', slots ='$slots' WHERE id='$id'";
         if (mysqli_query($conn, $sql)) {
             // Data updated successfully, display an alert message and redirect to Course_list.php
             echo '<script type="text/javascript">';
@@ -91,11 +90,7 @@ if (isset($_POST['update'])) {
         <!-- Display the data of the selected Course in the form fields -->
         <form method="POST" action="">
 
-            <div class="mb-3">
-                <label for="course_id" class="form-label">Course ID</label>
-                <input type="number" class="form-control" id="course_id" name="course_id"
-                    value="<?php echo $row['course_id']; ?>">
-            </div>
+        
             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 
             <div class="mb-3">

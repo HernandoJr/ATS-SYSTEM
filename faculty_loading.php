@@ -4,6 +4,11 @@ include 'index.php';
 
 
 // Check the number of rows in the rooms table, course table
+$sql = "SELECT COUNT(*) AS semester_count FROM semesters";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$semester_count = $row['semester_count'];
+
 $sql = "SELECT COUNT(*) AS subject_count FROM subjects";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
@@ -25,8 +30,8 @@ $row = mysqli_fetch_assoc($result);
 $teacher_count = $row['teacher_count'];
 
 
-if ($teacher_count <=0 || $courses_count <=0 || $section_count <=0 || $subject_count <=0) {
-    echo '<script>alert("Please make sure that you inserted data on the following table:\n 1. Teacher\n 2. Course \n 3. Section \n 4. Subject");</script>';
+if ($teacher_count <=0 || $courses_count <=0 || $section_count <=0 || $subject_count <=0 || $semester_count <1) {
+    echo '<script>alert("Please make sure that you inserted data on the following table:\n 1. Semester 2. Teacher\n 3. Course \n 4. Section \n 5. Subject");</script>';
     echo "<script>window.location.href = 'course_list.php';</script>";
 } else {
 
@@ -60,7 +65,7 @@ if (isset($_POST['submit'])) {
         // Check teacher load>5 not inserting data anymore
         $teacher_load = check_teacher_load($teacher);
         if ($teacher_load >= 30) {
-            $error = 'Teacher has already been assigned 7 subjects.';
+            $error = 'Teacher has already been assigned 30 subjects.';
             echo "<script>alert('$error');</script>";
         } else {
             // Get the subject units from the database
@@ -158,7 +163,7 @@ if (isset($_POST['submit'])) {
             <label for="teacher">Teacher</label>
             <select class="form-control" id="teacher" name="teacher">
                 <?php
-                $sql = "SELECT * FROM teachers";
+                $sql = "SELECT * FROM teachers ORDER BY firstname ASC";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {

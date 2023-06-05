@@ -23,7 +23,6 @@ if (isset($_GET['id'])) {
 if (isset($_POST['update'])) {
     // First, retrieve the data from the form and sanitize it
     $id = mysqli_real_escape_string($conn, $_POST['id']);
-    $section_id = mysqli_real_escape_string($conn, $_POST['section_id']);
     $section_name = mysqli_real_escape_string($conn, $_POST['section_name']);
 
 
@@ -35,11 +34,11 @@ if (isset($_POST['update'])) {
     if (mysqli_num_rows($result) > 0) {
         // If the section with the same name, course and year already exists, display an error message
         echo '<script type="text/javascript">';
-        echo ' alert("section with the same name, course and year already exists!")';
+        echo ' alert("section name already exist")';
         echo '</script>';
     } else {
         // If the section with the same name, course and year does not exist, update the data in the database
-        $sql = "UPDATE sections SET section_id='$section_id', section_name='$section_name', WHERE id='$id'";
+        $sql = "UPDATE sections SET = section_name='$section_name', WHERE id='$id'";
         if (mysqli_query($conn, $sql)) {
             // Data updated successfully, display an alert message and redirect to section_list.php
             echo '<script type="text/javascript">';
@@ -91,12 +90,6 @@ if (isset($_POST['update'])) {
         <!-- Display the data of the selected section in the form fields -->
         <form method="POST">
 
-            <div class="mb-3">
-
-                <label for="section_id" class="form-label">section ID</label>
-                <input type="text" class="form-control" id="section_id" name="section_id"
-                    value="<?php echo $row['section_id']; ?>">
-            </div>
 
             <div class="mb-3">
 

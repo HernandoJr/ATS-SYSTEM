@@ -1,6 +1,6 @@
 <?php
 
-//include the db connetion php file.
+// Include the db connection PHP file
 include 'database_connection.php';
 include 'index.php';
 
@@ -10,36 +10,36 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Inserting data for teachers table
+// Inserting data into the teachers table
 if (isset($_POST['submit'])) {
-    $firstname = mysqli_real_escape_string($conn,$_POST['firstname']);
-    $lastname = mysqli_real_escape_string($conn,$_POST['lastname']);
-    $teacher_id =mysqli_real_escape_string($conn,$_POST['teacher_id']);
-    // Check if data already exists in the database
+    $firstname = mysqli_real_escape_string($conn, $_POST['firstname']);
+    $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
     $teacher_id = mysqli_real_escape_string($conn, $_POST['teacher_id']);
-    $sql = "SELECT * FROM teachers WHERE teacher_id ='$teacher_id'";
+
+    // Check if the teacher already exists in the database
+    $sql = "SELECT * FROM teachers WHERE firstname = '$firstname' AND lastname = '$lastname' OR teacher_id = '$teacher_id'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
-        // Data already exists in the database, display an error message
+        // Teacher already exists in the database, display an error message
         echo '<script type="text/javascript">';
-        echo ' alert("teacher already exist!")';
+        echo ' alert("Teacher already exists!");';
+        echo ' window.location.href = "teacher_list.php";'; // Redirect to teacher list page
         echo '</script>';
+        exit; // Exit after the redirect
     } else {
-        // Data does not exist in the database, insert the data into the table
+        // Teacher does not exist in the database, insert the data into the table
         $sql = "INSERT INTO teachers (firstname, lastname, teacher_id) VALUES ('$firstname', '$lastname', '$teacher_id')";
 
         if (mysqli_query($conn, $sql)) {
             echo '<script type="text/javascript">';
             echo ' alert("New record added successfully!");';
-            echo ' window.location.href = "teacher_list.php";';
+            echo ' window.location.href = "teacher_list.php";'; // Redirect to teacher list page
             echo '</script>';
-            exit; // Make sure to exit after the redirect
-
+            exit; // Exit after the redirect
         } else {
             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
-
     }
 }
 

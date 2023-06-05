@@ -24,13 +24,12 @@ if (isset($_POST['update'])) {
     // First, retrieve the data from the form and sanitize it
     $id = mysqli_real_escape_string($conn, $_POST['id']);
 
-    $semester_id = mysqli_real_escape_string($conn, $_POST['semester_id']);
     $semester_name = mysqli_real_escape_string($conn, $_POST['semester_name']);
     $start_year = mysqli_real_escape_string($conn, $_POST['start_year']);
     $end_year = mysqli_real_escape_string($conn, $_POST['end_year']);
 
     // Then, check if the semester name, start date and end date already exists in the database
-    $sql = "SELECT * FROM semesters WHERE semester_id='$semester_id'  AND semester_name='$semester_name' AND start_year='$start_year' AND end_year='$end_year' AND id!='$id'";
+    $sql = "SELECT * FROM semesters WHERE semester_name='$semester_name' AND start_year='$start_year' AND end_year='$end_year' AND id!='$id'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -40,7 +39,7 @@ if (isset($_POST['update'])) {
         echo '</script>';
     } else {
         // If the semester with the same name, start date and end date does not exist, update the data in the database
-        $sql = "UPDATE semesters SET semester_id='$semester_id', semester_name='$semester_name', start_year ='$start_year', end_year='$end_year' WHERE id='$id'";
+        $sql = "UPDATE semesters SET semester_name='$semester_name', start_year ='$start_year', end_year='$end_year' WHERE id='$id'";
         if (mysqli_query($conn, $sql)) {
             // Data updated successfully, display an alert message and redirect to semester_list.php
             echo '<script type="text/javascript">';
@@ -92,18 +91,13 @@ if (isset($_POST['update'])) {
 
         <!-- Display the data of the selected semester in the form fields -->
         <form method="POST" action="">
-            <div class="mb-3">
-                <label for="semester_id" class="form-label">Semester ID</label>
-                <input type="text" class="form-control" id="semester_id" name="semester_id"
-                    value="<?php echo $row['semester_id']; ?>">
-            </div>
             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
             <div class="mb-3">
                 <label for="semester_name" class="form-label">Semester Name</label>
                 <select class="form-select" id="semester_name" name="semester_name">
                     <?php
                     // Define the allowed semester names
-                    $allowed_semester_names = array('1st Sem', '2nd Sem', 'Midyear');
+                    $allowed_semester_names = array('1st SEM', '2nd SEM', 'Midyear');
 
                     // Loop through each allowed semester name and create an option in the dropdown menu
                     foreach ($allowed_semester_names as $semester_name) {

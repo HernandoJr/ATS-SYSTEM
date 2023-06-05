@@ -11,13 +11,10 @@ if (!isset($_SESSION['user_id'])) {
 
 // Inserting data for courses table
 if (isset($_POST['submit'])) {
-    $course_id = mysqli_real_escape_string($conn,$_POST['course_id']);
     $course_name = mysqli_real_escape_string($conn,$_POST['course_name']);
     $slots = mysqli_real_escape_string ($conn,$_POST['slots']);
-
     // Check if data already exists in the database
-    $course_id = mysqli_real_escape_string($conn, $_POST['course_id']);
-    $sql = "SELECT * FROM courses WHERE course_id ='$course_id'";
+    $sql = "SELECT * FROM courses WHERE course_name = '$course_name'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -27,7 +24,7 @@ if (isset($_POST['submit'])) {
         echo '</script>';
     } else {
         // Data does not exist in the database, insert the data into the table
-        $sql = "INSERT INTO courses (course_id, course_name, slots) VALUES ('$course_id', '$course_name', '$slots')";
+        $sql = "INSERT INTO courses (course_name, slots) VALUES ('$course_name', '$slots')";
 
         if (mysqli_query($conn, $sql)) {
             echo '<script type="text/javascript">';
@@ -78,11 +75,7 @@ if (isset($_POST['submit'])) {
 
         <form method="post" class="fw-bolder">
 
-            <div class="mb-3">
-                <label for="course_id" class="form-label">Course ID:</label>
-                <input type="number" class="form-control" id="course_id" placeholder="Enter Course id"
-                    name="course_id" required>
-            </div>
+          
             <div class="mb-3 mt-3">
                 <label for="course_name" class="form-label">Course Name</label>
                 <input type="text" class="form-control" id="course_name" placeholder="Enter Course name"

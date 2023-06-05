@@ -18,7 +18,7 @@ if (isset($_GET['delete_id'])) {
 // Execute search query if search form is submitted
 if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
-    $query = "SELECT * FROM sections WHERE section_name LIKE '%$search_term%' OR section_id LIKE '%$search_term%'";
+    $query = "SELECT * FROM sections WHERE section_name LIKE '%$search_term%'";
     $result = $conn->query($query);
 } else {
     $query = "SELECT * FROM sections";
@@ -64,7 +64,7 @@ if (isset($_POST['search'])) {
             <form method="POST">
                 <div class="input-group mb-3">
 
-                    <input type="text" class="form-control rounded" placeholder="Search by section_name or section_id"
+                    <input type="text" class="form-control rounded" placeholder="Search by section_name"
                         name="search">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
@@ -76,7 +76,6 @@ if (isset($_POST['search'])) {
                 <thead class="bg-warning">
                     <tr>
                         <th>No.</th>
-                        <th>Section ID</th>
                         <th>Section Name</th>
                         <th>Action</th>
 
@@ -88,7 +87,7 @@ if (isset($_POST['search'])) {
                     // Execute search query if search form is submitted
                     if (isset($_POST['search'])) {
                         $search_term = $_POST['search'];
-                        $query = "SELECT * FROM sections WHERE section_name LIKE '%$search_term%' OR section_id LIKE '%$search_term%'";
+                        $query = "SELECT * FROM sections WHERE section_name LIKE '%$search_term%'";
                         $result = $conn->query($query);
                         if (!$result) {
                             die("Error executing search query: " . $conn->error);
@@ -109,7 +108,6 @@ if (isset($_POST['search'])) {
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . $i . "</td>";
-                            echo "<td>" . $row["section_id"] . "</td>";
                             echo "<td>" . $row["section_name"] . "</td>";
                             echo "<td>";
                             echo "<a href='section_update.php?id=" . $row["id"] . "' class='btn btn-primary btn-sm'>Update<i class='fas fa-edit'></i></a>&nbsp";

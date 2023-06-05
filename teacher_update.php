@@ -34,8 +34,9 @@ if (isset($_POST['update'])) {
     $teacher_id = mysqli_real_escape_string($conn, $_POST['teacher_id']);
 
     // Then, check if the teacher_id already exists in the database
-    $sql = "SELECT * FROM teachers WHERE teacher_id='$teacher_id' AND id!='$id'";
+    $sql = "SELECT * FROM teachers WHERE firstname = '$firstname' AND lastname = '$lastname' OR teacher_id='$teacher_id'";
     $result = mysqli_query($conn, $sql);
+
 
     if (mysqli_num_rows($result) > 0) {
         // If the teacher_id already exists, display an error message

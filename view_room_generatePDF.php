@@ -17,6 +17,7 @@ $pdf->SetFooterMargin(8);
 $pdf->SetAutoPageBreak(true, 10);
 $pdf->AddPage();
 
+
 $html = '
 <!DOCTYPE html>
 <html>
@@ -161,6 +162,7 @@ $html = '
 <body>
 <h1 style="text-align:center;font-weight:bold;font-size:2.9em;color:darkgreen;font-family:monospace;">ROOM SCHEDULES</h1>
 ';
+
 
 function calculateRowspan($room_name, $day) {
     global $conn;

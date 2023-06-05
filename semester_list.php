@@ -5,14 +5,28 @@ include 'index.php';
 // Delete semester if delete_id is set in the URL parameters
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
-    $sql = "DELETE FROM semesters WHERE id='$id'";
-    if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Semester deleted successfully');</script>";
-        echo "<script>window.location.href = 'semester_list.php';</script>";
+    
+    // Check the number of rows before deleting
+    $countQuery = "SELECT COUNT(*) as total FROM semesters";
+    $countResult = $conn->query($countQuery);
+    $rowCount = $countResult->fetch_assoc()['total'];
+    
+    if ($rowCount > 1) {
+        $sql = "DELETE FROM semesters WHERE id='$id'";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo "<script>alert('Semester deleted successfully');</script>";
+            echo "<script>window.location.href = 'semester_list.php';</script>";
+        } else {
+            echo "Error deleting record: " . $conn->error;
+        }
     } else {
-        echo "Error deleting record: " . $conn->error;
-    }
+        echo '<script type="text/javascript">';
+        echo ' alert("Unable to delete. At least one semester must be present.");';
+        echo ' window.location.href = "semester_list.php";';
+        echo '</script>';    }
 }
+
 
 ?>
 
@@ -68,7 +82,6 @@ if (isset($_GET['delete_id'])) {
               <thead class="bg-warning">
                     <tr>
                         <th>No.</th>
-                        <th>Semester ID</th>
                         <th>Semester Name</th>
                         <th>Start Year</th>
                         <th>End Year</th>
@@ -100,7 +113,6 @@ if (isset($_GET['delete_id'])) {
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . $i . "</td>";
-                            echo "<td>" . $row["semester_id"] . "</td>";
                             echo "<td>" . $row["semester_name"] . "</td>";
                             echo "<td>" . $row["start_year"] . "</td>";
                             echo "<td>" . $row["end_year"] . "</td>";

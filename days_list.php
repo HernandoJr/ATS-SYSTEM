@@ -10,7 +10,7 @@ if (isset($_GET['delete_id'])) {
         echo "<script>alert('Day deleted successfully');</script>";
         echo "<script>window.location.href = 'days_list.php';</script>";
     } else {
-        echo "Error deleting record: " . $conn->error;
+        echo "Error deleting record: " . $conn->$error;
     }
 }
 

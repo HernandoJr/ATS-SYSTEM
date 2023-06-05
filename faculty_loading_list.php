@@ -31,13 +31,13 @@ if (isset($_POST['search'])) {
     $search_term = $_POST['search'];
     $query = "SELECT * FROM faculty_loadings WHERE teacher LIKE '%$search_term%' OR section_name LIKE '%$search_term%' OR course_name LIKE '%$search_term%' OR subject_description LIKE '%$search_term%'";
 } else {
-$query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
+    $query = "SELECT fl.id, fl.sched_code, fl.teacher_name, s.subject_code, fl.subject_units, fl.subject_hours, fl.subject_description, fl.subject_type, fl.contact_hours, fl.course_name, fl.section_name, fl.section_year 
     FROM faculty_loadings fl
     JOIN subjects s ON fl.subject_description = s.subject_description
     JOIN subjects sd ON sd.subject_type = s.subject_type
     ORDER BY fl.course_year_section ASC";
 
-$result = $conn->query($query);
+    $result = $conn->query($query);
 
 }
 
@@ -99,10 +99,11 @@ if (isset($_POST['update'])) {
 
     <div class="container">
 
- 
 
 
-    <h1 style="text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">FACULTY LOADING</H1>
+
+        <h1 style="text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);"
+            class="fw-bolder text-center text-warning mt-3 text-outline">FACULTY LOADING</H1>
 
         <form method="POST">
 
@@ -115,14 +116,40 @@ if (isset($_POST['update'])) {
 
         <div class="containe-fluid text-center ">
 
-            <a href="faculty_loading.php" style ="text-align:center" class="btn btn-primary mb-3 mt-3"><i class='fas fa-user-plus'></i>Assign subject</a>
-            <button type="button" class="btn btn-danger mb-3 text-center mt-3" id="truncate-btn">Delete All Data</button>
-       
+            <div class="container fw-bolder" style="padding: 5px;">
+                <?php // SEMESTER DISPLAY 
+                $sql = "SELECT * FROM semesters";
+                $result = mysqli_query($conn, $sql);
+
+                // Check if the query was successful
+                if ($result) {
+                    // Fetch the semester name
+                    $row = mysqli_fetch_assoc($result);
+                    $semester_name = $row['semester_name'];
+                    $start_year = $row['start_year'];
+                    $end_year = $row['end_year'];
+
+                    // Display the schedule
+                    echo '<h1 class= "fw-bolder" style="color:dark; margin-top: 0; margin-bottom: 10px;font-family:">' . $semester_name . '</h1>';
+                    echo '<p style="margin: 0;color:black;font-family:monospace; font-size: 17px; margin-bottom: 10px;">A.Y: ' . $start_year . '-' . $end_year . '</p>';
+                } else {
+                    // Handle the case when the query fails
+                    echo' Add semester!';
+                    echo 'Error fetching     semester name: ' . mysqli_error($connection);
+                }
+                ?>
+            </div>
+
+            <a href="faculty_loading.php" style="text-align:center" class="btn btn-primary mb-3 mt-3"><i
+                    class='fas fa-user-plus'></i>Assign subject</a>
+            <button type="button" class="btn btn-danger mb-3 text-center mt-3" id="truncate-btn">Delete All
+                Data</button>
+
         </div>
 
-  
+
         <table class="table table-bordered border-dark table-hover">
-            <thead class="bg-success text-white text-center" style=" vertical-align:middle;" >
+            <thead class="bg-success text-white text-center" style=" vertical-align:middle;">
                 <tr>
                     <th>No.</th>
                     <th>Sched Code</th>
@@ -140,8 +167,6 @@ if (isset($_POST['update'])) {
             <tbody style="font-size:1.2rem;font-family:monospace">
 
                 <?php
-
-
 
                 // Execute search query if search form is submitted
                 if (isset($_POST['search'])) {
@@ -172,17 +197,32 @@ if (isset($_POST['update'])) {
                         $section_name = $row["section_name"];
                         $course_name = $row["course_name"];
 
+                        if ($semester_name == "1st SEM"){
                         
-                        if ($section_year == "1st" ) {
-                            $course_year_section = $course_name  . " 101-" . $section_name;
-                        } elseif ($section_year == "2nd") {
-                            $course_year_section = $course_name . " 201-" . $section_name;
-                        } elseif ($section_year == "3rd") {
-                            $course_year_section = $course_name . " 301-" . $section_name;
-                        } elseif ($section_year == "4th") {
-                            $course_year_section = $course_name   . " 401-" . $section_name;
-                        } else {
-                            $course_year_section = $course_name . $section_year . $section_name;
+                            if ($section_year == "1st" ) {
+                                $course_year_section = $course_name . " 101-" . $section_name;
+                            } elseif ($section_year == "2nd") {
+                                $course_year_section = $course_name . " 201-" . $section_name;
+                            } elseif ($section_year == "3rd") {
+                                $course_year_section = $course_name . " 301-" . $section_name;
+                            } elseif ($section_year == "4th") {
+                                $course_year_section = $course_name . " 401-" . $section_name;
+                            } else {
+                                $course_year_section = $course_name . $section_year . $section_name;
+                            }
+                        
+                        }else{
+                            if ($section_year == "1st" ) {
+                                $course_year_section = $course_name . " 102-" . $section_name;
+                            } elseif ($section_year == "2nd") {
+                                $course_year_section = $course_name . " 202-" . $section_name;
+                            } elseif ($section_year == "3rd") {
+                                $course_year_section = $course_name . " 302-" . $section_name;
+                            } elseif ($section_year == "4th") {
+                                $course_year_section = $course_name . " 402-" . $section_name;
+                            } else {
+                                $course_year_section = $course_name . $section_year . $section_name;
+                            }
                         }
 
                         // Update row in database with combined value
@@ -193,7 +233,7 @@ if (isset($_POST['update'])) {
 
                         echo "<tr class='text-center' style='vertical-align:middle;'>";
                         echo "<td>" . $i . "</td>";
-                        echo "<td>".  $row["schedcode"] . "</td>";
+                        echo "<td>" . $row["schedcode"] . "</td>";
                         echo "<td>" . $row["teacher"] . "</td>";
                         echo "<td>" . $row["subject_code"] . "</td>";
                         echo "<td>" . $row["subject_description"] . "</td>";

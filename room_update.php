@@ -22,24 +22,23 @@ if (isset($_GET['id'])) {
 // Updating data in the database
 if (isset($_POST['update'])) {
     // First, retrieve the data from the form and sanitize it
-    $room_id = mysqli_real_escape_string($conn, $_POST['room_id']);
     $room_name = mysqli_real_escape_string($conn, $_POST['room_name']);
     $room_type = mysqli_real_escape_string($conn, $_POST['room_type']);
     $room_capacity = mysqli_real_escape_string($conn, $_POST['room_capacity']);
 
 
     // Then, check if the Room code and name already exists in the database
-    $sql = "SELECT * FROM rooms WHERE room_id = '$room_id' AND room_name= '$room_name' AND id!='$id'";
+    $sql = "SELECT * FROM rooms WHERE  room_name= '$room_name' AND room_type = '$room_type'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
         // If the room with the same room id and name already exists, display an error message
         echo '<script type="text/javascript">';
-        echo ' alert("Room with the same room id and name already exists!")';
+        echo ' alert("Room already exists!")';
         echo '</script>';
     } else {
         // If the room with the same room id and name does not exist, update the data in the database
-        $sql = "UPDATE rooms SET room_id='$room_id', room_name='$room_name', room_type='$room_type', room_capacity='$room_capacity' WHERE id='$id'";
+        $sql = "UPDATE rooms SET room_name='$room_name', room_type='$room_type', room_capacity='$room_capacity' WHERE id='$id'";
         if (mysqli_query($conn, $sql)) {
             // Data updated successfully, display an alert message and redirect to room_list.php
             echo '<script type="text/javascript">';
@@ -92,13 +91,6 @@ if (isset($_POST['update'])) {
         <form method="POST">
         
             <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-
-            <div class="mb-3">
-
-                <label for="room_id" class="form-label">Room ID</label>
-                <input type="text" class="form-control" id="room_id" name="room_id"
-                    value="<?php echo $row['room_id']; ?>">
-            </div>
 
             <div class="mb-3">
 

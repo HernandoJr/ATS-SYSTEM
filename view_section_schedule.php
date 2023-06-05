@@ -2,6 +2,7 @@
 include 'database_connection.php';
 include 'index.php';
 
+
 echo '
 <!DOCTYPE html>
 <html>
@@ -9,7 +10,32 @@ echo '
 <head>
     <title>View Schedule</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
-    <h1 style="  text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">COURSE SCHEDULES</H1>
+
+<div class="containe-fluid text-center ">
+<h1 style="  text-shadow: 4px 2px 3px rgba(0, .5, 0, .80);" class="fw-bolder text-center text-warning mt-3 text-outline">COURSE SCHEDULES</H1>
+
+            <div class="container fw-bolder" style="padding: 5px;">';
+                
+                $sql = "SELECT * FROM semesters";
+                $result = mysqli_query($conn, $sql);
+
+                // Check if the query was successful
+                if ($result) {
+                    // Fetch the semester name
+                    $row = mysqli_fetch_assoc($result);
+                    $semester_name = $row['semester_name'];
+                    $start_year = $row['start_year'];
+                    $end_year = $row['end_year'];
+
+                    // Display the schedule
+                    echo '<h1 class= "fw-bolder" style="color:dark; margin-top: 0; margin-bottom: 10px;font-family:">' . $semester_name . '</h1>';
+                    echo '<p style="margin: 0;color:black;font-family:monospace; font-size: 17px; margin-bottom: 10px;">A.Y: ' . $start_year . '-' . $end_year . '</p>';
+                } else {
+                    // Handle the case when the query fails
+                    echo 'Error fetching semester name: ' . mysqli_error($connection);
+                }
+        
+            echo '  </div>
 
 <style>
 .table-bordered {
@@ -222,7 +248,7 @@ if ($result !== false && $result->num_rows > 0) {
                     echo '<td class="header_row bg-light" rowspan="' . $scheduleResult->num_rows . '">' . $course_year_section . '</td>';
                 }
 
-                // Check if the current day is the same as the previous day
+                // Check if the current day is the same as the previous day to merge cell if me day
                 if ($day != $previousDay) {
                     // Calculate the rowspan value for the day
                     $rowspan = calculateRowspan($course_year_section, $day);

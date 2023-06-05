@@ -14,21 +14,23 @@ if (isset($_POST['submit'])) {
     $subject_units = $_POST['subject_units'];
     $subject_hours = $_POST['subject_hours'];
 
+// check if a record with the same subject code and type already exists
+$sql = "SELECT * FROM subjects WHERE subject_code='$subject_code' AND subject_type='$subject_type' AND subject_description='$subject_description'";
+$result = mysqli_query($conn, $sql);
 
-    // check if a record with the same subject code and type already exists
-    $sql = "SELECT * FROM subjects WHERE subject_code='$subject_code' and subject_type='$subject_type' or 'subject_description=$subject_description'";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0) {
+    if (mysqli_query($conn, $sql)) {
         echo '<script type="text/javascript">';
-        echo ' alert("A Subject with the same subject code and type already exists!");';
-        echo ' window.location.href = "subject_create.php";';
+        echo ' alert("Subject already exist!");';
+        echo ' window.location.href = "subject_list.php";';
         echo '</script>';
         exit;
+    } else {
+        echo "Error updating record: " . mysqli_error($conn);
+        exit;
     }
-
-
-    // insert the data into the database
+} else {
+    // No record found, perform the insert
     $sql = "INSERT INTO subjects (subject_code, subject_description, subject_type, subject_units, subject_hours) VALUES ('$subject_code', '$subject_description', '$subject_type', '$subject_units', '$subject_hours')";
 
     if (mysqli_query($conn, $sql)) {
@@ -38,9 +40,11 @@ if (isset($_POST['submit'])) {
         echo '</script>';
         exit;
     } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        echo "Error inserting record: " . mysqli_error($conn);
+        exit;
     }
-}
+}}
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -108,3 +112,5 @@ if (isset($_POST['submit'])) {
 </body>
 
 </html>
+
+
