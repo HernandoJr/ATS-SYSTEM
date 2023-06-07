@@ -10,7 +10,7 @@ if (isset($_GET['delete_id'])) {
         echo "<script>alert('subject deleted successfully');</script>";
         echo "<script>window.location.href = 'subject_list.php';</script>";
     } else {
-        echo "Error deleting record: " . $conn->error;
+        echo "Error deleting record: " . $conn->$error;
     }
 }
 
@@ -92,13 +92,13 @@ if (isset($_POST['search'])) {
                         $query = "SELECT * FROM subjects WHERE subject_description LIKE '%$search_term%' OR subject_code LIKE '%$search_term%' OR subject_type LIKE '%$search_term%'";
                         $result = $conn->query($query);
                         if (!$result) {
-                            die("Error executing search query: " . $conn->error);
+                            die("Error executing search query: " . $conn->$error);
                         }
                     } else {
                         $query = "SELECT * FROM subjects";
                         $result = $conn->query($query);
                         if (!$result) {
-                            die("Error executing query: " . $conn->error);
+                            die("Error executing query: " . $conn->$error);
                         }
                     }
                     ?>

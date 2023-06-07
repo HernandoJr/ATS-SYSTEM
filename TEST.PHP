@@ -60,11 +60,11 @@ function check_teacher_load($teacher)
     $row = $result->fetch_assoc();
     $count = $row['count'];
     return $count;
-}
+}  
 
 if (isset($_POST['submit'])) {
     $teacher = mysqli_real_escape_string($conn, $_POST['teacher']);
-    $subject_code = mysqli_real_escape_string($conn, $_POST['subject_code']);
+    $subjectDescription = mysqli_real_escape_string($conn, $_POST['subject_description']);
     $courseName = mysqli_real_escape_string($conn, $_POST['course_name']);
     $sectionName = mysqli_real_escape_string($conn, $_POST['section_name']);
     $sectionYear = mysqli_real_escape_string($conn, $_POST['section_year']);
@@ -72,12 +72,65 @@ if (isset($_POST['submit'])) {
     $day = mysqli_real_escape_string($conn, $_POST['day']);
     $startTime = mysqli_real_escape_string($conn, $_POST['start_time']);
     $endTime = mysqli_real_escape_string($conn, $_POST['end_time']);
+   
+    $sql = "SELECT * FROM semesters";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    $semester_name = $row['semester_name'];
+
+    if ($semester_name == "1st SEM"){
+                        
+        if ($sectionYear == "1st" ) {
+            $course_year_section = $courseName . " 101-" . $sectionName;
+        } elseif ($sectionYear == "2nd") {
+            $course_year_section = $courseName . " 201-" . $sectionName;
+        } elseif ($sectionYear == "3rd") {
+            $course_year_section = $courseName . " 301-" . $sectionName;
+        } elseif ($sectionYear == "4th") {
+            $course_year_section = $courseName . " 401-" . $sectionName;
+        } else {
+            $course_year_section = $courseName . $section_year . $sectionName;
+        }
+    
+    }else{
+        if ($sectionYear == "1st" ) {
+            $course_year_section = $courseName . " 102-" . $sectionName;
+        } elseif ($sectionYear == "2nd") {
+            $course_year_section = $courseName . " 202-" . $sectionName;
+        } elseif ($sectionYear == "3rd") {
+            $course_year_section = $courseName . " 302-" . $sectionName;
+        } elseif ($sectionYear == "4th") {
+            $course_year_section = $courseName . " 402-" . $sectionName;
+        } else {
+            $course_year_section = $courseName . $section_year . $sectionName;
+        }
+    }
 
     // Check if the teacher has reached the maximum load
     $teacherLoad = check_teacher_load($teacher);
     if ($teacherLoad >= 30) {
         $error = "Teacher has reached the maximum load.";
     } else {
+        $stmt = $conn->prepare("SELECT subject_units, subject_type, subject_hours, subject_code FROM subjects WHERE subject_description = ?");
+        $stmt->bind_param("s", $subjectDescription);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $subjectUnits = $row['subject_units'];
+            $subjectType = $row['subject_type'];
+            $subjectHours = $row['subject_hours'];
+            $subjectCode = $row['subject_code'];
+        } else {
+            $subjectUnits = "";
+            $subjectType = "";
+            $subjectHours = "";
+            $subjectCode = "";
+        }
+        
+        
+    
     // Check if the timeslot is available for the teacher, room, and course year section
     $isTeacherAvailable = isTeacherAvailable($teacher, $day, $startTime, $endTime);
     $isRoomAvailable = isRoomAvailable($roomName, $day, $startTime, $endTime);
@@ -85,15 +138,18 @@ if (isset($_POST['submit'])) {
 
     if ($isTeacherAvailable && $isRoomAvailable && !$isCourseYearSectionConflict) {
         // Insert the schedule into the database
-        $query = "INSERT INTO faculty_loadings (teacher, subject_code, course_name, section_name, section_year, room_name, day, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO faculty_loadings (teacher,subject_description, subject_code, subject_hours, subject_type, subject_units, course_name, section_name, section_year, room_name, course_year_section, day, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("sssssssss", $teacher,$subject_code, $courseName, $sectionName, $sectionYear, $roomName, $day, $startTime, $endTime);
+        $stmt->bind_param("ssssssssssssss", $teacher,$subjectDescription,$subjectCode, $subjectHours, $subjectType, $subjectUnits, $courseName, $sectionName, $sectionYear, $roomName,$course_year_section,  $day, $startTime, $endTime);
         $stmt->execute();
+        echo "<script>alert('Data Successfully added!');</script>";
         $stmt->close();
 
         echo "Schedule added successfully.";
     } else {
         $error  = "There is a schedule conflict. Check for the schedule of Teacher, Course Section and Room availability in view schedule page.";
+        echo "<script>alert('".$error."');</script>";
+        echo "<script>window.location.href = 'TEST.php';</script>";
     }
 }
 
@@ -169,16 +225,16 @@ if (!empty($error)) {
             </select>
         </div>
 
-        <!-- Form for selecting a subject -->
+      <!-- Form for selecting a subject -->
         <div class="form-group">
-            <label for="subject_code">Subject Code and Title</label>
-            <select class="form-control" id="subject_code" name="subject_code">
+            <label for="subject_description">Subject Description</label>
+            <select class="form-control" id="subject_description" name="subject_description">
                 <?php
-                $sql = "SELECT subject_description, subject_code FROM subjects";
+                $sql = "SELECT * FROM subjects";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo '<option value="' . $row["subject_description"] .  $row["subject_code"] .'">' . "[". $row["subject_code"] ."]  "."[". $row["subject_description"] ."]".'</option>';
+                        echo '<option value="' . $row["subject_description"] . '">' . $row["subject_description"] . '</option>';
                     }
                 }
                 ?>

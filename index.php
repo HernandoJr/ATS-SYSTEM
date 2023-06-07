@@ -148,11 +148,6 @@ if (isset($_POST['logout'])) {
                         <a class="nav-link hover-color" href="section_list.php">Add Section</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link hover-color" href="TEST.php">TEST</a>
-                    </li>
-
-
-                    <li class="nav-item">
                         <a class="nav-link hover-color" href="subject_list.php">Add Subject</a>
                     </li>
 
@@ -175,7 +170,7 @@ if (isset($_POST['logout'])) {
                     </li>
                     <hr class="dropdown-divider">
                     </li>
-                    <a class="nav-link hover-color text-primary fw-bolder text-center h5" href="manual_schedule_list.php">Manual</a>
+                    <a class="nav-link hover-color text-primary fw-bolder text-center h5" href="TEST.php">Manual</a>
                 </ul>
                 </li>
 
