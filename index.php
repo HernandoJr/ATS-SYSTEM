@@ -170,7 +170,7 @@ if (isset($_POST['logout'])) {
                     </li>
                     <hr class="dropdown-divider">
                     </li>
-                    <a class="nav-link hover-color text-primary fw-bolder text-center h5" href="TEST.php">Manual</a>
+                    <a class="nav-link hover-color text-primary fw-bolder text-center h5" href="manual_add_schedule.php">Manual</a>
                 </ul>
                 </li>
 
